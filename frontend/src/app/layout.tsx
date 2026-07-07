@@ -4,8 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { cn } from "@/lib/utils";
 
-const figtree = Figtree({subsets:['latin'],variable:'--font-sans'});
-
+const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,8 +18,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // <html> එකේ විතරක් නෙවෙයි, <body> එකෙත් මේක තියෙන්න ඕනේ
     <html lang="en" suppressHydrationWarning className={cn("font-sans", figtree.variable)}>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <Providers>
           {children}
         </Providers>
