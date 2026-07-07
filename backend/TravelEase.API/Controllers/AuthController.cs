@@ -15,12 +15,10 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    // ලියාපදිංචි වීමේ method එක
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
-        // Debugging සඳහා
-        Console.WriteLine($"Register Request: {dto.Email}, {dto.FirstName}");
-
         if (dto == null) return BadRequest("Invalid client request");
 
         try
@@ -30,11 +28,25 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Terminal එකේ දෝෂය පෙන්වයි
-            Console.WriteLine($"Error: {ex.Message}");
             return BadRequest(new { success = false, message = ex.Message });
         }
     }
-    
-    // Login method එක කලින් තිබූ පරිදිම තබා ගන්න
+
+    // Login වීමේ method එක (අලුතින් එකතු කළා)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginDto dto)
+    {
+        if (dto == null) return BadRequest("Invalid login request");
+
+        try
+        {
+            var result = await _authService.LoginAsync(dto);
+            return Ok(new { success = true, data = result, message = "Login successful" });
+        }
+        catch (Exception ex)
+        {
+            // Unauthorized (401) Error එක පෙන්වීම සුදුසුයි
+            return Unauthorized(new { success = false, message = "Invalid email or password" });
+        }
+    }
 }
