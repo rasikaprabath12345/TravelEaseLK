@@ -107,7 +107,7 @@ export default function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={IMAGES.hero}
+            src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80"
             alt="Sri Lanka Beach"
             className="w-full h-full object-cover"
           />
