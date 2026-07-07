@@ -14,6 +14,8 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useFeaturedPackages } from '@/hooks/usePackages';
@@ -48,13 +50,18 @@ export default function HomePage() {
         }
       `}</style>
 
+      <Navbar />
+
       {/* Hero Section */}
       <section className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--tl-navy)]/80 via-[var(--tl-navy)]/55 to-[var(--tl-navy)]/85 z-10" />
+        {/* Flat darkening layer — guarantees contrast no matter what's in the photo */}
+        <div className="absolute inset-0 bg-[var(--tl-navy)]/55 z-10" />
+        {/* Extra vignette so the text band in the middle is always the darkest area */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--tl-navy)]/70 via-[var(--tl-navy)]/35 to-[var(--tl-navy)]/75 z-10" />
 
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -62,41 +69,44 @@ export default function HomePage() {
           transition={{ duration: 0.7 }}
           className="relative z-20 text-center px-4 max-w-4xl mx-auto"
         >
-          <motion.span
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="inline-block font-display font-semibold text-xs md:text-sm tracking-[0.2em] text-[var(--tl-coral)] mb-5"
-          >
-            SRI LANKA · PREMIUM TOURS
-          </motion.span>
+          {/* Frosted glass panel behind the copy — reliable contrast over any photo */}
+          <div className="backdrop-blur-md bg-black/25 border border-white/10 rounded-3xl px-6 py-10 sm:px-12 sm:py-14">
+            <motion.span
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="inline-block font-display font-semibold text-xs md:text-sm tracking-[0.2em] text-[var(--tl-coral)] mb-5"
+            >
+              SRI LANKA · PREMIUM TOURS
+            </motion.span>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="font-display font-extrabold text-4xl md:text-6xl text-white mb-6 leading-tight"
-          >
-            Discover Your Next
-            <span className="block text-[var(--tl-coral)]">Adventure</span>
-          </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="font-display font-extrabold text-4xl md:text-6xl text-white mb-6 leading-tight drop-shadow-[0_4px_18px_rgba(0,0,0,0.45)]"
+            >
+              Discover Your Next
+              <span className="block text-[var(--tl-coral)]">Adventure</span>
+            </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="text-base md:text-lg mb-10 text-white/80 max-w-xl mx-auto"
-          >
-            Curated tours across Sri Lanka's beaches, hill country and ancient cities —
-            planned to the last detail, so you don't have to.
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35 }}
+              className="text-base md:text-lg text-white/90 max-w-xl mx-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]"
+            >
+              Curated tours across Sri Lanka's beaches, hill country and ancient cities —
+              planned to the last detail, so you don't have to.
+            </motion.p>
+          </div>
 
           {/* Search Box */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white rounded-2xl p-3 shadow-2xl max-w-3xl mx-auto"
+            className="bg-white rounded-2xl p-3 shadow-2xl max-w-3xl mx-auto mt-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
               <div className="flex items-center gap-3 rounded-xl px-4 py-3 hover:bg-[var(--tl-bg-soft)] transition-colors">
@@ -438,6 +448,8 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 }
