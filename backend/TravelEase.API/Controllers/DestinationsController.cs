@@ -1,13 +1,62 @@
-// Placeholder DestinationsController
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TravelEase.Application.DTOs;
+using TravelEase.Application.Services;
 
-namespace TravelEase.API.Controllers
+namespace TravelEase.API.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class DestinationsController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class DestinationsController : ControllerBase
+    private readonly IDestinationService _destinationService;
+
+    public DestinationsController(IDestinationService destinationService)
     {
-        [HttpGet]
-        public IActionResult Get() => Ok("Destinations controller placeholder");
+        _destinationService = destinationService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] string? search)
+    {
+        var destinations = await _destinationService.GetAllAsync(search);
+        return Ok(new { success = true, data = destinations });
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var destination = await _destinationService.GetByIdAsync(id);
+        if (destination == null)
+            return NotFound(new { success = false, message = "Destination not found" });
+        
+        return Ok(new { success = true, data = destination });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateDestinationDto dto)
+    {
+        var destination = await _destinationService.CreateAsync(dto);
+        return Ok(new { success = true, data = destination, message = "Destination created" });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] UpdateDestinationDto dto)
+    {
+        var destination = await _destinationService.UpdateAsync(dto);
+        return Ok(new { success = true, data = destination, message = "Destination updated" });
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _destinationService.DeleteAsync(id);
+        if (!result)
+            return NotFound(new { success = false, message = "Destination not found" });
+        
+        return Ok(new { success = true, message = "Destination deleted" });
     }
 }

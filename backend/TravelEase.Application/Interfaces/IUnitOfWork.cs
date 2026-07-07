@@ -1,5 +1,7 @@
-// Placeholder IUnitOfWork
-namespace TravelEase.Application.Interfaces
+namespace TravelEase.Application.Interfaces;
+
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork { }
+    IRepository<T> Repository<T>() where T : Domain.Entities.BaseEntity;
+    Task<int> SaveChangesAsync();
 }
