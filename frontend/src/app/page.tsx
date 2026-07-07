@@ -270,6 +270,11 @@ export default function HomePage() {
       {/* Stats Section */}
       <section className="relative -mt-16 z-30 px-4">
         <div className="max-w-6xl mx-auto">
+
+          <br></br>
+           <br></br>
+            <br></br>
+             <br></br>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
