@@ -1,0 +1,4 @@
+# Global gitignore
+bin/
+obj/
+node_modules/
