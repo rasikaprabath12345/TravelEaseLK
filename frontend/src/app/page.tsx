@@ -1,7 +1,21 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, MapPin, Calendar, Users, Star, Shield, Award, Headphones, ChevronRight } from 'lucide-react';
+import {
+  Search,
+  MapPin,
+  Calendar,
+  Users,
+  Star,
+  Shield,
+  Award,
+  Headphones,
+  ChevronRight,
+  ArrowRight,
+  Plane,
+  Quote,
+  Compass,
+} from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -12,75 +26,143 @@ import { useFeaturedPackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice } from '@/lib/utils';
 
+// Route-code helper — turns a destination name into a boarding-pass style code, e.g. "Ella" -> "ELA"
+function routeCode(name?: string) {
+  return (name || 'CMB').replace(/[^a-zA-Z]/g, '').slice(0, 3).toUpperCase() || 'CMB';
+}
+
 export default function HomePage() {
   const { data: packagesData, isLoading: packagesLoading, error: packagesError } = useFeaturedPackages();
   const { data: destinationsData, isLoading: destLoading, error: destError } = useDestinations();
 
-  // දත්ත ලැබෙනතුරු හෝ error එකක් නම් empty array එකක් භාවිතා කරන්න
   const featuredPackages = packagesData?.data || [];
   const destinations = destinationsData?.data || [];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen font-body bg-[#F3ECDA]">
+      {/* Design tokens + typography, scoped to this page */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+        :root {
+          --tl-ink: #12211d;
+          --tl-canvas: #f3ecda;
+          --tl-teal: #0b5c55;
+          --tl-teal-dark: #072f2b;
+          --tl-gold: #c89b3d;
+          --tl-rust: #9c4a2e;
+          --tl-paper: #fffbf2;
+        }
+        .font-display {
+          font-family: 'Fraunces', serif;
+        }
+        .font-body {
+          font-family: 'Work Sans', sans-serif;
+        }
+        .font-mono-tl {
+          font-family: 'IBM Plex Mono', monospace;
+        }
+      `}</style>
+
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-purple-900/80 to-indigo-900/80 z-10" />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-[var(--tl-ink)]">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80')` }}
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80&crop=entropy')` }}
         />
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8 }} 
-          className="relative z-20 text-center text-white px-4 max-w-5xl mx-auto"
+        <div className="absolute inset-0 bg-gradient-to-br from-[#072F2B]/95 via-[#0B5C55]/75 to-[#12211D]/90 z-10" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-20 text-center px-4 max-w-5xl mx-auto"
         >
-          <motion.h1 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-2 font-mono-tl text-[11px] md:text-xs tracking-[0.25em] text-[var(--tl-gold)] border border-[var(--tl-gold)]/40 rounded-full px-4 py-1.5 mb-8"
+          >
+            <Compass className="h-3.5 w-3.5" />
+            6°56′N&nbsp;79°51′E — COLOMBO, SRI LANKA
+          </motion.div>
+
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+            transition={{ delay: 0.25 }}
+            className="font-display font-medium text-5xl md:text-7xl text-[var(--tl-paper)] mb-6 leading-[1.05]"
           >
-            Discover Your Next
-            <span className="block bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-              Adventure
+            Journeys Written In
+            <span className="block italic bg-gradient-to-r from-[var(--tl-gold)] to-[#e8c874] bg-clip-text text-transparent">
+              Ceylon Gold &amp; Ocean Blue
             </span>
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl mb-10 text-gray-200 max-w-3xl mx-auto"
+            className="text-lg md:text-xl mb-10 text-[var(--tl-paper)]/80 max-w-2xl mx-auto"
           >
-            Explore breathtaking destinations with premium travel experiences crafted just for you
+            Hand-crafted itineraries through ancient cities, misty tea country and untouched
+            coastline — guided by locals who know every turn.
           </motion.p>
 
-          {/* Search Box */}
-          <motion.div 
+          {/* Search Box — boarding-pass strip */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 max-w-4xl mx-auto"
+            transition={{ delay: 0.55 }}
+            className="bg-[var(--tl-paper)] rounded-2xl p-2 shadow-2xl max-w-4xl mx-auto"
           >
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
-                <MapPin className="h-5 w-5 text-yellow-400" />
-                <input type="text" placeholder="Where to?" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] items-stretch">
+              <div className="flex flex-col justify-center px-5 py-3 md:border-r md:border-dashed md:border-[var(--tl-ink)]/15">
+                <span className="font-mono-tl text-[10px] tracking-[0.2em] text-[var(--tl-teal)] mb-1">
+                  DESTINATION
+                </span>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-[var(--tl-gold)] shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Where to?"
+                    className="bg-transparent border-none outline-none text-[var(--tl-ink)] placeholder-[var(--tl-ink)]/40 w-full font-body"
+                  />
+                </div>
               </div>
-              <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
-                <Calendar className="h-5 w-5 text-yellow-400" />
-                <input type="text" placeholder="When?" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
+              <div className="flex flex-col justify-center px-5 py-3 md:border-r md:border-dashed md:border-[var(--tl-ink)]/15">
+                <span className="font-mono-tl text-[10px] tracking-[0.2em] text-[var(--tl-teal)] mb-1">
+                  DEPART
+                </span>
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-[var(--tl-gold)] shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="When?"
+                    className="bg-transparent border-none outline-none text-[var(--tl-ink)] placeholder-[var(--tl-ink)]/40 w-full font-body"
+                  />
+                </div>
               </div>
-              <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
-                <Users className="h-5 w-5 text-yellow-400" />
-                <input type="text" placeholder="Guests" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
+              <div className="flex flex-col justify-center px-5 py-3">
+                <span className="font-mono-tl text-[10px] tracking-[0.2em] text-[var(--tl-teal)] mb-1">
+                  TRAVELLERS
+                </span>
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-[var(--tl-gold)] shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Guests"
+                    className="bg-transparent border-none outline-none text-[var(--tl-ink)] placeholder-[var(--tl-ink)]/40 w-full font-body"
+                  />
+                </div>
               </div>
-              <Link href="/packages">
-                <Button size="lg" className="w-full h-full text-lg">
+              <Link href="/packages" className="md:m-1">
+                <Button
+                  size="lg"
+                  className="w-full h-full text-base bg-[var(--tl-teal)] hover:bg-[var(--tl-teal-dark)] text-[var(--tl-paper)] rounded-xl px-8"
+                >
                   <Search className="h-5 w-5 mr-2" /> Search
                 </Button>
               </Link>
@@ -88,100 +170,124 @@ export default function HomePage() {
           </motion.div>
         </motion.div>
 
-        {/* Scroll Indicator */}
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20"
         >
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-            <div className="w-1 h-3 bg-white/50 rounded-full" />
+          <div className="w-6 h-10 border-2 border-[var(--tl-paper)]/40 rounded-full flex items-start justify-center p-2">
+            <div className="w-1 h-3 bg-[var(--tl-gold)] rounded-full" />
           </div>
         </motion.div>
       </section>
 
-      {/* Featured Packages Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      {/* Featured Packages Section — boarding-pass ticket cards */}
+      <section className="py-24 bg-[var(--tl-canvas)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <Badge className="mb-4 text-sm px-3 py-1">Featured Tours</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Popular <span className="gradient-text">Packages</span>
+            <span className="font-mono-tl text-xs tracking-[0.25em] text-[var(--tl-teal)]">
+              FEATURED ITINERARIES
+            </span>
+            <h2 className="font-display font-medium text-4xl md:text-5xl mt-3 mb-4 text-[var(--tl-ink)]">
+              Popular <span className="italic text-[var(--tl-teal)]">Routes</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-              Handpicked travel experiences for unforgettable memories
+            <p className="text-[var(--tl-ink)]/60 text-lg max-w-2xl mx-auto">
+              Every itinerary below is a ticket to somewhere unforgettable
             </p>
           </motion.div>
 
           {packagesLoading ? (
             <div className="flex justify-center items-center py-10">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--tl-teal)]"></div>
             </div>
           ) : packagesError ? (
-            <p className="text-center text-red-500 py-10">Failed to load packages. Please try again later.</p>
+            <p className="text-center text-[var(--tl-rust)] py-10">
+              Failed to load packages. Please try again later.
+            </p>
           ) : featuredPackages.length === 0 ? (
-            <p className="text-center text-gray-500 py-10">No packages found at the moment.</p>
+            <p className="text-center text-[var(--tl-ink)]/50 py-10">No packages found at the moment.</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {featuredPackages.slice(0, 8).map((pkg: any, index: number) => (
                 <motion.div
                   key={pkg.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/packages/${pkg.id}`}>
-                    <Card className="overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                      <div className="relative h-48 overflow-hidden">
+                    <div className="group cursor-pointer bg-[var(--tl-paper)] rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                      <div className="relative h-44 overflow-hidden">
                         <img
                           src={pkg.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute top-3 right-3">
-                          <Badge className="bg-white/90 text-blue-600">
-                            <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
-                            {pkg.averageRating ? pkg.averageRating.toFixed(1) : "5.0"}
+                          <Badge className="bg-[var(--tl-paper)]/95 text-[var(--tl-ink)] font-mono-tl text-xs">
+                            <Star className="h-3 w-3 mr-1 fill-[var(--tl-gold)] text-[var(--tl-gold)]" />
+                            {pkg.averageRating ? pkg.averageRating.toFixed(1) : '5.0'}
                           </Badge>
                         </div>
                         {pkg.isFeatured && (
                           <div className="absolute top-3 left-3">
-                            <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-none">
-                              Featured
+                            <Badge className="bg-[var(--tl-gold)] text-[var(--tl-ink)] border-none font-mono-tl text-[10px] tracking-wide">
+                              FEATURED
                             </Badge>
                           </div>
                         )}
                       </div>
-                      <CardContent className="p-4">
-                        <div className="flex items-center text-sm text-gray-500 mb-2">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {pkg.destinationName || "Sri Lanka"}
+
+                      {/* Perforated ticket seam */}
+                      <div className="relative">
+                        <div className="absolute -left-3 top-0 -translate-y-1/2 w-6 h-6 rounded-full bg-[var(--tl-canvas)]" />
+                        <div className="absolute -right-3 top-0 -translate-y-1/2 w-6 h-6 rounded-full bg-[var(--tl-canvas)]" />
+                        <div className="border-t-2 border-dashed border-[var(--tl-ink)]/15 mx-4" />
+                      </div>
+
+                      <div className="p-5">
+                        <div className="flex items-center justify-between font-mono-tl text-[11px] tracking-[0.15em] text-[var(--tl-teal)] mb-3">
+                          <span>CMB → {routeCode(pkg.destinationName)}</span>
+                          <span className="flex items-center gap-1 text-[var(--tl-ink)]/50">
+                            <MapPin className="h-3 w-3" />
+                            {pkg.destinationName || 'Sri Lanka'}
+                          </span>
                         </div>
-                        <h3 className="font-semibold text-lg mb-2 line-clamp-1">{pkg.name}</h3>
-                        <div className="flex items-center justify-between">
+                        <h3 className="font-display font-medium text-xl mb-3 line-clamp-1 text-[var(--tl-ink)]">
+                          {pkg.name}
+                        </h3>
+                        <div className="flex items-center justify-between pt-3 border-t border-[var(--tl-ink)]/10">
                           <div>
-                            <span className="text-2xl font-bold text-blue-600">{formatPrice(pkg.price)}</span>
-                            <span className="text-sm text-gray-500 ml-1">/ person</span>
+                            <span className="text-2xl font-display font-semibold text-[var(--tl-rust)]">
+                              {formatPrice(pkg.price)}
+                            </span>
+                            <span className="text-xs text-[var(--tl-ink)]/50 ml-1">/ person</span>
                           </div>
-                          <div className="text-sm text-gray-500">{pkg.duration} Days</div>
+                          <div className="font-mono-tl text-xs text-[var(--tl-ink)]/60">
+                            {String(pkg.duration).padStart(2, '0')}D / {String(Math.max(pkg.duration - 1, 0)).padStart(2, '0')}N
+                          </div>
                         </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    </div>
                   </Link>
                 </motion.div>
               ))}
             </div>
           )}
 
-          <div className="text-center mt-10">
+          <div className="text-center mt-14">
             <Link href="/packages">
-              <Button size="lg" variant="outline" className="text-lg">
+              <Button
+                size="lg"
+                variant="outline"
+                className="text-base border-[var(--tl-ink)]/20 text-[var(--tl-ink)] hover:bg-[var(--tl-ink)] hover:text-[var(--tl-paper)] rounded-full px-8"
+              >
                 View All Packages <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
@@ -190,31 +296,33 @@ export default function HomePage() {
       </section>
 
       {/* Popular Destinations */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-24 bg-[var(--tl-paper)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <Badge className="mb-4 text-sm px-3 py-1">Top Destinations</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Explore <span className="gradient-text">Destinations</span>
+            <span className="font-mono-tl text-xs tracking-[0.25em] text-[var(--tl-teal)]">
+              WHERE TO NEXT
+            </span>
+            <h2 className="font-display font-medium text-4xl md:text-5xl mt-3 mb-4 text-[var(--tl-ink)]">
+              Explore <span className="italic text-[var(--tl-teal)]">Destinations</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-              Discover the most beautiful places around the world
+            <p className="text-[var(--tl-ink)]/60 text-lg max-w-2xl mx-auto">
+              From ancient citadels to eight-mile stretches of empty sand
             </p>
           </motion.div>
 
           {destLoading ? (
-             <div className="flex justify-center items-center py-10">
-               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-             </div>
+            <div className="flex justify-center items-center py-10">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--tl-teal)]"></div>
+            </div>
           ) : destError ? (
-            <p className="text-center text-red-500 py-10">Failed to load destinations.</p>
+            <p className="text-center text-[var(--tl-rust)] py-10">Failed to load destinations.</p>
           ) : destinations.length === 0 ? (
-            <p className="text-center text-gray-500 py-10">No destinations found.</p>
+            <p className="text-center text-[var(--tl-ink)]/50 py-10">No destinations found.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {destinations.slice(0, 6).map((dest: any, index: number) => (
@@ -223,20 +331,26 @@ export default function HomePage() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/destinations/${dest.id}`}>
-                    <div className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+                    <div className="relative h-72 rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
                       <img
                         src={dest.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
                         alt={dest.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 className="text-2xl font-bold mb-1">{dest.name}</h3>
-                        <p className="text-gray-200 text-sm">{dest.country || "Sri Lanka"}</p>
-                        <p className="text-sm mt-2 text-gray-300">{dest.packageCount || 0} packages available</p>
+                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--tl-ink)]/90 via-[var(--tl-ink)]/10 to-transparent" />
+                      <div className="absolute top-4 left-4 font-mono-tl text-[10px] tracking-[0.2em] text-[var(--tl-paper)]/80 bg-[var(--tl-ink)]/30 backdrop-blur-sm rounded-full px-3 py-1">
+                        {routeCode(dest.name)}
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-[var(--tl-paper)]">
+                        <h3 className="font-display font-medium text-2xl mb-1">{dest.name}</h3>
+                        <p className="text-[var(--tl-paper)]/70 text-sm mb-2">{dest.country || 'Sri Lanka'}</p>
+                        <p className="font-mono-tl text-xs text-[var(--tl-gold)] flex items-center gap-1">
+                          {dest.packageCount || 0} ROUTES AVAILABLE
+                          <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                        </p>
                       </div>
                     </div>
                   </Link>
@@ -247,44 +361,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900">
+      {/* Why Choose Us — contrast band */}
+      <section className="py-24 bg-[var(--tl-teal-dark)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Why Choose <span className="gradient-text">TravelEase LK</span>
+            <span className="font-mono-tl text-xs tracking-[0.25em] text-[var(--tl-gold)]">
+              THE TRAVELEASE DIFFERENCE
+            </span>
+            <h2 className="font-display font-medium text-4xl md:text-5xl mt-3 mb-4 text-[var(--tl-paper)]">
+              Why Choose <span className="italic text-[var(--tl-gold)]">TravelEase LK</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 text-lg max-w-2xl mx-auto">
-              We provide the best travel experiences with premium services
+            <p className="text-[var(--tl-paper)]/60 text-lg max-w-2xl mx-auto">
+              Premium service, at every mile of the journey
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Award, title: 'Experienced Guides', desc: 'Professional and knowledgeable tour guides' },
-              { icon: Shield, title: 'Best Prices', desc: 'Competitive pricing with no hidden charges' },
-              { icon: Star, title: 'Safe Travel', desc: 'Your safety is our top priority always' },
-              { icon: Headphones, title: '24/7 Support', desc: 'Round the clock customer support' },
+              { icon: Award, title: 'Expert Local Guides', desc: 'Professional, licensed guides who know every backroad' },
+              { icon: Shield, title: 'Honest Pricing', desc: 'Transparent rates with absolutely no hidden charges' },
+              { icon: Star, title: 'Safety First', desc: 'Vetted operators and 24-hour on-ground support' },
+              { icon: Headphones, title: 'Always Reachable', desc: 'Round-the-clock support before, during and after' },
             ].map((item, index) => (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.08 }}
               >
-                <Card className="text-center p-6 hover:shadow-xl transition-all hover:-translate-y-2 border-none">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="h-8 w-8 text-white" />
+                <div className="text-center p-6 rounded-2xl hover:bg-[var(--tl-paper)]/5 transition-all">
+                  <div className="w-16 h-16 rounded-full border border-[var(--tl-gold)]/40 flex items-center justify-center mx-auto mb-5">
+                    <item.icon className="h-7 w-7 text-[var(--tl-gold)]" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{item.desc}</p>
-                </Card>
+                  <h3 className="font-display text-xl mb-2 text-[var(--tl-paper)]">{item.title}</h3>
+                  <p className="text-[var(--tl-paper)]/60 text-sm">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -292,16 +409,19 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 bg-white dark:bg-gray-800">
+      <section className="py-24 bg-[var(--tl-paper)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-14"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              What Our <span className="gradient-text">Travelers Say</span>
+            <span className="font-mono-tl text-xs tracking-[0.25em] text-[var(--tl-teal)]">
+              TRAVELLER LOG
+            </span>
+            <h2 className="font-display font-medium text-4xl md:text-5xl mt-3 text-[var(--tl-ink)]">
+              What Our <span className="italic text-[var(--tl-teal)]">Travelers Say</span>
             </h2>
           </motion.div>
 
@@ -316,20 +436,27 @@ export default function HomePage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.08 }}
               >
-                <Card className="p-6 border-none shadow-lg">
-                  <div className="flex mb-3">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
+                <div className="p-8 rounded-2xl bg-[var(--tl-canvas)] h-full flex flex-col">
+                  <Quote className="h-7 w-7 text-[var(--tl-gold)] mb-4" />
+                  <p className="font-display italic text-lg text-[var(--tl-ink)]/80 mb-6 flex-1">
+                    "{testimonial.text}"
+                  </p>
+                  <div className="flex items-center justify-between pt-4 border-t border-[var(--tl-ink)]/10">
+                    <div>
+                      <p className="font-semibold text-[var(--tl-ink)] text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-[var(--tl-ink)]/50 font-mono-tl tracking-wide">
+                        {testimonial.role.toUpperCase()}
+                      </p>
+                    </div>
+                    <div className="flex">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="h-4 w-4 fill-[var(--tl-gold)] text-[var(--tl-gold)]" />
+                      ))}
+                    </div>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4 italic">"{testimonial.text}"</p>
-                  <div>
-                    <p className="font-semibold">{testimonial.name}</p>
-                    <p className="text-sm text-gray-500">{testimonial.role}</p>
-                  </div>
-                </Card>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -337,28 +464,48 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-        <div className="max-w-4xl mx-auto px-4 text-center text-white relative z-10">
+      <section className="py-24 bg-gradient-to-r from-[var(--tl-teal-dark)] to-[var(--tl-ink)] relative overflow-hidden">
+        <svg
+          className="absolute inset-0 w-full h-full opacity-[0.15]"
+          preserveAspectRatio="none"
+          viewBox="0 0 1200 400"
+        >
+          <path
+            d="M0,200 C300,50 500,350 800,150 C950,60 1050,240 1200,120"
+            fill="none"
+            stroke="var(--tl-gold)"
+            strokeWidth="2"
+            strokeDasharray="8 10"
+          />
+        </svg>
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <Plane className="h-8 w-8 text-[var(--tl-gold)] mx-auto mb-6" />
+            <h2 className="font-display font-medium text-4xl md:text-5xl mb-6 text-[var(--tl-paper)]">
               Ready for Your Next Adventure?
             </h2>
-            <p className="text-xl mb-8 text-blue-100">
+            <p className="text-xl mb-10 text-[var(--tl-paper)]/70">
               Book your dream vacation today and create memories that last a lifetime
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/packages">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
+                <Button
+                  size="lg"
+                  className="bg-[var(--tl-gold)] text-[var(--tl-ink)] hover:bg-[#dcb254] text-base px-8 rounded-full font-semibold"
+                >
                   Browse Packages
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="lg" variant="outline" className="text-white border-2 border-white hover:bg-white/10 text-lg px-8">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="text-[var(--tl-paper)] border-2 border-[var(--tl-paper)]/40 hover:bg-[var(--tl-paper)]/10 text-base px-8 rounded-full"
+                >
                   Contact Us
                 </Button>
               </Link>
