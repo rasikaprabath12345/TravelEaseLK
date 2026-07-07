@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Search, Eye, Mail, Phone } from 'lucide-react';
+import { Search, Eye } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +16,8 @@ export default function AdminCustomersPage() {
   const { data: customersData, isLoading } = useQuery({
     queryKey: ['customers', search],
     queryFn: async () => {
-      const response = await api.get('/auth/customers', { params: { search } });
+      // මෙහි /api/customers ලෙස URL එක නිවැරදි කරගන්න (Backend එකේ හදපු Controller එකට අනුව)
+      const response = await api.get('/customers', { params: { search } });
       return response.data;
     },
   });
@@ -84,7 +84,8 @@ export default function AdminCustomersPage() {
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge variant={customer.isActive ? 'success' : 'destructive'}>
+                        {/* මෙතැනදී className හරහා පාට තීරණය කිරීම වඩාත් සුදුසුයි */}
+                        <Badge className={customer.isActive ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
                           {customer.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </td>
