@@ -1,12 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TravelEase.Application.DTOs;
 using TravelEase.Application.Interfaces;
 using TravelEase.Domain.Entities;
+using BCrypt.Net; // මෙය අනිවාර්යයෙන්ම එකතු කරන්න
 
 namespace TravelEase.Application.Services;
 
@@ -29,10 +29,10 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
-        var existingUser = await _unitOfWork.Repository<User>()
-            .FindAsync(u => u.Email == dto.Email);
+        // FindAsync මගින් ලැබෙන ප්‍රතිඵලය IEnumerable හෝ List එකක් නම් Any() භාවිතා කළ හැක
+        var existingUsers = await _unitOfWork.Repository<User>().FindAsync(u => u.Email == dto.Email);
         
-        if (existingUser.Any())
+        if (existingUsers != null && existingUsers.Any())
             throw new Exception("Email already registered");
 
         var user = new User
@@ -42,7 +42,8 @@ public class AuthService : IAuthService
             Email = dto.Email,
             PasswordHash = HashPassword(dto.Password),
             PhoneNumber = dto.PhoneNumber,
-            Role = "Customer"
+            Role = "Customer",
+            IsActive = true // දෝෂයක් නොවීමට මෙය එකතු කරන්න
         };
 
         await _unitOfWork.Repository<User>().AddAsync(user);
@@ -63,10 +64,10 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var user = await _unitOfWork.Repository<User>()
+        var users = await _unitOfWork.Repository<User>()
             .FindAsync(u => u.Email == dto.Email && u.IsActive);
         
-        var foundUser = user.FirstOrDefault();
+        var foundUser = users?.FirstOrDefault();
         
         if (foundUser == null || !VerifyPassword(dto.Password, foundUser.PasswordHash))
             throw new Exception("Invalid email or password");
@@ -102,7 +103,7 @@ public class AuthService : IAuthService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddDays(7),
+            expires: DateTime.UtcNow.AddDays(7), // DateTime.Now වෙනුවට DateTime.UtcNow වඩා සුදුසුයි
             signingCredentials: creds
         );
 
