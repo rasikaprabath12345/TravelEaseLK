@@ -13,9 +13,10 @@ import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice } from '@/lib/utils';
 
 export default function HomePage() {
-  const { data: packagesData } = useFeaturedPackages();
-  const { data: destinationsData } = useDestinations();
+  const { data: packagesData, isLoading: packagesLoading, error: packagesError } = useFeaturedPackages();
+  const { data: destinationsData, isLoading: destLoading, error: destError } = useDestinations();
 
+  // දත්ත ලැබෙනතුරු හෝ error එකක් නම් empty array එකක් භාවිතා කරන්න
   const featuredPackages = packagesData?.data || [];
   const destinations = destinationsData?.data || [];
 
@@ -28,18 +29,16 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-purple-900/80 to-indigo-900/80 z-10" />
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80')`,
-          }}
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80')` }}
         />
         
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.8 }} 
           className="relative z-20 text-center text-white px-4 max-w-5xl mx-auto"
         >
-          <motion.h1
+          <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -51,7 +50,7 @@ export default function HomePage() {
             </span>
           </motion.h1>
           
-          <motion.p
+          <motion.p 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -61,7 +60,7 @@ export default function HomePage() {
           </motion.p>
 
           {/* Search Box */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
@@ -70,32 +69,19 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
                 <MapPin className="h-5 w-5 text-yellow-400" />
-                <input
-                  type="text"
-                  placeholder="Where to?"
-                  className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full"
-                />
+                <input type="text" placeholder="Where to?" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
               </div>
               <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
                 <Calendar className="h-5 w-5 text-yellow-400" />
-                <input
-                  type="text"
-                  placeholder="When?"
-                  className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full"
-                />
+                <input type="text" placeholder="When?" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
               </div>
               <div className="flex items-center space-x-3 bg-white/10 rounded-xl p-3">
                 <Users className="h-5 w-5 text-yellow-400" />
-                <input
-                  type="text"
-                  placeholder="Guests"
-                  className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full"
-                />
+                <input type="text" placeholder="Guests" className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-full" />
               </div>
               <Link href="/packages">
-                <Button size="lg" className="w-full h-full">
-                  <Search className="h-5 w-5 mr-2" />
-                  Search
+                <Button size="lg" className="w-full h-full text-lg">
+                  <Search className="h-5 w-5 mr-2" /> Search
                 </Button>
               </Link>
             </div>
@@ -114,7 +100,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      {/* Featured Packages */}
+      {/* Featured Packages Section */}
       <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -123,7 +109,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4">Featured Tours</Badge>
+            <Badge className="mb-4 text-sm px-3 py-1">Featured Tours</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Popular <span className="gradient-text">Packages</span>
             </h2>
@@ -132,62 +118,71 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredPackages.slice(0, 8).map((pkg, index) => (
-              <motion.div
-                key={pkg.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link href={`/packages/${pkg.id}`}>
-                  <Card className="overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={pkg.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
-                        alt={pkg.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute top-3 right-3">
-                        <Badge className="bg-white/90 text-blue-600">
-                          <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
-                          {pkg.averageRating.toFixed(1)}
-                        </Badge>
-                      </div>
-                      {pkg.isFeatured && (
-                        <div className="absolute top-3 left-3">
-                          <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white">
-                            Featured
+          {packagesLoading ? (
+            <div className="flex justify-center items-center py-10">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            </div>
+          ) : packagesError ? (
+            <p className="text-center text-red-500 py-10">Failed to load packages. Please try again later.</p>
+          ) : featuredPackages.length === 0 ? (
+            <p className="text-center text-gray-500 py-10">No packages found at the moment.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredPackages.slice(0, 8).map((pkg: any, index: number) => (
+                <motion.div
+                  key={pkg.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link href={`/packages/${pkg.id}`}>
+                    <Card className="overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={pkg.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
+                          alt={pkg.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-3 right-3">
+                          <Badge className="bg-white/90 text-blue-600">
+                            <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                            {pkg.averageRating ? pkg.averageRating.toFixed(1) : "5.0"}
                           </Badge>
                         </div>
-                      )}
-                    </div>
-                    <CardContent className="p-4">
-                      <div className="flex items-center text-sm text-gray-500 mb-2">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {pkg.destinationName}
+                        {pkg.isFeatured && (
+                          <div className="absolute top-3 left-3">
+                            <Badge className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white border-none">
+                              Featured
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-1">{pkg.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <span className="text-2xl font-bold text-blue-600">{formatPrice(pkg.price)}</span>
-                          <span className="text-sm text-gray-500 ml-1">/ person</span>
+                      <CardContent className="p-4">
+                        <div className="flex items-center text-sm text-gray-500 mb-2">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {pkg.destinationName || "Sri Lanka"}
                         </div>
-                        <div className="text-sm text-gray-500">{pkg.duration} Days</div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                        <h3 className="font-semibold text-lg mb-2 line-clamp-1">{pkg.name}</h3>
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-2xl font-bold text-blue-600">{formatPrice(pkg.price)}</span>
+                            <span className="text-sm text-gray-500 ml-1">/ person</span>
+                          </div>
+                          <div className="text-sm text-gray-500">{pkg.duration} Days</div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-10">
             <Link href="/packages">
-              <Button size="lg" variant="outline">
-                View All Packages
-                <ChevronRight className="h-4 w-4 ml-2" />
+              <Button size="lg" variant="outline" className="text-lg">
+                View All Packages <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
           </div>
@@ -203,7 +198,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4">Top Destinations</Badge>
+            <Badge className="mb-4 text-sm px-3 py-1">Top Destinations</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Explore <span className="gradient-text">Destinations</span>
             </h2>
@@ -212,33 +207,43 @@ export default function HomePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {destinations.slice(0, 6).map((dest, index) => (
-              <motion.div
-                key={dest.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link href={`/destinations/${dest.id}`}>
-                  <div className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer">
-                    <img
-                      src={dest.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
-                      alt={dest.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="text-2xl font-bold mb-1">{dest.name}</h3>
-                      <p className="text-gray-200 text-sm">{dest.country}</p>
-                      <p className="text-sm mt-2 text-gray-300">{dest.packageCount} packages available</p>
+          {destLoading ? (
+             <div className="flex justify-center items-center py-10">
+               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+             </div>
+          ) : destError ? (
+            <p className="text-center text-red-500 py-10">Failed to load destinations.</p>
+          ) : destinations.length === 0 ? (
+            <p className="text-center text-gray-500 py-10">No destinations found.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {destinations.slice(0, 6).map((dest: any, index: number) => (
+                <motion.div
+                  key={dest.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Link href={`/destinations/${dest.id}`}>
+                    <div className="relative h-64 rounded-2xl overflow-hidden group cursor-pointer shadow-lg">
+                      <img
+                        src={dest.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
+                        alt={dest.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                        <h3 className="text-2xl font-bold mb-1">{dest.name}</h3>
+                        <p className="text-gray-200 text-sm">{dest.country || "Sri Lanka"}</p>
+                        <p className="text-sm mt-2 text-gray-300">{dest.packageCount || 0} packages available</p>
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -273,7 +278,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="text-center p-6 hover:shadow-xl transition-all hover:-translate-y-2">
+                <Card className="text-center p-6 hover:shadow-xl transition-all hover:-translate-y-2 border-none">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <item.icon className="h-8 w-8 text-white" />
                   </div>
@@ -313,7 +318,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="p-6">
+                <Card className="p-6 border-none shadow-lg">
                   <div className="flex mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
@@ -332,8 +337,9 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-4xl mx-auto px-4 text-center text-white">
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+        <div className="max-w-4xl mx-auto px-4 text-center text-white relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -347,12 +353,12 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/packages">
-                <Button size="xl" variant="outline" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
                   Browse Packages
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button size="xl" variant="ghost" className="text-white border-2 border-white hover:bg-white/10">
+                <Button size="lg" variant="outline" className="text-white border-2 border-white hover:bg-white/10 text-lg px-8">
                   Contact Us
                 </Button>
               </Link>
