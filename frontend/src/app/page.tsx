@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Search,
   MapPin,
@@ -15,14 +15,11 @@ import {
   Globe,
   Clock,
   Heart,
-  Play,
   Sparkles,
-  TrendingUp,
   CheckCircle,
-  Quote,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -31,74 +28,17 @@ import { useFeaturedPackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice } from '@/lib/utils';
 
-// Animated counter component
-function AnimatedCounter({ target, duration = 2000, suffix = '' }: { target: number; duration?: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    const element = document.getElementById(`counter-${target}`);
-    if (element) observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [target]);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let startTime: number;
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-    requestAnimationFrame(animate);
-  }, [isVisible, target, duration]);
-
-  return (
-    <span id={`counter-${target}`}>
-      {count.toLocaleString()}{suffix}
-    </span>
-  );
-}
-
-// Skeleton loader for packages
-function PackageSkeleton() {
-  return (
-    <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
-      <div className="h-44 bg-gray-200" />
-      <div className="p-5">
-        <div className="h-3 bg-gray-200 rounded w-20 mb-3" />
-        <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
-        <div className="h-4 bg-gray-200 rounded w-1/2 mb-4" />
-        <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-          <div className="h-6 bg-gray-200 rounded w-24" />
-          <div className="h-6 bg-gray-200 rounded w-16" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Destination skeleton
-function DestinationSkeleton() {
-  return (
-    <div className="h-72 rounded-2xl overflow-hidden animate-pulse">
-      <div className="w-full h-full bg-gray-200" />
-    </div>
-  );
-}
+// Image URLs - Generated
+const IMAGES = {
+  hero: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/118da4336-3953-4ca6-b315-99ef014952d6.png',
+  sigiriya: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a8d1aa12-160e-4c1f-8cc7-f10f5675db58.png',
+  ella: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1479926ae-5216-4fd8-b7c1-3528caca7122.png',
+  kandy: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a0438d02-1922-45b2-bec3-2b07b20156da.png',
+  yala: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1335030c0-0605-4f92-a8fa-ad37583c6186.png',
+  mirissa: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/175172c21-a721-4942-b2e9-f07824061a63.png',
+  nuwaraeliya: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/15ccd3012-f00a-44f1-a817-dbcd1233580f.png',
+  galle: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a44f951d-2ad0-4d48-b38e-45b51f47f7b3.png',
+};
 
 export default function HomePage() {
   const { data: packagesData, isLoading: packagesLoading, error: packagesError } = useFeaturedPackages();
@@ -109,93 +49,94 @@ export default function HomePage() {
   const destinations = destinationsData?.data || [];
 
   const categories = [
-    { id: 'all', label: 'All Tours', icon: Globe },
-    { id: 'beach', label: 'Beach', icon: MapPin },
-    { id: 'adventure', label: 'Adventure', icon: TrendingUp },
-    { id: 'cultural', label: 'Cultural', icon: Award },
+    { id: 'all', label: 'All Tours' },
+    { id: 'beach', label: 'Beach & Coastal' },
+    { id: 'cultural', label: 'Cultural Heritage' },
+    { id: 'nature', label: 'Nature & Wildlife' },
+    { id: 'hill', label: 'Hill Country' },
   ];
 
   const filteredPackages = activeCategory === 'all'
     ? featuredPackages
     : featuredPackages.filter((pkg: any) => pkg.category === activeCategory);
 
-  // Parallax effect
-  const { scrollYProgress } = useScroll();
-  const heroY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
+  const packageImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.nuwaraeliya, IMAGES.galle, IMAGES.hero];
+  const destinationImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.galle];
 
   return (
-    <div className="font-body bg-white overflow-x-hidden">
+    <div className="font-body bg-white">
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+        @import url('https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.16/index.min.css');
+        @import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css');
+        
         :root {
-          --tl-navy: #16232e;
-          --tl-ocean: #0e6ba8;
-          --tl-ocean-dark: #0a4e7d;
-          --tl-coral: #ff7a50;
-          --tl-coral-dark: #e85d34;
-          --tl-bg-soft: #f5f9fb;
-          --tl-gold: #f4b942;
+          --tl-navy: #0f172a;
+          --tl-ocean: #0369a1;
+          --tl-ocean-light: #0ea5e9;
+          --tl-coral: #ea580c;
+          --tl-coral-light: #f97316;
+          --tl-gray-50: #f8fafc;
+          --tl-gray-100: #f1f5f9;
+          --tl-gray-200: #e2e8f0;
+          --tl-gray-400: #94a3b8;
+          --tl-gray-500: #64748b;
+          --tl-gray-600: #475569;
+          --tl-gray-700: #334155;
+          --tl-gray-900: #0f172a;
         }
+        
         .font-display {
           font-family: 'Plus Jakarta Sans', sans-serif;
+          font-weight: 600;
         }
+        
         .font-body {
           font-family: 'Inter', sans-serif;
+          font-weight: 400;
         }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
       `}</style>
 
       <Navbar />
 
-      {/* Hero Section - Enhanced */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <motion.div
-          style={{ y: heroY }}
-          className="absolute inset-0 bg-cover bg-center scale-110"
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1.1 }}
-          transition={{ duration: 20, repeat: Infinity, repeatType: 'reverse' }}
-        >
+        <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80"
+            src={IMAGES.hero}
             alt="Sri Lanka Beach"
             className="w-full h-full object-cover"
           />
-        </motion.div>
-
-        {/* Multi-layer gradient overlays */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--tl-navy)]/80 via-[var(--tl-navy)]/50 to-[var(--tl-navy)]/90 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--tl-ocean-dark)]/30 to-transparent z-10" />
-
-        {/* Floating decorative elements */}
-        <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-20 left-10 w-20 h-20 rounded-full bg-[var(--tl-coral)]/10 blur-xl z-10"
-        />
-        <motion.div
-          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute bottom-40 right-20 w-32 h-32 rounded-full bg-[var(--tl-ocean)]/10 blur-xl z-10"
-        />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
+          transition={{ duration: 0.8 }}
           className="relative z-20 text-center px-4 max-w-5xl mx-auto"
         >
-          {/* Badge */}
+
+          
+           <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-8"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-8"
           >
-            <Sparkles className="h-4 w-4 text-[var(--tl-coral)]" />
-            <span className="font-display font-semibold text-xs md:text-sm tracking-wide text-white/90">
-              #1 Rated Travel Agency in Sri Lanka
+         
+            <Sparkles className="h-4 w-4 text-orange-400" />
+            <span className="font-display text-sm text-white">
+              #1 Travel Agency in Sri Lanka
             </span>
           </motion.div>
 
@@ -203,34 +144,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-display font-extrabold text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-[1.1] tracking-tight"
+            className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight tracking-tight"
           >
-            Explore The
-            <span className="relative inline-block ml-4">
-              <span className="relative z-10 bg-gradient-to-r from-[var(--tl-coral)] to-[var(--tl-gold)] bg-clip-text text-transparent">
-                Pearl
-              </span>
-              <motion.svg
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ delay: 1, duration: 1.5 }}
-                className="absolute -bottom-2 left-0 w-full"
-                viewBox="0 0 200 12"
-              >
-                <motion.path
-                  d="M 0 8 Q 50 0, 100 8 T 200 8"
-                  fill="none"
-                  stroke="var(--tl-coral)"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ delay: 1, duration: 1.5 }}
-                />
-              </motion.svg>
-            </span>
-            <span className="block mt-2 text-4xl md:text-5xl lg:text-6xl font-bold text-white/90">
-              of the Indian Ocean
+            Discover Sri Lanka
+            <span className="block text-4xl md:text-5xl lg:text-6xl mt-4 font-normal text-white/90">
+              The Pearl of the Indian Ocean
             </span>
           </motion.h1>
 
@@ -240,11 +158,10 @@ export default function HomePage() {
             transition={{ delay: 0.5 }}
             className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            From pristine beaches to ancient kingdoms, discover Sri Lanka's magic
+            From pristine beaches to ancient kingdoms, explore Sri Lanka's magic
             with expertly curated tours designed for unforgettable memories.
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -254,66 +171,62 @@ export default function HomePage() {
             <Link href="/packages">
               <Button
                 size="lg"
-                className="bg-[var(--tl-coral)] hover:bg-[var(--tl-coral-dark)] text-white font-semibold px-8 py-6 rounded-full text-base shadow-lg shadow-[var(--tl-coral)]/30 hover:shadow-xl hover:shadow-[var(--tl-coral)]/40 transition-all hover:-translate-y-0.5"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-6 rounded-full text-base shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
                 Explore Packages <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </Link>
-            <Button
-              size="lg"
-              variant="outline"
-              className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
-            >
-              <Play className="h-5 w-5 mr-2 fill-white" /> Watch Story
-            </Button>
+            <Link href="/contact">
+              <Button
+                size="lg"
+                variant="outline"
+                className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
+              >
+                Contact Us
+              </Button>
+            </Link>
           </motion.div>
 
-          {/* Search Box - Enhanced */}
+          {/* Search Box */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="bg-white/95 backdrop-blur-xl rounded-3xl p-2 shadow-2xl shadow-black/20 max-w-4xl mx-auto border border-white/50"
+            className="bg-white rounded-2xl p-2 shadow-2xl max-w-4xl mx-auto"
           >
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-1">
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-[var(--tl-bg-soft)] transition-all cursor-pointer group">
-                <div className="w-10 h-10 rounded-xl bg-[var(--tl-ocean)]/10 flex items-center justify-center group-hover:bg-[var(--tl-ocean)]/20 transition-colors">
-                  <MapPin className="h-5 w-5 text-[var(--tl-ocean)]" />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors">
+                <MapPin className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Destination</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Destination</p>
                   <input
                     type="text"
                     placeholder="Where to?"
-                    className="bg-transparent border-none outline-none text-[var(--tl-navy)] placeholder-[var(--tl-navy)]/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-[var(--tl-bg-soft)] transition-all cursor-pointer group md:border-l md:border-gray-100">
-                <div className="w-10 h-10 rounded-xl bg-[var(--tl-ocean)]/10 flex items-center justify-center group-hover:bg-[var(--tl-ocean)]/20 transition-colors">
-                  <Calendar className="h-5 w-5 text-[var(--tl-ocean)]" />
-                </div>
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors md:border-l md:border-gray-200">
+                <Calendar className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Date</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Date</p>
                   <input
                     type="text"
                     placeholder="When?"
-                    className="bg-transparent border-none outline-none text-[var(--tl-navy)] placeholder-[var(--tl-navy)]/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-[var(--tl-bg-soft)] transition-all cursor-pointer group md:border-l md:border-gray-100">
-                <div className="w-10 h-10 rounded-xl bg-[var(--tl-ocean)]/10 flex items-center justify-center group-hover:bg-[var(--tl-ocean)]/20 transition-colors">
-                  <Users className="h-5 w-5 text-[var(--tl-ocean)]" />
-                </div>
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors md:border-l md:border-gray-200">
+                <Users className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Guests</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Guests</p>
                   <input
                     type="text"
                     placeholder="How many?"
-                    className="bg-transparent border-none outline-none text-[var(--tl-navy)] placeholder-[var(--tl-navy)]/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
@@ -322,7 +235,7 @@ export default function HomePage() {
                 <Link href="/packages" className="w-full h-full">
                   <Button
                     size="lg"
-                    className="w-full h-full bg-[var(--tl-coral)] hover:bg-[var(--tl-coral-dark)] text-white rounded-2xl px-8 font-semibold shadow-lg shadow-[var(--tl-coral)]/30 hover:shadow-xl transition-all"
+                    className="w-full h-full bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 font-semibold shadow-lg hover:shadow-xl transition-all"
                   >
                     <Search className="h-5 w-5 mr-2" /> Search
                   </Button>
@@ -336,7 +249,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/60 text-sm"
+            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/70 text-sm"
           >
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-400" />
@@ -352,26 +265,6 @@ export default function HomePage() {
             </div>
           </motion.div>
         </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2"
-          >
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-              className="w-1.5 h-1.5 rounded-full bg-white/70"
-            />
-          </motion.div>
-        </motion.div>
       </section>
 
       {/* Stats Section */}
@@ -381,13 +274,13 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 border border-gray-100"
+            className="bg-white rounded-2xl shadow-xl p-8 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 border border-gray-100"
           >
             {[
-              { value: 15000, suffix: '+', label: 'Happy Travelers', icon: Users },
-              { value: 250, suffix: '+', label: 'Tour Packages', icon: Globe },
-              { value: 50, suffix: '+', label: 'Destinations', icon: MapPin },
-              { value: 98, suffix: '%', label: 'Satisfaction Rate', icon: Star },
+              { value: '15K+', label: 'Happy Travelers', icon: Users },
+              { value: '250+', label: 'Tour Packages', icon: Globe },
+              { value: '50+', label: 'Destinations', icon: MapPin },
+              { value: '98%', label: 'Satisfaction Rate', icon: Star },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -397,20 +290,20 @@ export default function HomePage() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="w-12 h-12 bg-[var(--tl-bg-soft)] rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <stat.icon className="h-6 w-6 text-[var(--tl-ocean)]" />
+                <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <stat.icon className="h-6 w-6 text-sky-600" />
                 </div>
-                <p className="font-display font-extrabold text-3xl md:text-4xl text-[var(--tl-navy)] mb-1">
-                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                <p className="font-display text-3xl md:text-4xl text-slate-900 mb-1">
+                  {stat.value}
                 </p>
-                <p className="text-gray-500 text-sm font-medium">{stat.label}</p>
+                <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Featured Packages Section - Enhanced */}
+      {/* Featured Packages Section */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -420,31 +313,28 @@ export default function HomePage() {
             className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-6"
           >
             <div>
-              <span className="inline-flex items-center gap-2 font-display font-semibold text-xs tracking-[0.2em] text-[var(--tl-coral)] mb-3">
+              <span className="inline-flex items-center gap-2 font-display text-sm text-orange-600 mb-3">
                 <Sparkles className="h-4 w-4" /> FEATURED TOURS
               </span>
-              <h2 className="font-display font-extrabold text-3xl md:text-5xl text-[var(--tl-navy)] leading-tight">
+              <h2 className="font-display text-4xl md:text-5xl text-slate-900 leading-tight">
                 Popular Packages
-                <span className="block text-[var(--tl-ocean)]">For You</span>
               </h2>
             </div>
             <div className="flex flex-col gap-4">
-              <p className="text-gray-500 max-w-md text-sm md:text-base leading-relaxed">
-                Handpicked travel experiences crafted by experts for unforgettable memories
+              <p className="text-slate-500 max-w-md text-base leading-relaxed">
+                Handpicked travel experiences crafted by experts
               </p>
-              {/* Category filter */}
-              <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+              <div className="flex gap-2 overflow-x-auto pb-2">
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                       activeCategory === cat.id
-                        ? 'bg-[var(--tl-navy)] text-white shadow-md'
-                        : 'bg-[var(--tl-bg-soft)] text-gray-600 hover:bg-gray-200'
+                        ? 'bg-slate-900 text-white shadow-md'
+                        : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
                     }`}
                   >
-                    <cat.icon className="h-4 w-4" />
                     {cat.label}
                   </button>
                 ))}
@@ -455,7 +345,18 @@ export default function HomePage() {
           {packagesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
-                <PackageSkeleton key={i} />
+                <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
+                  <div className="h-52 bg-gray-200" />
+                  <div className="p-5">
+                    <div className="h-3 bg-gray-200 rounded w-20 mb-3" />
+                    <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
+                    <div className="h-4 bg-gray-200 rounded w-1/2 mb-4" />
+                    <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                      <div className="h-6 bg-gray-200 rounded w-24" />
+                      <div className="h-6 bg-gray-200 rounded w-16" />
+                    </div>
+                  </div>
+                </div>
               ))}
             </div>
           ) : packagesError ? (
@@ -464,15 +365,15 @@ export default function HomePage() {
                 <Shield className="h-8 w-8 text-red-400" />
               </div>
               <p className="text-red-500 font-medium mb-2">Failed to load packages</p>
-              <p className="text-gray-400 text-sm">Please try again later</p>
+              <p className="text-slate-400 text-sm">Please try again later</p>
             </div>
           ) : filteredPackages.length === 0 ? (
             <div className="text-center py-16">
               <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-8 w-8 text-gray-300" />
+                <Globe className="h-8 w-8 text-slate-300" />
               </div>
-              <p className="text-gray-500 font-medium mb-2">No packages found</p>
-              <p className="text-gray-400 text-sm">Try a different category</p>
+              <p className="text-slate-500 font-medium mb-2">No packages found</p>
+              <p className="text-slate-400 text-sm">Try a different category</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -485,79 +386,68 @@ export default function HomePage() {
                   transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/packages/${pkg.id}`}>
-                    <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 hover:-translate-y-2">
+                    <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                       <div className="relative h-52 overflow-hidden">
                         <img
-                          src={pkg.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
+                          src={pkg.imageUrl || packageImages[index % packageImages.length]}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                        {/* Badges */}
-                        <div className="absolute top-3 right-3 flex gap-2">
-                          <Badge className="bg-white/95 backdrop-blur-sm text-[var(--tl-navy)] shadow-sm text-xs font-semibold border-0">
-                            <Star className="h-3 w-3 mr-1 fill-[var(--tl-gold)] text-[var(--tl-gold)]" />
+                        <div className="absolute top-3 right-3">
+                          <Badge className="bg-white/95 backdrop-blur-sm text-slate-900 shadow-sm text-xs font-semibold border-0">
+                            <Star className="h-3 w-3 mr-1 fill-orange-400 text-orange-400" />
                             {pkg.averageRating ? pkg.averageRating.toFixed(1) : '5.0'}
                           </Badge>
                         </div>
 
                         {pkg.isFeatured && (
                           <div className="absolute top-3 left-3">
-                            <Badge className="bg-gradient-to-r from-[var(--tl-coral)] to-[var(--tl-coral-dark)] text-white border-none text-[10px] font-bold tracking-wide shadow-lg">
+                            <Badge className="bg-orange-600 text-white border-none text-xs font-semibold shadow-lg">
                               <Sparkles className="h-3 w-3 mr-1" /> FEATURED
                             </Badge>
                           </div>
                         )}
 
-                        {/* Wishlist button */}
                         <button
                           onClick={(e) => { e.preventDefault(); }}
                           className="absolute bottom-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg"
                         >
-                          <Heart className="h-4 w-4 text-gray-600 hover:text-[var(--tl-coral)] transition-colors" />
+                          <Heart className="h-4 w-4 text-slate-600 hover:text-orange-600 transition-colors" />
                         </button>
-
-                        {/* Duration badge */}
-                        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Badge className="bg-black/60 backdrop-blur-sm text-white border-0 text-xs">
-                            <Clock className="h-3 w-3 mr-1" /> {pkg.duration} Days
-                          </Badge>
-                        </div>
                       </div>
 
                       <div className="p-5">
-                        <div className="flex items-center text-xs text-[var(--tl-ocean)] font-semibold mb-2">
+                        <div className="flex items-center text-xs text-sky-600 font-semibold mb-2">
                           <MapPin className="h-3.5 w-3.5 mr-1" />
                           {pkg.destinationName || 'Sri Lanka'}
                         </div>
-                        <h3 className="font-display font-bold text-lg mb-3 line-clamp-1 text-[var(--tl-navy)] group-hover:text-[var(--tl-ocean)] transition-colors">
+                        <h3 className="font-display text-lg mb-3 line-clamp-1 text-slate-900 group-hover:text-sky-600 transition-colors">
                           {pkg.name}
                         </h3>
 
-                        {/* Features */}
-                        <div className="flex items-center gap-3 mb-4 text-xs text-gray-500">
+                        <div className="flex items-center gap-3 mb-4 text-xs text-slate-500">
                           <span className="flex items-center gap-1">
                             <Users className="h-3.5 w-3.5" /> Max {pkg.maxGroupSize || 15}
                           </span>
                           <span className="flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 fill-[var(--tl-gold)] text-[var(--tl-gold)]" />
-                            {pkg.reviewCount || 0} reviews
+                            <Clock className="h-3.5 w-3.5" /> {pkg.duration} Days
                           </span>
                         </div>
 
                         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                           <div>
-                            <span className="text-xs text-gray-400">From</span>
+                            <span className="text-xs text-slate-400">From</span>
                             <div>
-                              <span className="text-xl font-display font-extrabold text-[var(--tl-navy)]">
+                              <span className="text-xl font-display text-slate-900">
                                 {formatPrice(pkg.price)}
                               </span>
-                              <span className="text-xs text-gray-400 ml-1">/ person</span>
+                              <span className="text-xs text-slate-400 ml-1">/ person</span>
                             </div>
                           </div>
-                          <div className="w-9 h-9 bg-[var(--tl-ocean)]/10 rounded-full flex items-center justify-center group-hover:bg-[var(--tl-ocean)] group-hover:text-white transition-all">
-                            <ArrowRight className="h-4 w-4 text-[var(--tl-ocean)] group-hover:text-white transition-colors" />
+                          <div className="w-9 h-9 bg-sky-50 rounded-full flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-all">
+                            <ArrowRight className="h-4 w-4 text-sky-600 group-hover:text-white transition-colors" />
                           </div>
                         </div>
                       </div>
@@ -572,7 +462,7 @@ export default function HomePage() {
             <Link href="/packages">
               <Button
                 size="lg"
-                className="bg-[var(--tl-navy)] hover:bg-[var(--tl-navy)]/90 text-white text-sm font-semibold px-10 py-6 rounded-full shadow-lg shadow-[var(--tl-navy)]/20 hover:shadow-xl transition-all hover:-translate-y-0.5"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-10 py-6 rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
                 View All Packages <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
@@ -581,34 +471,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Popular Destinations - Enhanced */}
-      <section className="py-24 bg-[var(--tl-bg-soft)] relative overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[var(--tl-ocean)]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[var(--tl-coral)]/5 rounded-full blur-3xl" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* Popular Destinations */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 font-display font-semibold text-xs tracking-[0.2em] text-[var(--tl-coral)] mb-3">
+            <span className="inline-flex items-center gap-2 font-display text-sm text-orange-600 mb-3">
               <MapPin className="h-4 w-4" /> TOP DESTINATIONS
             </span>
-            <h2 className="font-display font-extrabold text-3xl md:text-5xl mb-4 text-[var(--tl-navy)]">
+            <h2 className="font-display text-4xl md:text-5xl mb-4 text-slate-900">
               Explore Destinations
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-              Discover the most beautiful places around the island paradise
+            <p className="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">
+              Discover the most beautiful places around the island
             </p>
           </motion.div>
 
           {destLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <DestinationSkeleton key={i} />
+                <div key={i} className="h-72 rounded-2xl overflow-hidden animate-pulse">
+                  <div className="w-full h-full bg-gray-200" />
+                </div>
               ))}
             </div>
           ) : destError ? (
@@ -617,7 +505,7 @@ export default function HomePage() {
             </div>
           ) : destinations.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-gray-400">No destinations found</p>
+              <p className="text-slate-400">No destinations found</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -630,15 +518,14 @@ export default function HomePage() {
                   transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/destinations/${dest.id}`}>
-                    <div className="relative h-72 rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <div className="relative h-72 rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
                       <img
-                        src={dest.imageUrl || 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80'}
+                        src={dest.imageUrl || destinationImages[index % destinationImages.length]}
                         alt={dest.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[var(--tl-navy)]/95 via-[var(--tl-navy)]/30 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/30 to-transparent" />
 
-                      {/* Package count badge */}
                       <div className="absolute top-4 right-4">
                         <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30 text-xs font-semibold">
                           {dest.packageCount || 0} Tours
@@ -646,13 +533,13 @@ export default function HomePage() {
                       </div>
 
                       <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                        <h3 className="font-display font-bold text-2xl mb-1 group-hover:text-[var(--tl-coral)] transition-colors">
+                        <h3 className="font-display text-2xl mb-1 group-hover:text-orange-400 transition-colors">
                           {dest.name}
                         </h3>
                         <p className="text-white/70 text-sm mb-3 flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5" /> {dest.country || 'Sri Lanka'}
                         </p>
-                        <div className="flex items-center gap-2 text-[var(--tl-coral)] font-semibold text-sm group-hover:gap-3 transition-all">
+                        <div className="flex items-center gap-2 text-orange-400 font-semibold text-sm group-hover:gap-3 transition-all">
                           <span>Explore Now</span>
                           <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </div>
@@ -666,8 +553,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Why Choose Us - Enhanced */}
-      <section className="py-24 bg-white relative">
+      {/* Why Choose Us */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -675,15 +562,14 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="inline-flex items-center gap-2 font-display font-semibold text-xs tracking-[0.2em] text-[var(--tl-coral)] mb-3">
+            <span className="inline-flex items-center gap-2 font-display text-sm text-orange-600 mb-3">
               <Shield className="h-4 w-4" /> WHY TRAVELEASE LK
             </span>
-            <h2 className="font-display font-extrabold text-3xl md:text-5xl mb-4 text-[var(--tl-navy)]">
-              Built On Trust &
-              <span className="text-[var(--tl-ocean)]"> Excellence</span>
+            <h2 className="font-display text-4xl md:text-5xl mb-4 text-slate-900">
+              Built On Trust & Excellence
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
-              We provide the best travel experiences with premium service and unmatched quality
+            <p className="text-slate-500 max-w-xl mx-auto text-base leading-relaxed">
+              We provide the best travel experiences with premium service
             </p>
           </motion.div>
 
@@ -693,29 +579,29 @@ export default function HomePage() {
                 icon: Award,
                 title: 'Experienced Guides',
                 desc: 'Professional and knowledgeable tour guides with years of expertise',
-                color: 'from-[var(--tl-ocean)] to-blue-400',
-                bgColor: 'bg-[var(--tl-ocean)]/10',
+                bgColor: 'bg-sky-50',
+                iconColor: 'text-sky-600',
               },
               {
                 icon: Shield,
                 title: 'Best Prices',
                 desc: 'Competitive pricing with no hidden charges and price match guarantee',
-                color: 'from-[var(--tl-coral)] to-orange-400',
-                bgColor: 'bg-[var(--tl-coral)]/10',
+                bgColor: 'bg-orange-50',
+                iconColor: 'text-orange-600',
               },
               {
                 icon: Star,
                 title: 'Safe Travel',
                 desc: 'Your safety is our top priority with comprehensive travel insurance',
-                color: 'from-[var(--tl-gold)] to-yellow-400',
-                bgColor: 'bg-[var(--tl-gold)]/10',
+                bgColor: 'bg-yellow-50',
+                iconColor: 'text-yellow-600',
               },
               {
                 icon: Headphones,
                 title: '24/7 Support',
                 desc: 'Round the clock customer support in multiple languages',
-                color: 'from-green-500 to-emerald-400',
                 bgColor: 'bg-green-50',
+                iconColor: 'text-green-600',
               },
             ].map((item, index) => (
               <motion.div
@@ -725,15 +611,12 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="relative p-8 rounded-3xl border border-gray-100 hover:shadow-xl hover:shadow-gray-100/50 hover:-translate-y-2 transition-all duration-500 h-full group bg-white">
-                  {/* Gradient accent */}
-                  <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} rounded-t-3xl opacity-0 group-hover:opacity-100 transition-opacity`} />
-
+                <div className="p-8 rounded-2xl border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full group bg-white">
                   <div className={`w-16 h-16 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                    <item.icon className={`h-7 w-7 bg-gradient-to-br ${item.color} bg-clip-text`} style={{ color: 'inherit' }} />
+                    <item.icon className={`h-7 w-7 ${item.iconColor}`} />
                   </div>
-                  <h3 className="font-display font-bold text-lg mb-3 text-[var(--tl-navy)]">{item.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="font-display text-lg mb-3 text-slate-900">{item.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -741,27 +624,23 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials - Enhanced */}
-      <section className="py-24 bg-[var(--tl-bg-soft)] relative overflow-hidden">
-        <div className="absolute top-20 left-10 text-[var(--tl-ocean)]/5">
-          <Quote className="h-40 w-40" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      {/* Testimonials */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-14"
           >
-            <span className="inline-flex items-center gap-2 font-display font-semibold text-xs tracking-[0.2em] text-[var(--tl-coral)] mb-3">
+            <span className="inline-flex items-center gap-2 font-display text-sm text-orange-600 mb-3">
               <Heart className="h-4 w-4" /> TESTIMONIALS
             </span>
-            <h2 className="font-display font-extrabold text-3xl md:text-5xl mb-4 text-[var(--tl-navy)]">
+            <h2 className="font-display text-4xl md:text-5xl mb-4 text-slate-900">
               What Our Travelers Say
             </h2>
-            <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-base">
-              Real stories from real travelers who explored with us
+            <p className="text-slate-500 max-w-xl mx-auto text-base">
+              Real stories from real travelers
             </p>
           </motion.div>
 
@@ -770,23 +649,20 @@ export default function HomePage() {
               {
                 name: 'John Smith',
                 role: 'Adventure Traveler',
-                text: 'Amazing experience! The tour was well organized and the guides were fantastic. Every detail was perfectly planned.',
+                text: 'Amazing experience! The tour was well organized and the guides were fantastic.',
                 rating: 5,
-                location: 'United Kingdom',
               },
               {
                 name: 'Sarah Johnson',
                 role: 'Family Traveler',
-                text: 'Perfect family vacation. Everything was taken care of from start to finish. The kids loved every moment!',
+                text: 'Perfect family vacation. Everything was taken care of. Highly recommended!',
                 rating: 5,
-                location: 'Australia',
               },
               {
                 name: 'Michael Brown',
                 role: 'Solo Traveler',
-                text: 'Best travel agency I have ever used. Professional service, great value, and incredible experiences throughout.',
+                text: 'Best travel agency I have ever used. Professional service and great value.',
                 rating: 5,
-                location: 'Canada',
               },
             ].map((testimonial, index) => (
               <motion.div
@@ -796,31 +672,24 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="p-8 rounded-3xl bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col relative group">
-                  {/* Quote icon */}
-                  <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <Quote className="h-12 w-12 text-[var(--tl-ocean)]" />
-                  </div>
-
+                <div className="p-8 rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-[var(--tl-gold)] text-[var(--tl-gold)]" />
+                      <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
                     ))}
                   </div>
 
-                  <p className="text-gray-600 mb-6 text-sm leading-relaxed flex-1 italic">
+                  <p className="text-slate-600 mb-6 text-sm leading-relaxed flex-1">
                     "{testimonial.text}"
                   </p>
 
                   <div className="flex items-center gap-4 pt-5 border-t border-gray-100">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--tl-ocean)] to-[var(--tl-coral)] flex items-center justify-center text-white text-lg font-display font-bold shrink-0 shadow-lg">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-sky-600 to-orange-600 flex items-center justify-center text-white text-lg font-display font-bold shrink-0 shadow-lg">
                       {testimonial.name.charAt(0)}
                     </div>
                     <div>
-                      <p className="font-semibold text-[var(--tl-navy)] text-sm">{testimonial.name}</p>
-                      <p className="text-xs text-gray-400 flex items-center gap-1">
-                        <MapPin className="h-3 w-3" /> {testimonial.location}
-                      </p>
+                      <p className="font-semibold text-slate-900 text-sm">{testimonial.name}</p>
+                      <p className="text-xs text-slate-400">{testimonial.role}</p>
                     </div>
                   </div>
                 </div>
@@ -830,55 +699,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-br from-[var(--tl-navy)] to-[var(--tl-ocean-dark)] rounded-3xl p-10 md:p-14 text-center relative overflow-hidden"
-          >
-            {/* Decorative elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--tl-coral)]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-[var(--tl-ocean)]/20 rounded-full blur-3xl" />
-
-            <div className="relative z-10">
-              <h3 className="font-display font-extrabold text-2xl md:text-3xl text-white mb-3">
-                Get Exclusive Deals
-              </h3>
-              <p className="text-white/70 mb-8 max-w-md mx-auto">
-                Subscribe to our newsletter and be the first to know about special offers and new destinations
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/50 outline-none focus:border-[var(--tl-coral)] transition-colors"
-                />
-                <Button className="bg-[var(--tl-coral)] hover:bg-[var(--tl-coral-dark)] text-white font-semibold px-8 py-4 rounded-full shadow-lg shadow-[var(--tl-coral)]/30 whitespace-nowrap">
-                  Subscribe <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section - Enhanced */}
-      <section className="py-24 bg-gradient-to-br from-[var(--tl-ocean-dark)] via-[var(--tl-ocean)] to-[var(--tl-ocean-dark)] relative overflow-hidden">
-        {/* Animated background shapes */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
-          className="absolute -top-20 -right-20 w-80 h-80 border border-white/5 rounded-full"
-        />
-        <motion.div
-          animate={{ rotate: -360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          className="absolute -bottom-20 -left-20 w-96 h-96 border border-white/5 rounded-full"
-        />
-
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-br from-sky-700 via-sky-600 to-sky-700 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -886,23 +708,22 @@ export default function HomePage() {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6">
-              <Sparkles className="h-4 w-4 text-[var(--tl-coral)]" />
+              <Sparkles className="h-4 w-4 text-orange-400" />
               <span className="text-white/80 text-sm font-medium">Start Your Journey Today</span>
             </div>
 
-            <h2 className="font-display font-extrabold text-4xl md:text-6xl mb-6 text-white leading-tight">
+            <h2 className="font-display text-4xl md:text-6xl mb-6 text-white leading-tight">
               Ready for Your Next
-              <span className="block text-[var(--tl-coral)]">Adventure?</span>
+              <span className="block text-orange-400">Adventure?</span>
             </h2>
             <p className="text-lg md:text-xl mb-10 text-white/70 max-w-2xl mx-auto leading-relaxed">
-              Book your dream vacation today and create memories that last a lifetime.
-              Our experts are ready to help you plan the perfect trip.
+              Book your dream vacation today and create memories that last a lifetime
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/packages">
                 <Button
                   size="lg"
-                  className="bg-[var(--tl-coral)] hover:bg-[var(--tl-coral-dark)] text-white text-base font-semibold px-10 py-7 rounded-full shadow-xl shadow-[var(--tl-coral)]/30 hover:shadow-2xl transition-all hover:-translate-y-1"
+                  className="bg-orange-600 hover:bg-orange-700 text-white text-base font-semibold px-10 py-7 rounded-full shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
                 >
                   Browse Packages <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
