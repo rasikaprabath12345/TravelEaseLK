@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Plus, Search, Edit, Trash2, ChevronLeft, ChevronRight, Filter, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useDestinations, useDeleteDestination } from '@/hooks/useDestinations';
+import Navbar from '../../../components/layout/Navbar';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Input } from '../../../components/ui/input';
+import { useDestinations, useDeleteDestination } from '../../../hooks/useDestinations';
 
 const destinationImages = [
   'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=200&q=80',

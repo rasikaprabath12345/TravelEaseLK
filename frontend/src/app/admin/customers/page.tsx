@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Users, Search, ChevronLeft, ChevronRight, Mail, Phone, Globe, Filter, Eye } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { useAdminCustomers } from '@/hooks/useUsers';
-import { formatDate } from '@/lib/utils';
+import Navbar from '../../../components/layout/Navbar';
+import { Badge } from '../../../components/ui/badge';
+import { Input } from '../../../components/ui/input';
+import { useAdminCustomers } from '../../../hooks/useUsers';
+import { formatDate } from '../../../lib/utils';
 
 export default function AdminCustomersPage() {
   const [search, setSearch] = useState('');
