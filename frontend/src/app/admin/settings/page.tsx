@@ -142,16 +142,18 @@ export default function AdminSettingsPage() {
                 <p className="text-xs text-slate-400">Manage multiple images for your home landing page slideshow</p>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="Enter image URL (e.g. Unsplash URL)..." 
-                    value={newHeroUrl} 
-                    onChange={e => setNewHeroUrl(e.target.value)}
-                    className="rounded-xl border-slate-200"
+                <div className="space-y-3">
+                  <ImageUpload
+                    label="Add Slide Image"
+                    value={newHeroUrl}
+                    onChange={setNewHeroUrl}
+                    placeholder="Paste slide image URL or upload one"
                   />
-                  <Button onClick={addHeroUrl} className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl">
-                    <Plus className="h-4 w-4 mr-1" /> Add
-                  </Button>
+                  {newHeroUrl && (
+                    <Button onClick={addHeroUrl} className="bg-sky-500 hover:bg-sky-600 text-white rounded-xl w-full font-semibold">
+                      <Plus className="h-4 w-4 mr-1.5" /> Add to Slideshow
+                    </Button>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
@@ -229,28 +231,28 @@ export default function AdminSettingsPage() {
                 <div>
                   <p className="text-xs font-bold text-slate-500 mb-1.5">Packages Cover Preview</p>
                   <div className="h-24 rounded-lg overflow-hidden border bg-slate-100">
-                    <img src={packagesCover} className="w-full h-full object-cover" alt="Packages preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=400')} />
+                    <img src={packagesCover || null} className="w-full h-full object-cover" alt="Packages preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=400')} />
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs font-bold text-slate-500 mb-1.5">Destinations Cover Preview</p>
                   <div className="h-24 rounded-lg overflow-hidden border bg-slate-100">
-                    <img src={destinationsCover} className="w-full h-full object-cover" alt="Destinations preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400')} />
+                    <img src={destinationsCover || null} className="w-full h-full object-cover" alt="Destinations preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400')} />
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs font-bold text-slate-500 mb-1.5">About Cover Preview</p>
                   <div className="h-24 rounded-lg overflow-hidden border bg-slate-100">
-                    <img src={aboutCover} className="w-full h-full object-cover" alt="About preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=400')} />
+                    <img src={aboutCover || null} className="w-full h-full object-cover" alt="About preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=400')} />
                   </div>
                 </div>
 
                 <div>
                   <p className="text-xs font-bold text-slate-500 mb-1.5">Contact Cover Preview</p>
                   <div className="h-24 rounded-lg overflow-hidden border bg-slate-100">
-                    <img src={contactCover} className="w-full h-full object-cover" alt="Contact preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=400')} />
+                    <img src={contactCover || null} className="w-full h-full object-cover" alt="Contact preview" onError={e => (e.currentTarget.src = 'https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=400')} />
                   </div>
                 </div>
 
