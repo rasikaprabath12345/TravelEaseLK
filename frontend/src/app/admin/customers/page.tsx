@@ -1,106 +1,139 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Users, Search, ChevronLeft, ChevronRight, Mail, Phone, Globe, Filter, Eye } from 'lucide-react';
+import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import api from '@/services/api';
-import { useQuery } from '@tanstack/react-query';
+import { Input } from '@/components/ui/input';
+import { useAdminCustomers } from '@/hooks/useUsers';
+import { formatDate } from '@/lib/utils';
 
 export default function AdminCustomersPage() {
   const [search, setSearch] = useState('');
-  
-  const { data: customersData, isLoading } = useQuery({
-    queryKey: ['customers', search],
-    queryFn: async () => {
-      // මෙහි /api/customers ලෙස URL එක නිවැරදි කරගන්න (Backend එකේ හදපු Controller එකට අනුව)
-      const response = await api.get('/customers', { params: { search } });
-      return response.data;
-    },
-  });
+  const [page, setPage] = useState(1);
 
+  const { data: customersData, isLoading } = useAdminCustomers({ search, page, pageSize: 15 });
   const customers = customersData?.data || [];
+  const total = customersData?.total || 0;
+
+  const gradients = [
+    'from-sky-400 to-cyan-500',
+    'from-orange-400 to-amber-500',
+    'from-purple-400 to-pink-500',
+    'from-emerald-400 to-teal-500',
+    'from-blue-400 to-indigo-500',
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-slate-50">
       <Navbar />
 
-      <div className="pt-24 pb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Manage Customers</h1>
-          <p className="text-gray-600 dark:text-gray-400">View and manage all registered customers</p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
+          <div className="flex items-center gap-2 mb-1">
+            <Link href="/admin/dashboard" className="text-slate-400 hover:text-slate-600 text-sm">Admin</Link>
+            <span className="text-slate-300">/</span>
+            <span className="text-slate-700 text-sm font-medium">Customers</span>
+          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
+            <Users className="h-7 w-7 text-sky-500" /> Customer Management
+          </h1>
+          <p className="text-slate-500 text-sm mt-0.5">{total} registered customers</p>
+        </motion.div>
+
+        {/* Search */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 mb-5 flex flex-wrap gap-3 items-center">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Input placeholder="Search by name, email, or country..."
+              value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+              className="pl-10 rounded-xl border-slate-200 h-10 text-sm" />
+          </div>
+          <div className="flex items-center gap-2 ml-auto text-sm text-slate-500">
+            <Filter className="h-4 w-4" /><span>{customers.length} of {total} shown</span>
+          </div>
         </div>
 
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-              <Input
-                placeholder="Search customers..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
+        {/* Table */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          {isLoading ? (
+            <div className="p-8 space-y-3">{[...Array(5)].map((_, i) => <div key={i} className="h-14 bg-slate-100 rounded-xl animate-pulse" />)}</div>
+          ) : customers.length === 0 ? (
+            <div className="text-center py-16">
+              <Users className="h-14 w-14 text-slate-200 mx-auto mb-4" />
+              <p className="text-slate-500 font-medium">No customers found</p>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 dark:bg-gray-800 border-b">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {/* මෙතැන map එකට index එක එකතු කර, key එකට එය ලබා දී ඇත */}
-                  {customers.map((customer: any, index: number) => (
-                    <tr key={customer?.id || `customer-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {customer?.firstName?.[0] || 'U'}{customer?.lastName?.[0] || ''}
-                          </div>
-                          <div>
-                            <p className="font-medium">{customer?.firstName || customer} {customer?.lastName || ''}</p>
-                            <p className="text-sm text-gray-500">ID: {customer?.id || 'N/A'}</p>
-                          </div>
+          ) : (
+            <>
+              <div className="hidden md:grid grid-cols-[2fr_2fr_1fr_1fr_1fr_auto] gap-4 px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                <span>Customer</span><span>Email & Phone</span><span>Country</span>
+                <span>Joined</span><span>Status</span><span>Actions</span>
+              </div>
+              <div className="divide-y divide-slate-100">
+                {customers.map((customer: any, index: number) => (
+                  <motion.div key={customer.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.04 }}
+                    className="grid grid-cols-1 md:grid-cols-[2fr_2fr_1fr_1fr_1fr_auto] gap-4 px-5 py-4 items-center hover:bg-slate-50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 bg-gradient-to-br ${gradients[index % gradients.length]} rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0`}>
+                        {customer.firstName?.charAt(0)}{customer.lastName?.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-slate-800 text-sm">{customer.firstName} {customer.lastName}</p>
+                        <p className="text-slate-400 text-xs">ID: {customer.id}</p>
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5 text-sm text-slate-600">
+                        <Mail className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+                        <span className="truncate text-xs">{customer.email}</span>
+                      </div>
+                      {customer.phoneNumber && (
+                        <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                          <Phone className="h-3.5 w-3.5 text-sky-500 shrink-0" />{customer.phoneNumber}
                         </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm">{customer?.email || 'No Email'}</td>
-                      <td className="px-6 py-4 text-sm">{customer?.phoneNumber || '-'}</td>
-                      <td className="px-6 py-4">
-                        <Badge variant={customer?.role === 'Admin' ? 'default' : 'secondary'}>
-                          {customer?.role || 'Customer'}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge className={customer?.isActive ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
-                          {customer?.isActive ? 'Active' : 'Inactive'}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-1.5 text-sm text-slate-600">
+                      <Globe className="h-3.5 w-3.5 text-sky-500" />
+                      <span className="text-xs">{customer.country || '—'}</span>
+                    </div>
+                    <div className="text-xs text-slate-500">{formatDate(customer.createdAt)}</div>
+                    <div>
+                      <Badge className={`text-xs font-semibold ${customer.isActive
+                        ? 'bg-green-100 text-green-700 border-green-200'
+                        : 'bg-red-100 text-red-600 border-red-200'}`}>
+                        {customer.isActive ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </div>
+                    <div>
+                      <button className="w-8 h-8 bg-sky-50 hover:bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 transition-colors">
+                        <Eye className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              {total > 15 && (
+                <div className="flex items-center justify-between px-5 py-4 border-t border-slate-100">
+                  <p className="text-sm text-slate-500">Page {page} of {Math.ceil(total / 15)}</p>
+                  <div className="flex gap-2">
+                    <button onClick={() => setPage(Math.max(1, page - 1))} disabled={page === 1}
+                      className="w-9 h-9 border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 disabled:opacity-40">
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => setPage(page + 1)} disabled={customers.length < 15}
+                      className="w-9 h-9 border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 disabled:opacity-40">
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
