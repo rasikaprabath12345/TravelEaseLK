@@ -27,6 +27,46 @@ export function ImageUpload({ value, onChange, label, placeholder }: ImageUpload
     }
   };
 
+  const compressImage = (base64Str: string, callback: (compressedStr: string) => void) => {
+    const img = new Image();
+    img.src = base64Str;
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 800;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width = Math.round((width * MAX_HEIGHT) / height);
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(img, 0, 0, width, height);
+        // Compress as JPEG at 0.7 quality to reduce file size drastically (around 50KB-100KB)
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+        callback(compressedBase64);
+      } else {
+        callback(base64Str);
+      }
+    };
+    img.onerror = () => {
+      callback(base64Str);
+    };
+  };
+
   const processFile = (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Please upload an image file.');
@@ -36,7 +76,9 @@ export function ImageUpload({ value, onChange, label, placeholder }: ImageUpload
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target?.result) {
-        onChange(event.target.result as string);
+        compressImage(event.target.result as string, (compressed) => {
+          onChange(compressed);
+        });
       }
     };
     reader.readAsDataURL(file);

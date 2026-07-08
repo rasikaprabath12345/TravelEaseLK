@@ -52,14 +52,19 @@ export default function AdminSettingsPage() {
   }, []);
 
   const handleSave = () => {
-    localStorage.setItem('site_hero_backgrounds', JSON.stringify(heroBackgrounds));
-    localStorage.setItem('site_packages_cover', packagesCover);
-    localStorage.setItem('site_destinations_cover', destinationsCover);
-    localStorage.setItem('site_about_cover', aboutCover);
-    localStorage.setItem('site_contact_cover', contactCover);
+    try {
+      localStorage.setItem('site_hero_backgrounds', JSON.stringify(heroBackgrounds));
+      localStorage.setItem('site_packages_cover', packagesCover);
+      localStorage.setItem('site_destinations_cover', destinationsCover);
+      localStorage.setItem('site_about_cover', aboutCover);
+      localStorage.setItem('site_contact_cover', contactCover);
 
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 3000);
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (e: any) {
+      console.error(e);
+      alert('Local storage quota exceeded. Please upload smaller/optimized images or clear browser cache.');
+    }
   };
 
   const handleReset = () => {
