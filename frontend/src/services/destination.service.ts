@@ -2,8 +2,8 @@ import api from './api';
 import type { Destination, ApiResponse } from '@/types';
 
 export const destinationService = {
-  async getAll(search?: string) {
-    const response = await api.get<ApiResponse<Destination[]>>('/destinations', { params: { search } });
+  async getAll(search?: string, page?: number, pageSize?: number) {
+    const response = await api.get<ApiResponse<Destination[]>>('/destinations', { params: { search, page, pageSize } });
     return response.data;
   },
 

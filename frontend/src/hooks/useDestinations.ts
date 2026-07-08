@@ -1,10 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { destinationService } from '@/services/destination.service';
 
-export function useDestinations(search?: string) {
+export function useDestinations(params?: string | { search?: string; page?: number; pageSize?: number }) {
+  const search = typeof params === 'string' ? params : params?.search;
+  const page = typeof params === 'object' ? params?.page : undefined;
+  const pageSize = typeof params === 'object' ? params?.pageSize : undefined;
   return useQuery({
-    queryKey: ['destinations', search],
-    queryFn: () => destinationService.getAll(search),
+    queryKey: ['destinations', search, page, pageSize],
+    queryFn: () => destinationService.getAll(search, page, pageSize),
   });
 }
 
