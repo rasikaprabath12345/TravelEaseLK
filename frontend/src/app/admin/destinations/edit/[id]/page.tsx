@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation'; // useParams අලුතින් එකතු කරලා තියෙන්නේ
+import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,10 +12,10 @@ import api from '@/services/api';
 export default function EditDestinationPage() {
   const router = useRouter();
   const params = useParams();
-  const id = params.id; // URL එකෙන් ID එක ගන්නවා
+  const id = params.id; 
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true); // මුලින්ම දත්ත load වෙනකම් පෙන්නන්න
+  const [isFetching, setIsFetching] = useState(true); 
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -36,22 +36,25 @@ export default function EditDestinationPage() {
     const fetchDestination = async () => {
       try {
         const response = await api.get(`/destinations/${id}`);
-        const data = response.data;
         
-        // Backend එකෙන් එන දත්ත formData එකට set කිරීම
+        console.log("Backend Response:", response.data); 
+
+        const data = response.data?.data || response.data;
+        
         setFormData({
-          name: data.name || '',
-          country: data.country || '',
-          shortDescription: data.shortDescription || '',
-          description: data.description || '',
-          imageUrl: data.imageUrl || '',
-          bestTimeToVisit: data.bestTimeToVisit || '',
-          travelTips: data.travelTips || '',
-          attractions: data.attractions || '',
-          latitude: data.latitude || 0,
-          longitude: data.longitude || 0,
+          name: data.name || data.Name || '',
+          country: data.country || data.Country || '',
+          shortDescription: data.shortDescription || data.ShortDescription || '',
+          description: data.description || data.Description || '',
+          imageUrl: data.imageUrl || data.ImageUrl || '',
+          bestTimeToVisit: data.bestTimeToVisit || data.BestTimeToVisit || '',
+          travelTips: data.travelTips || data.TravelTips || '',
+          attractions: data.attractions || data.Attractions || '',
+          latitude: data.latitude || data.Latitude || 0,
+          longitude: data.longitude || data.Longitude || 0,
         });
       } catch (err: any) {
+        console.error("API Error:", err);
         setError('Failed to fetch destination details.');
       } finally {
         setIsFetching(false);
@@ -77,19 +80,25 @@ export default function EditDestinationPage() {
     setError('');
 
     try {
-      // දත්ත Update කිරීම සඳහා PUT request එකක් යැවීම (Backend එක අනුව PATCH වෙන්නත් පුළුවන්)
-      await api.put(`/destinations/${id}`, formData);
+      // Backend එකට යවද්දී ID එකත් Data එක ඇතුලටම දාලා යවනවා
+      const payload = {
+        ...formData,
+        id: Number(id), // C# backend එකට id එක number එකක් විදියට යන්න ඕනේ
+        Id: Number(id)  // PascalCase support කිරීම සඳහා
+      };
+
+      await api.put(`/destinations/${id}`, payload);
       
       router.push('/admin/destinations');
-      router.refresh(); // අලුත් දත්ත පෙනෙන්න list එක refresh කිරීම
+      router.refresh(); 
     } catch (err: any) {
+      console.error("Update Error:", err.response?.data);
       setError(err.response?.data?.message || 'Failed to update destination. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // දත්ත Load වෙනකම් Loading Screen එකක් පෙන්නීම
   if (isFetching) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
