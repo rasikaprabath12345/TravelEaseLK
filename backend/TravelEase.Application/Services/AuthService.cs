@@ -4,17 +4,11 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TravelEase.Application.DTOs;
-using TravelEase.Application.Interfaces;
+using TravelEase.Application.Interfaces; 
 using TravelEase.Domain.Entities;
-using BCrypt.Net; // මෙය අනිවාර්යයෙන්ම එකතු කරන්න
+using BCrypt.Net;
 
 namespace TravelEase.Application.Services;
-
-public interface IAuthService
-{
-    Task<AuthResponseDto> RegisterAsync(RegisterDto dto);
-    Task<AuthResponseDto> LoginAsync(LoginDto dto);
-}
 
 public class AuthService : IAuthService
 {
@@ -29,7 +23,6 @@ public class AuthService : IAuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
-        // FindAsync මගින් ලැබෙන ප්‍රතිඵලය IEnumerable හෝ List එකක් නම් Any() භාවිතා කළ හැක
         var existingUsers = await _unitOfWork.Repository<User>().FindAsync(u => u.Email == dto.Email);
         
         if (existingUsers != null && existingUsers.Any())
@@ -43,7 +36,7 @@ public class AuthService : IAuthService
             PasswordHash = HashPassword(dto.Password),
             PhoneNumber = dto.PhoneNumber,
             Role = "Customer",
-            IsActive = true // දෝෂයක් නොවීමට මෙය එකතු කරන්න
+            IsActive = true 
         };
 
         await _unitOfWork.Repository<User>().AddAsync(user);
@@ -86,6 +79,13 @@ public class AuthService : IAuthService
         };
     }
 
+    // මෙන්න අපි අලුතින් එකතු කළ කොටස
+    public async Task<object> GetAllUsersAsync(string search)
+    {
+        var dummyData = new[] { "User1", "User2" }; 
+        return await Task.FromResult(dummyData);
+    }
+
     private string GenerateJwtToken(User user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
@@ -103,7 +103,7 @@ public class AuthService : IAuthService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(7), // DateTime.Now වෙනුවට DateTime.UtcNow වඩා සුදුසුයි
+            expires: DateTime.UtcNow.AddDays(7), 
             signingCredentials: creds
         );
 

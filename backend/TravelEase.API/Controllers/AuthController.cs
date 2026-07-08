@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TravelEase.Application.DTOs;
-using TravelEase.Application.Services;
+using TravelEase.Application.Interfaces; // <-- මෙන්න මේ පේළියයි වෙනස් වුණේ
 
 namespace TravelEase.API.Controllers;
 
