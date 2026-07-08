@@ -63,30 +63,30 @@ export default function AdminCustomersPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {customers.map((customer: any) => (
-                    <tr key={customer.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
+                  {/* මෙතැන map එකට index එක එකතු කර, key එකට එය ලබා දී ඇත */}
+                  {customers.map((customer: any, index: number) => (
+                    <tr key={customer?.id || `customer-${index}`} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
-                            {customer.firstName?.[0]}{customer.lastName?.[0]}
+                            {customer?.firstName?.[0] || 'U'}{customer?.lastName?.[0] || ''}
                           </div>
                           <div>
-                            <p className="font-medium">{customer.firstName} {customer.lastName}</p>
-                            <p className="text-sm text-gray-500">ID: {customer.id}</p>
+                            <p className="font-medium">{customer?.firstName || customer} {customer?.lastName || ''}</p>
+                            <p className="text-sm text-gray-500">ID: {customer?.id || 'N/A'}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm">{customer.email}</td>
-                      <td className="px-6 py-4 text-sm">{customer.phoneNumber || '-'}</td>
+                      <td className="px-6 py-4 text-sm">{customer?.email || 'No Email'}</td>
+                      <td className="px-6 py-4 text-sm">{customer?.phoneNumber || '-'}</td>
                       <td className="px-6 py-4">
-                        <Badge variant={customer.role === 'Admin' ? 'default' : 'secondary'}>
-                          {customer.role}
+                        <Badge variant={customer?.role === 'Admin' ? 'default' : 'secondary'}>
+                          {customer?.role || 'Customer'}
                         </Badge>
                       </td>
                       <td className="px-6 py-4">
-                        {/* මෙතැනදී className හරහා පාට තීරණය කිරීම වඩාත් සුදුසුයි */}
-                        <Badge className={customer.isActive ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
-                          {customer.isActive ? 'Active' : 'Inactive'}
+                        <Badge className={customer?.isActive ? "bg-green-500 hover:bg-green-600" : "bg-red-500 hover:bg-red-600"}>
+                          {customer?.isActive ? 'Active' : 'Inactive'}
                         </Badge>
                       </td>
                       <td className="px-6 py-4 text-right">
