@@ -225,9 +225,7 @@ export default function HomePage() {
             className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-6 soft-shadow"
           >
             <Sparkles className="h-4 w-4 text-orange-400" />
-            <span className="font-display text-sm text-white font-medium">
-              #1 Travel Agency in Sri Lanka
-            </span>
+           
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           </motion.div>
 
