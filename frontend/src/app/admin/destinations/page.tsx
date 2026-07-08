@@ -51,7 +51,7 @@ export default function AdminDestinationsPage() {
             </h1>
             <p className="text-slate-500 text-sm mt-0.5">{total} destinations total</p>
           </div>
-          <Link href="/admin/destinations/new">
+          <Link href="/admin/destinations/create">
             <Button className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-xl px-5 py-2.5 font-semibold shadow-md hover:-translate-y-0.5 transition-all">
               <Plus className="h-4 w-4 mr-2" /> Add Destination
             </Button>

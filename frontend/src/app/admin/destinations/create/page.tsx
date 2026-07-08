@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
+import { ImageUpload } from '../../../../components/ui/image-upload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -133,16 +134,13 @@ export default function CreateDestinationPage() {
                 />
               </div>
 
-              {/* Image URL */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Main Image URL</label>
-                <Input 
-                  name="imageUrl" 
-                  value={formData.imageUrl} 
-                  onChange={handleChange} 
-                  placeholder="https://example.com/image.jpg" 
-                />
-              </div>
+              {/* Image Drag-n-Drop & Upload */}
+              <ImageUpload
+                label="Main Image"
+                value={formData.imageUrl}
+                onChange={(val) => setFormData((prev) => ({ ...prev, imageUrl: val }))}
+                placeholder="Paste main image URL or upload one"
+              />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Best Time To Visit */}

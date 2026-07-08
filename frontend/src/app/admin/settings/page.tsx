@@ -8,6 +8,7 @@ import Navbar from '../../../components/layout/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/input';
+import { ImageUpload } from '../../../components/ui/image-upload';
 
 export default function AdminSettingsPage() {
   const [success, setSuccess] = useState(false);
@@ -179,47 +180,39 @@ export default function AdminSettingsPage() {
                 <CardTitle className="text-lg font-bold">Inner Pages Banners</CardTitle>
                 <p className="text-xs text-slate-400">Configure cover headers for packages, destinations, about, and contact pages</p>
               </CardHeader>
-              <CardContent className="p-6 space-y-5">
+              <CardContent className="p-6 space-y-6">
                 
                 {/* Packages Page */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">Packages Page Banner URL</label>
-                  <Input 
-                    value={packagesCover} 
-                    onChange={e => setPackagesCover(e.target.value)}
-                    className="rounded-xl border-slate-200"
-                  />
-                </div>
+                <ImageUpload
+                  label="Packages Page Banner"
+                  value={packagesCover}
+                  onChange={setPackagesCover}
+                  placeholder="Paste packages cover URL or upload one"
+                />
 
                 {/* Destinations Page */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">Destinations Page Banner URL</label>
-                  <Input 
-                    value={destinationsCover} 
-                    onChange={e => setDestinationsCover(e.target.value)}
-                    className="rounded-xl border-slate-200"
-                  />
-                </div>
+                <ImageUpload
+                  label="Destinations Page Banner"
+                  value={destinationsCover}
+                  onChange={setDestinationsCover}
+                  placeholder="Paste destinations cover URL or upload one"
+                />
 
                 {/* About Page */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">About Page Banner URL</label>
-                  <Input 
-                    value={aboutCover} 
-                    onChange={e => setAboutCover(e.target.value)}
-                    className="rounded-xl border-slate-200"
-                  />
-                </div>
+                <ImageUpload
+                  label="About Page Banner"
+                  value={aboutCover}
+                  onChange={setAboutCover}
+                  placeholder="Paste about cover URL or upload one"
+                />
 
                 {/* Contact Page */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-700">Contact Page Banner URL</label>
-                  <Input 
-                    value={contactCover} 
-                    onChange={e => setContactCover(e.target.value)}
-                    className="rounded-xl border-slate-200"
-                  />
-                </div>
+                <ImageUpload
+                  label="Contact Page Banner"
+                  value={contactCover}
+                  onChange={setContactCover}
+                  placeholder="Paste contact cover URL or upload one"
+                />
 
               </CardContent>
             </Card>

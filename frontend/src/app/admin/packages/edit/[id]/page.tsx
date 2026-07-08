@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
+import { ImageUpload } from '../../../../../components/ui/image-upload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -199,10 +200,13 @@ export default function EditPackagePage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Cover Image URL</label>
-                <Input name="imageUrl" value={formData.imageUrl} onChange={handleChange} />
-              </div>
+              {/* Image Drag-n-Drop & Upload */}
+              <ImageUpload
+                label="Cover Image"
+                value={formData.imageUrl}
+                onChange={(val) => setFormData((prev) => ({ ...prev, imageUrl: val }))}
+                placeholder="Paste cover image URL or upload one"
+              />
 
               <div className="flex items-center space-x-2 pt-2">
                 <input 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
+import { ImageUpload } from '../../../../components/ui/image-upload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -196,16 +197,13 @@ export default function NewPackagePage() {
                 </div>
               </div>
 
-              {/* Image URL */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Cover Image URL</label>
-                <Input 
-                  name="imageUrl" 
-                  value={formData.imageUrl} 
-                  onChange={handleChange} 
-                  placeholder="https://example.com/package-image.jpg" 
-                />
-              </div>
+              {/* Image Drag-n-Drop & Upload */}
+              <ImageUpload
+                label="Cover Image"
+                value={formData.imageUrl}
+                onChange={(val) => setFormData((prev) => ({ ...prev, imageUrl: val }))}
+                placeholder="Paste cover image URL or upload one"
+              />
 
               {/* Is Featured Checkbox */}
               <div className="flex items-center space-x-2 pt-2">
