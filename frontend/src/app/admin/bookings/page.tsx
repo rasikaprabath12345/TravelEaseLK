@@ -111,44 +111,80 @@ export default function AdminBookingsPage() {
                   const sc = statusConfig[booking.status] || statusConfig.Pending;
                   return (
                     <motion.div key={booking.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.04 }}
-                      className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto] gap-4 px-5 py-4 items-center hover:bg-slate-50 transition-colors">
-                      <div>
-                        <p className="font-mono font-bold text-sky-600 text-sm">{booking.bookingId}</p>
-                        <p className="text-slate-400 text-xs">{formatDate(booking.createdAt)}</p>
-                      </div>
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center text-white text-sm font-bold shrink-0">
-                          {booking.fullName?.charAt(0)}
-                        </div>
+                      className="p-4 hover:bg-slate-50 transition-colors flex flex-col gap-3.5 lg:grid lg:grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto] lg:gap-4 lg:px-5 lg:py-4 lg:items-center">
+                      
+                      {/* Booking ID */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Booking ID</span>
                         <div>
-                          <p className="font-semibold text-slate-800 text-sm">{booking.fullName}</p>
-                          <p className="text-slate-500 text-xs">{booking.email}</p>
+                          <p className="font-mono font-bold text-sky-600 text-sm">{booking.bookingId}</p>
+                          <p className="text-slate-400 text-xs">{formatDate(booking.createdAt)}</p>
                         </div>
                       </div>
-                      <div>
-                        <p className="font-medium text-slate-700 text-sm line-clamp-1">{booking.packageName}</p>
-                        <p className="text-slate-400 text-xs">{booking.numberOfAdults}A, {booking.numberOfChildren}C</p>
-                      </div>
-                      <div className="flex items-center gap-1.5 text-sm text-slate-600">
-                        <Calendar className="h-3.5 w-3.5 text-sky-500" />{formatDate(booking.travelDate)}
-                      </div>
-                      <div>
-                        <p className="font-bold text-slate-800 text-sm">{formatPrice(booking.totalPrice)}</p>
-                        <p className={`text-xs font-medium ${booking.paymentStatus === 'Paid' ? 'text-green-600' : 'text-amber-600'}`}>{booking.paymentStatus || 'Unpaid'}</p>
-                      </div>
-                      <div>
-                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${sc.bg} ${sc.color}`}>
-                          <sc.icon className="h-3 w-3" />{booking.status}
+
+                      {/* Customer */}
+                      <div className="flex justify-between items-start lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden mt-2">Customer</span>
+                        <div className="flex items-center gap-2.5 text-right lg:text-left">
+                          <div className="w-9 h-9 bg-gradient-to-br from-sky-400 to-cyan-500 rounded-xl flex items-center justify-center text-white text-sm font-bold shrink-0">
+                            {booking.fullName?.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-slate-800 text-sm">{booking.fullName}</p>
+                            <p className="text-slate-500 text-xs">{booking.email}</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <select value={booking.status} onChange={e => handleStatusUpdate(booking.id, e.target.value)}
-                          disabled={updatingId === booking.id}
-                          className="h-8 rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-600 focus:outline-none focus:border-sky-400 disabled:opacity-60">
-                          {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                        {updatingId === booking.id && <RefreshCw className="h-3 w-3 text-sky-500 animate-spin" />}
+
+                      {/* Package */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Package</span>
+                        <div className="text-right lg:text-left">
+                          <p className="font-medium text-slate-700 text-sm line-clamp-1">{booking.packageName}</p>
+                          <p className="text-slate-400 text-xs">{booking.numberOfAdults}A, {booking.numberOfChildren}C</p>
+                        </div>
                       </div>
+
+                      {/* Travel Date */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Travel Date</span>
+                        <div className="flex items-center gap-1.5 text-sm text-slate-600">
+                          <Calendar className="h-3.5 w-3.5 text-sky-500" />{formatDate(booking.travelDate)}
+                        </div>
+                      </div>
+
+                      {/* Total Price */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Amount</span>
+                        <div className="text-right lg:text-left">
+                          <p className="font-bold text-slate-800 text-sm">{formatPrice(booking.totalPrice)}</p>
+                          <p className={`text-xs font-medium ${booking.paymentStatus === 'Paid' ? 'text-green-600' : 'text-amber-600'}`}>{booking.paymentStatus || 'Unpaid'}</p>
+                        </div>
+                      </div>
+
+                      {/* Status */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Status</span>
+                        <div>
+                          <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${sc.bg} ${sc.color}`}>
+                            <sc.icon className="h-3 w-3" />{booking.status}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions/Dropdown */}
+                      <div className="flex justify-between items-center border-t border-slate-100 pt-3.5 lg:border-t-0 lg:pt-0 lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Update Status</span>
+                        <div className="flex items-center gap-1.5">
+                          <select value={booking.status} onChange={e => handleStatusUpdate(booking.id, e.target.value)}
+                            disabled={updatingId === booking.id}
+                            className="h-8 rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-600 focus:outline-none focus:border-sky-400 disabled:opacity-60">
+                            {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map(s => <option key={s} value={s}>{s}</option>)}
+                          </select>
+                          {updatingId === booking.id && <RefreshCw className="h-3 w-3 text-sky-500 animate-spin" />}
+                        </div>
+                      </div>
+
                     </motion.div>
                   );
                 })}

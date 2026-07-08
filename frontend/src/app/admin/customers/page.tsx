@@ -75,44 +75,75 @@ export default function AdminCustomersPage() {
               <div className="divide-y divide-slate-100">
                 {customers.map((customer: any, index: number) => (
                   <motion.div key={customer.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.04 }}
-                    className="grid grid-cols-1 md:grid-cols-[2fr_2fr_1fr_1fr_1fr_auto] gap-4 px-5 py-4 items-center hover:bg-slate-50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 bg-gradient-to-br ${gradients[index % gradients.length]} rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0`}>
-                        {customer.firstName?.charAt(0)}{customer.lastName?.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-slate-800 text-sm">{customer.firstName} {customer.lastName}</p>
-                        <p className="text-slate-400 text-xs">ID: {customer.id}</p>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-sm text-slate-600">
-                        <Mail className="h-3.5 w-3.5 text-sky-500 shrink-0" />
-                        <span className="truncate text-xs">{customer.email}</span>
-                      </div>
-                      {customer.phoneNumber && (
-                        <div className="flex items-center gap-1.5 text-xs text-slate-500">
-                          <Phone className="h-3.5 w-3.5 text-sky-500 shrink-0" />{customer.phoneNumber}
+                    className="p-4 hover:bg-slate-50 transition-colors flex flex-col gap-3.5 md:grid md:grid-cols-[2fr_2fr_1fr_1fr_1fr_auto] md:gap-4 md:px-5 md:py-4 md:items-center">
+                    
+                    {/* Customer */}
+                    <div className="flex justify-between items-start md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden mt-2">Customer</span>
+                      <div className="flex items-center gap-3 text-right md:text-left">
+                        <div className={`w-10 h-10 bg-gradient-to-br ${gradients[index % gradients.length]} rounded-xl flex items-center justify-center text-white font-bold text-sm shrink-0`}>
+                          {customer.firstName?.charAt(0)}{customer.lastName?.charAt(0)}
                         </div>
-                      )}
+                        <div>
+                          <p className="font-semibold text-slate-800 text-sm">{customer.firstName} {customer.lastName}</p>
+                          <p className="text-slate-400 text-xs">ID: {customer.id}</p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-sm text-slate-600">
-                      <Globe className="h-3.5 w-3.5 text-sky-500" />
-                      <span className="text-xs">{customer.country || '—'}</span>
+
+                    {/* Email & Phone */}
+                    <div className="flex justify-between items-center md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden">Email & Phone</span>
+                      <div className="space-y-1 text-right md:text-left">
+                        <div className="flex items-center justify-end md:justify-start gap-1.5 text-sm text-slate-600">
+                          <Mail className="h-3.5 w-3.5 text-sky-500 shrink-0" />
+                          <span className="truncate text-xs">{customer.email}</span>
+                        </div>
+                        {customer.phoneNumber && (
+                          <div className="flex items-center justify-end md:justify-start gap-1.5 text-xs text-slate-500">
+                            <Phone className="h-3.5 w-3.5 text-sky-500 shrink-0" />{customer.phoneNumber}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-xs text-slate-500">{formatDate(customer.createdAt)}</div>
-                    <div>
-                      <Badge className={`text-xs font-semibold ${customer.isActive
-                        ? 'bg-green-100 text-green-700 border-green-200'
-                        : 'bg-red-100 text-red-600 border-red-200'}`}>
-                        {customer.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
+
+                    {/* Country */}
+                    <div className="flex justify-between items-center md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden">Country</span>
+                      <div className="flex items-center gap-1.5 text-sm text-slate-600">
+                        <Globe className="h-3.5 w-3.5 text-sky-500" />
+                        <span className="text-xs">{customer.country || '—'}</span>
+                      </div>
                     </div>
-                    <div>
-                      <button className="w-8 h-8 bg-sky-50 hover:bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 transition-colors">
-                        <Eye className="h-3.5 w-3.5" />
-                      </button>
+
+                    {/* Joined */}
+                    <div className="flex justify-between items-center md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden">Joined</span>
+                      <div className="text-xs text-slate-500">{formatDate(customer.createdAt)}</div>
                     </div>
+
+                    {/* Status */}
+                    <div className="flex justify-between items-center md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden">Status</span>
+                      <div>
+                        <Badge className={`text-xs font-semibold ${customer.isActive
+                          ? 'bg-green-100 text-green-700 border-green-200'
+                          : 'bg-red-100 text-red-600 border-red-200'}`}>
+                          {customer.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Action */}
+                    <div className="flex justify-between items-center border-t border-slate-100 pt-3.5 md:border-t-0 md:pt-0 md:block">
+                      <span className="text-xs font-semibold text-slate-400 md:hidden">Action</span>
+                      <div>
+                        <button className="w-8 h-8 bg-sky-50 hover:bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 transition-colors">
+                          <Eye className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+
                   </motion.div>
                 ))}
               </div>
