@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Award, Users, Globe, Shield, Star, Heart, ChevronRight, MapPin,
@@ -65,17 +66,25 @@ const milestones = [
 ];
 
 export default function AboutPage() {
+  const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_about_cover');
+    if (saved) setCoverImage(saved);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-24 bg-gradient-to-br from-sky-950 via-slate-900 to-slate-950 overflow-hidden">
-        {/* Background orbs */}
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-3xl" />
+      <section className="relative pt-32 pb-24 overflow-hidden text-center text-white">
+        <div className="absolute inset-0 z-0">
+          <img src={coverImage} className="w-full h-full object-cover" alt="About cover" />
+          <div className="absolute inset-0 bg-slate-950/70" />
+        </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

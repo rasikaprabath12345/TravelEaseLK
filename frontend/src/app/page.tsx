@@ -99,15 +99,30 @@ export default function HomePage() {
     { id: 'hill', label: 'Hill Country', icon: Mountain },
   ];
 
-  const heroBackgrounds = [
-    IMAGES.hero1,
-    IMAGES.hero2,
-    IMAGES.hero3,
-    IMAGES.sigiriya,
-    IMAGES.ella,
-  ];
+  const [heroBackgrounds, setHeroBackgrounds] = useState<string[]>([]);
 
   useEffect(() => {
+    const saved = localStorage.getItem('site_hero_backgrounds');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setHeroBackgrounds(parsed);
+          return;
+        }
+      } catch (e) {}
+    }
+    setHeroBackgrounds([
+      IMAGES.hero1,
+      IMAGES.hero2,
+      IMAGES.hero3,
+      IMAGES.sigiriya,
+      IMAGES.ella,
+    ]);
+  }, []);
+
+  useEffect(() => {
+    if (heroBackgrounds.length === 0) return;
     const interval = setInterval(() => {
       setBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
     }, 5000);

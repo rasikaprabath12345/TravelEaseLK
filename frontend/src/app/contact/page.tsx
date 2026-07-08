@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Phone, Mail, MapPin, Clock, Send, MessageCircle,
@@ -9,10 +9,10 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -59,16 +59,25 @@ export default function ContactPage() {
     reset();
   };
 
+  const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=1200&q=80');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_contact_cover');
+    if (saved) setCoverImage(saved);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-slate-900 via-sky-950 to-slate-950 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-3xl" />
+      <section className="relative pt-32 pb-20 overflow-hidden text-center text-white">
+        <div className="absolute inset-0 z-0">
+          <img src={coverImage} className="w-full h-full object-cover" alt="Contact cover" />
+          <div className="absolute inset-0 bg-slate-950/70" />
+        </div>
 
-        <div className="relative max-w-4xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-4xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

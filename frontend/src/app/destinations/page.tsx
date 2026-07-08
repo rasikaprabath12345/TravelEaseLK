@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Search, ArrowRight, Compass, Globe, Waves, Mountain, TreePine, Award, Star } from 'lucide-react';
 import Link from 'next/link';
@@ -65,16 +65,25 @@ export default function DestinationsPage() {
 
   const displayList = showStatic ? staticDestinations : (filtered.length > 0 ? filtered : apiDestinations);
 
+  const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_destinations_cover');
+    if (saved) setCoverImage(saved);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-24 bg-gradient-to-br from-slate-900 via-sky-950 to-slate-900 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-sky-500/15 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-3xl" />
+      <section className="relative pt-32 pb-24 overflow-hidden text-center text-white">
+        <div className="absolute inset-0 z-0">
+          <img src={coverImage} className="w-full h-full object-cover" alt="Destinations cover" />
+          <div className="absolute inset-0 bg-slate-950/70" />
+        </div>
 
-        <div className="relative max-w-5xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

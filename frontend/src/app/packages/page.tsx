@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search, Grid, List, MapPin, Clock, Users, Star, ArrowRight,
@@ -57,33 +57,42 @@ export default function PackagesPage() {
 
   const totalPages = Math.ceil(total / 12);
 
+  const [coverImage, setCoverImage] = useState('https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=1200&q=80');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_packages_cover');
+    if (saved) setCoverImage(saved);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50/50 via-white to-white overflow-x-hidden">
       <Navbar />
 
       {/* Hero */}
-      <section className="relative pt-32 pb-16 px-4 overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-sky-100 rounded-full blur-3xl opacity-60" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-50 rounded-full blur-3xl opacity-80" />
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden text-center text-white">
+        <div className="absolute inset-0 z-0">
+          <img src={coverImage} className="w-full h-full object-cover" alt="Packages cover" />
+          <div className="absolute inset-0 bg-slate-950/70" />
+        </div>
 
-        <div className="relative max-w-4xl mx-auto text-center">
+        <div className="relative z-10 max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-sky-100 rounded-full px-4 py-2 mb-4 border border-sky-200"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md rounded-full px-4 py-2 mb-4 border border-white/20"
           >
-            <Sparkles className="h-4 w-4 text-sky-600" />
-            <span className="text-sky-700 text-sm font-semibold">{total > 0 ? `${total} Curated Tours` : 'Curated Tours'} Available</span>
+            <Sparkles className="h-4 w-4 text-sky-400" />
+            <span className="text-white/90 text-sm font-semibold">{total > 0 ? `${total} Curated Tours` : 'Curated Tours'} Available</span>
           </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-bold text-slate-900 mb-4 leading-tight"
+            className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight"
           >
             Find Your Perfect
-            <span className="block bg-gradient-to-r from-sky-500 to-cyan-500 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-sky-400 to-cyan-400 bg-clip-text text-transparent">
               Sri Lanka Tour
             </span>
           </motion.h1>
@@ -92,7 +101,7 @@ export default function PackagesPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-slate-500 text-lg max-w-2xl mx-auto mb-8"
+            className="text-white/80 text-lg max-w-2xl mx-auto mb-8"
           >
             Handpicked experiences from wildlife safaris to beach escapes — crafted by local experts for unforgettable memories.
           </motion.p>
