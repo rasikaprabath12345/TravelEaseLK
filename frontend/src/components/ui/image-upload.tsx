@@ -4,6 +4,7 @@ import { useState, useRef, DragEvent, ChangeEvent } from 'react';
 import { Upload, Image as ImageIcon, X, Link as LinkIcon } from 'lucide-react';
 import { Button } from './button';
 import { Input } from './input';
+import api from '../../services/api';
 
 interface ImageUploadProps {
   value: string;
@@ -32,8 +33,8 @@ export function ImageUpload({ value, onChange, label, placeholder }: ImageUpload
     img.src = base64Str;
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const MAX_WIDTH = 1200;
-      const MAX_HEIGHT = 800;
+      const MAX_WIDTH = 1920;
+      const MAX_HEIGHT = 1080;
       let width = img.width;
       let height = img.height;
 
@@ -55,8 +56,8 @@ export function ImageUpload({ value, onChange, label, placeholder }: ImageUpload
       const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.drawImage(img, 0, 0, width, height);
-        // Compress as JPEG at 0.7 quality to reduce file size drastically (around 50KB-100KB)
-        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+        // Compress as JPEG at 0.9 quality for crystal-clear high-definition look while optimizing size (around 150KB-250KB)
+        const compressedBase64 = canvas.toDataURL('image/jpeg', 0.9);
         callback(compressedBase64);
       } else {
         callback(base64Str);
@@ -67,10 +68,28 @@ export function ImageUpload({ value, onChange, label, placeholder }: ImageUpload
     };
   };
 
-  const processFile = (file: File) => {
+  const processFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
       alert('Please upload an image file.');
       return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await api.post('/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (response.data?.url) {
+        onChange(response.data.url);
+        return;
+      }
+    } catch (err) {
+      console.warn('Backend upload failed, falling back to client-side compressed base64...', err);
     }
 
     const reader = new FileReader();
