@@ -21,7 +21,6 @@ import {
   Quote,
   Compass,
   Camera,
-  Sun,
   Waves,
   Mountain,
   TreePine,
@@ -36,21 +35,27 @@ import { useFeaturedPackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice } from '@/lib/utils';
 
+// 📌 INSTRUCTIONS FOR IMAGES:
+// 1. Create a folder named 'images' inside your 'public' folder (public/images).
+// 2. Download your images and place them in the 'public/images' folder.
+// 3. Rename them exactly as below (e.g., hero-1.jpg, sigiriya.jpg).
 const IMAGES = {
-  hero: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/118da4336-3953-4ca6-b315-99ef014952d6.png',
-  sigiriya: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a8d1aa12-160e-4c1f-8cc7-f10f5675db58.png',
-  ella: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1479926ae-5216-4fd8-b7c1-3528caca7122.png',
-  kandy: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a0438d02-1922-45b2-bec3-2b07b20156da.png',
-  yala: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1335030c0-0605-4f92-a8fa-ad37583c6186.png',
-  mirissa: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/175172c21-a721-4942-b2e9-f07824061a63.png',
-  nuwaraeliya: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/15ccd3012-f00a-44f1-a817-dbcd1233580f.png',
-  galle: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a44f951d-2ad0-4d48-b38e-45b51f47f7b3.png',
+  hero1: '/images/1.jpg',
+  hero2: '/images/2.jpg',
+  hero3: '/images/3.jpg',
+  sigiriya: '/images/4.jpg',
+  ella: '/images/5.jpg',
+  kandy: '/images/6.jpg',
+  yala: '/images/1.jpg',
+  mirissa: '/images/2.jpg',
+  nuwaraeliya: '/images/3.jpg',
+  galle: '/images/6.jpg',
 };
 
 function AnimatedCounter({ value }: { value: string }) {
   const [count, setCount] = useState(0);
   const numericValue = parseInt(value.replace(/\D/g, ''));
-  
+
   useEffect(() => {
     const duration = 2000;
     const steps = 60;
@@ -82,6 +87,10 @@ export default function HomePage() {
   const featuredPackages = packagesData?.data || [];
   const destinations = destinationsData?.data || [];
 
+  const filteredPackages = activeCategory === 'all'
+    ? featuredPackages
+    : featuredPackages.filter((pkg: any) => pkg.category === activeCategory || pkg.categoryId === activeCategory);
+
   const categories = [
     { id: 'all', label: 'All Tours', icon: Compass },
     { id: 'beach', label: 'Beach & Coastal', icon: Waves },
@@ -90,17 +99,12 @@ export default function HomePage() {
     { id: 'hill', label: 'Hill Country', icon: Mountain },
   ];
 
-  const filteredPackages = activeCategory === 'all'
-    ? featuredPackages
-    : featuredPackages.filter((pkg: any) => pkg.category === activeCategory);
-
   const heroBackgrounds = [
-    IMAGES.hero,
+    IMAGES.hero1,
+    IMAGES.hero2,
+    IMAGES.hero3,
     IMAGES.sigiriya,
     IMAGES.ella,
-    IMAGES.yala,
-    IMAGES.mirissa,
-    IMAGES.galle
   ];
 
   useEffect(() => {
@@ -110,7 +114,7 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, [heroBackgrounds.length]);
 
-  const packageImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.nuwaraeliya, IMAGES.galle, IMAGES.hero];
+  const packageImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.nuwaraeliya, IMAGES.galle, IMAGES.hero1];
   const destinationImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.galle];
 
   return (
@@ -118,34 +122,34 @@ export default function HomePage() {
       <style jsx global>{`
         @import url('https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.16/index.min.css');
         @import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css');
-        
+
         :root {
           --tl-primary: #0ea5e9;
           --tl-primary-light: #e0f2fe;
           --tl-accent: #f97316;
           --tl-accent-light: #ffedd5;
         }
-        
+
         .font-display {
           font-family: 'Plus Jakarta Sans', sans-serif;
           font-weight: 600;
         }
-        
+
         .font-body {
           font-family: 'Inter', sans-serif;
           font-weight: 400;
         }
-        
+
         * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
         .glass-card {
-          background: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.97);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.4);
-          box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          box-shadow: 0 20px 60px -12px rgba(15, 23, 42, 0.35);
         }
 
         .gradient-text {
@@ -167,6 +171,17 @@ export default function HomePage() {
           transform: translateY(-8px);
           box-shadow: 0 20px 60px -15px rgba(14, 165, 233, 0.2);
         }
+
+        /* Thin, elegant fade at the very bottom of the hero so the photo
+           stays visible and only blends into the white page right at the edge */
+        .hero-bottom-fade {
+          background: linear-gradient(
+            to bottom,
+            rgba(248, 250, 252, 0) 0%,
+            rgba(248, 250, 252, 0.55) 60%,
+            rgba(248, 250, 252, 1) 100%
+          );
+        }
       `}</style>
 
       <motion.div
@@ -177,8 +192,8 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero Section - Image Slideshow Background */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        
+      <section className="relative h-[92vh] min-h-[720px] flex flex-col justify-end overflow-hidden">
+
         {/* Dynamic Background Slider */}
         <div className="absolute inset-0 z-0">
           {heroBackgrounds.map((src, index) => (
@@ -195,21 +210,19 @@ export default function HomePage() {
               />
             </div>
           ))}
-          {/* Overlay to ensure text readability and smooth transition to the next section */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/40 to-sky-50" />
+
+          {/* Subtle dark gradient for text legibility — image stays clearly visible */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/55 via-slate-900/15 to-slate-900/40" />
+          {/* Thin fade only at the very bottom edge, so the photo isn't washed out in white */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 hero-bottom-fade" />
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-20 text-center px-4 max-w-6xl mx-auto"
-        >
+        <div className="relative z-20 w-full px-4 max-w-6xl mx-auto flex flex-col items-center pt-28 pb-10">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-8 soft-shadow"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-6 soft-shadow"
           >
             <Sparkles className="h-4 w-4 text-orange-400" />
             <span className="font-display text-sm text-white font-medium">
@@ -222,11 +235,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight tracking-tight drop-shadow-lg"
+            className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-4 leading-tight tracking-tight drop-shadow-lg text-center"
           >
             Discover
             <span className="block gradient-text drop-shadow-md">Sri Lanka</span>
-            <span className="block text-3xl md:text-4xl lg:text-5xl mt-4 font-normal text-white/90">
+            <span className="block text-2xl md:text-3xl lg:text-4xl mt-3 font-normal text-white/90">
               The Pearl of the Indian Ocean
             </span>
           </motion.h1>
@@ -235,7 +248,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow"
+            className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed drop-shadow text-center"
           >
             From pristine beaches to ancient kingdoms, explore Sri Lanka's magic
             with expertly curated tours designed for unforgettable memories.
@@ -245,14 +258,14 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
+            className="flex flex-col sm:flex-row gap-4 justify-center mb-10"
           >
             <Link href="/packages">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white font-semibold px-8 py-6 rounded-full text-base soft-shadow hover:shadow-xl transition-all hover:-translate-y-0.5 group"
               >
-                Explore Packages 
+                Explore Packages
                 <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -267,15 +280,15 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          {/* Search Box - Light Glass */}
+          {/* Search Box */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="glass-card rounded-3xl p-3 soft-shadow max-w-4xl mx-auto"
+            className="glass-card rounded-3xl p-3 soft-shadow w-full"
           >
             <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/50 transition-colors group">
+              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/80 transition-colors group">
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <MapPin className="h-5 w-5 text-sky-600" />
                 </div>
@@ -289,7 +302,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/50 transition-colors md:border-l md:border-sky-100 group">
+              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/80 transition-colors md:border-l md:border-slate-200 group">
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <Calendar className="h-5 w-5 text-sky-600" />
                 </div>
@@ -303,7 +316,7 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/50 transition-colors md:border-l md:border-sky-100 group">
+              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-sky-50/80 transition-colors md:border-l md:border-slate-200 group">
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <Users className="h-5 w-5 text-sky-600" />
                 </div>
@@ -335,7 +348,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/90 text-sm font-medium drop-shadow-sm"
+            className="flex flex-wrap items-center justify-center gap-6 mt-6 text-white/90 text-sm font-medium"
           >
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-400" />
@@ -350,26 +363,11 @@ export default function HomePage() {
               <span>24/7 Support</span>
             </div>
           </motion.div>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
-            <motion.div
-              className="w-1 h-2 bg-white rounded-full"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative -mt-20 z-30 px-4 pb-20">
+      {/* Stats Section - Margin Fixed */}
+      <section className="relative z-30 px-4 py-16 bg-transparent">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -572,7 +570,7 @@ export default function HomePage() {
                 size="lg"
                 className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-sm font-semibold px-10 py-6 rounded-full soft-shadow hover:shadow-xl transition-all hover:-translate-y-0.5 group"
               >
-                View All Packages 
+                View All Packages
                 <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -786,7 +784,7 @@ export default function HomePage() {
               >
                 <div className="p-8 rounded-3xl bg-white soft-shadow card-hover h-full flex flex-col relative border border-sky-100">
                   <Quote className="absolute top-6 right-6 h-8 w-8 text-sky-100" />
-                  
+
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
@@ -865,7 +863,7 @@ export default function HomePage() {
                   size="lg"
                   className="bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white text-base font-semibold px-10 py-7 rounded-full soft-shadow hover:shadow-xl transition-all hover:-translate-y-1 group"
                 >
-                  Browse Packages 
+                  Browse Packages
                   <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
