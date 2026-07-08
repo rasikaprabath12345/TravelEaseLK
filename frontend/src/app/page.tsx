@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Search,
   MapPin,
@@ -17,24 +17,9 @@ import {
   Heart,
   Sparkles,
   CheckCircle,
-  Play,
-  Quote,
-  Compass,
-  Camera,
-  Sun,
-  Waves,
-  Mountain,
-  TreePine,
-  Navigation,
-  Phone,
-  Mail,
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -55,52 +40,20 @@ const IMAGES = {
   galle: 'https://image.qwenlm.ai/public_source/b8ecae86-4884-448f-8cdf-9ce39fadb778/1a44f951d-2ad0-4d48-b38e-45b51f47f7b3.png',
 };
 
-// Animated counter component
-function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: string }) {
-  const [count, setCount] = useState(0);
-  const numericValue = parseInt(value.replace(/\D/g, ''));
-  
-  useEffect(() => {
-    const duration = 2000;
-    const steps = 60;
-    const stepValue = numericValue / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += stepValue;
-      if (current >= numericValue) {
-        setCount(numericValue);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [numericValue]);
-
-  return (
-    <span>
-      {count.toLocaleString()}{suffix}
-    </span>
-  );
-}
-
 export default function HomePage() {
   const { data: packagesData, isLoading: packagesLoading, error: packagesError } = useFeaturedPackages();
   const { data: destinationsData, isLoading: destLoading, error: destError } = useDestinations();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   const featuredPackages = packagesData?.data || [];
   const destinations = destinationsData?.data || [];
 
   const categories = [
-    { id: 'all', label: 'All Tours', icon: Compass },
-    { id: 'beach', label: 'Beach & Coastal', icon: Waves },
-    { id: 'cultural', label: 'Cultural Heritage', icon: Award },
-    { id: 'nature', label: 'Nature & Wildlife', icon: TreePine },
-    { id: 'hill', label: 'Hill Country', icon: Mountain },
+    { id: 'all', label: 'All Tours' },
+    { id: 'beach', label: 'Beach & Coastal' },
+    { id: 'cultural', label: 'Cultural Heritage' },
+    { id: 'nature', label: 'Nature & Wildlife' },
+    { id: 'hill', label: 'Hill Country' },
   ];
 
   const filteredPackages = activeCategory === 'all'
@@ -110,19 +63,8 @@ export default function HomePage() {
   const packageImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.nuwaraeliya, IMAGES.galle, IMAGES.hero];
   const destinationImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.galle];
 
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX / window.innerWidth,
-        y: e.clientY / window.innerHeight,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
-    <div className="font-body bg-white overflow-x-hidden">
+    <div className="font-body bg-white">
       <style jsx global>{`
         @import url('https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.16/index.min.css');
         @import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css');
@@ -157,121 +99,45 @@ export default function HomePage() {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
-
-        .glass-card {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #0ea5e9 0%, #f97316 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .shimmer {
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-          animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-
-        .float-animation {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
       `}</style>
-
-      {/* Progress Bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 to-orange-500 origin-left z-50"
-        style={{ scaleX }}
-      />
 
       <Navbar />
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-sky-900 to-slate-900" />
-          <motion.div
-            className="absolute inset-0 opacity-30"
-            animate={{
-              backgroundPosition: ['0% 0%', '100% 100%'],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-            style={{
-              backgroundImage: `url(https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80)`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
+          <img
+            src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1920&q=80"
+            alt="Sri Lanka Beach"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80" />
-          
-          {/* Floating Orbs */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, -100, 0],
-              y: [0, 50, 0],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         </div>
-
-        {/* Grid Pattern Overlay */}
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-        }} />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative z-20 text-center px-4 max-w-6xl mx-auto pt-20"
+          className="relative z-20 text-center px-4 max-w-5xl mx-auto"
         >
+
+          
+           <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 glass-card rounded-full px-6 py-2.5 mb-8"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-8"
           >
+         
             <Sparkles className="h-4 w-4 text-orange-400" />
             <span className="font-display text-sm text-white">
               #1 Travel Agency in Sri Lanka
             </span>
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
           </motion.div>
 
           <motion.h1
@@ -280,9 +146,8 @@ export default function HomePage() {
             transition={{ delay: 0.3 }}
             className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight tracking-tight"
           >
-            Discover
-            <span className="block gradient-text">Sri Lanka</span>
-            <span className="block text-3xl md:text-4xl lg:text-5xl mt-4 font-normal text-white/80">
+            Discover Sri Lanka
+            <span className="block text-4xl md:text-5xl lg:text-6xl mt-4 font-normal text-white/90">
               The Pearl of the Indian Ocean
             </span>
           </motion.h1>
@@ -291,7 +156,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
             From pristine beaches to ancient kingdoms, explore Sri Lanka's magic
             with expertly curated tours designed for unforgettable memories.
@@ -306,19 +171,18 @@ export default function HomePage() {
             <Link href="/packages">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-semibold px-8 py-6 rounded-full text-base shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all hover:-translate-y-0.5 group"
+                className="bg-orange-600 hover:bg-orange-700 text-white font-semibold px-8 py-6 rounded-full text-base shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
-                Explore Packages 
-                <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                Explore Packages <ArrowRight className="h-5 w-5 ml-2" />
               </Button>
             </Link>
             <Link href="/contact">
               <Button
                 size="lg"
                 variant="outline"
-                className="glass-card text-white hover:bg-white/10 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
+                className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/20 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
               >
-                <Play className="h-5 w-5 mr-2" /> Watch Video
+                Contact Us
               </Button>
             </Link>
           </motion.div>
@@ -328,47 +192,41 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
-            className="glass-card rounded-3xl p-3 shadow-2xl max-w-4xl mx-auto"
+            className="bg-white rounded-2xl p-2 shadow-2xl max-w-4xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2">
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-white/5 transition-colors group">
-                <div className="w-10 h-10 bg-sky-500/20 rounded-xl flex items-center justify-center group-hover:bg-sky-500/30 transition-colors">
-                  <MapPin className="h-5 w-5 text-sky-400" />
-                </div>
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors">
+                <MapPin className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-white/50 uppercase tracking-wider mb-0.5">Destination</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Destination</p>
                   <input
                     type="text"
                     placeholder="Where to?"
-                    className="bg-transparent border-none outline-none text-white placeholder-white/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-white/5 transition-colors md:border-l md:border-white/10 group">
-                <div className="w-10 h-10 bg-sky-500/20 rounded-xl flex items-center justify-center group-hover:bg-sky-500/30 transition-colors">
-                  <Calendar className="h-5 w-5 text-sky-400" />
-                </div>
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors md:border-l md:border-gray-200">
+                <Calendar className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-white/50 uppercase tracking-wider mb-0.5">Date</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Date</p>
                   <input
                     type="text"
                     placeholder="When?"
-                    className="bg-transparent border-none outline-none text-white placeholder-white/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 rounded-2xl px-5 py-4 hover:bg-white/5 transition-colors md:border-l md:border-white/10 group">
-                <div className="w-10 h-10 bg-sky-500/20 rounded-xl flex items-center justify-center group-hover:bg-sky-500/30 transition-colors">
-                  <Users className="h-5 w-5 text-sky-400" />
-                </div>
+              <div className="flex items-center gap-3 rounded-xl px-5 py-4 hover:bg-gray-50 transition-colors md:border-l md:border-gray-200">
+                <Users className="h-5 w-5 text-sky-600 shrink-0" />
                 <div className="flex-1">
-                  <p className="text-[10px] font-semibold text-white/50 uppercase tracking-wider mb-0.5">Guests</p>
+                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Guests</p>
                   <input
                     type="text"
                     placeholder="How many?"
-                    className="bg-transparent border-none outline-none text-white placeholder-white/40 w-full text-sm font-medium"
+                    className="bg-transparent border-none outline-none text-slate-900 placeholder-slate-400 w-full text-sm font-medium"
                   />
                 </div>
               </div>
@@ -377,7 +235,7 @@ export default function HomePage() {
                 <Link href="/packages" className="w-full h-full">
                   <Button
                     size="lg"
-                    className="w-full h-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white rounded-2xl px-8 font-semibold shadow-lg shadow-orange-500/30 hover:shadow-xl transition-all group"
+                    className="w-full h-full bg-orange-600 hover:bg-orange-700 text-white rounded-xl px-8 font-semibold shadow-lg hover:shadow-xl transition-all"
                   >
                     <Search className="h-5 w-5 mr-2" /> Search
                   </Button>
@@ -391,7 +249,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/60 text-sm"
+            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/70 text-sm"
           >
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-green-400" />
@@ -407,37 +265,27 @@ export default function HomePage() {
             </div>
           </motion.div>
         </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex items-start justify-center p-2">
-            <motion.div
-              className="w-1 h-2 bg-white/60 rounded-full"
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </div>
-        </motion.div>
       </section>
 
       {/* Stats Section */}
-      <section className="relative -mt-20 z-30 px-4 pb-20">
+      <section className="relative -mt-16 z-30 px-4">
         <div className="max-w-6xl mx-auto">
+
+          <br></br>
+           <br></br>
+            <br></br>
+             <br></br>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-white rounded-3xl shadow-2xl p-8 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 border border-gray-100"
+            className="bg-white rounded-2xl shadow-xl p-8 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 border border-gray-100"
           >
             {[
-              { value: '15K+', label: 'Happy Travelers', icon: Users, color: 'sky' },
-              { value: '250+', label: 'Tour Packages', icon: Globe, color: 'orange' },
-              { value: '50+', label: 'Destinations', icon: MapPin, color: 'green' },
-              { value: '98%', label: 'Satisfaction Rate', icon: Star, color: 'yellow' },
+              { value: '15K+', label: 'Happy Travelers', icon: Users },
+              { value: '250+', label: 'Tour Packages', icon: Globe },
+              { value: '50+', label: 'Destinations', icon: MapPin },
+              { value: '98%', label: 'Satisfaction Rate', icon: Star },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -445,13 +293,13 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center group"
+                className="text-center"
               >
-                <div className={`w-14 h-14 bg-${stat.color}-50 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <stat.icon className={`h-7 w-7 text-${stat.color}-600`} />
+                <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                  <stat.icon className="h-6 w-6 text-sky-600" />
                 </div>
                 <p className="font-display text-3xl md:text-4xl text-slate-900 mb-1">
-                  <AnimatedCounter value={stat.value} />
+                  {stat.value}
                 </p>
                 <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
               </motion.div>
@@ -461,7 +309,7 @@ export default function HomePage() {
       </section>
 
       {/* Featured Packages Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -486,13 +334,12 @@ export default function HomePage() {
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id)}
-                    className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all flex items-center gap-2 ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                       activeCategory === cat.id
-                        ? 'bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-lg shadow-slate-900/20'
-                        : 'bg-white text-slate-600 hover:bg-gray-100 border border-gray-200'
+                        ? 'bg-slate-900 text-white shadow-md'
+                        : 'bg-gray-100 text-slate-600 hover:bg-gray-200'
                     }`}
                   >
-                    <cat.icon className="h-4 w-4" />
                     {cat.label}
                   </button>
                 ))}
@@ -503,8 +350,8 @@ export default function HomePage() {
           {packagesLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
-                  <div className="h-56 bg-gray-200" />
+                <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
+                  <div className="h-52 bg-gray-200" />
                   <div className="p-5">
                     <div className="h-3 bg-gray-200 rounded w-20 mb-3" />
                     <div className="h-5 bg-gray-200 rounded w-3/4 mb-3" />
@@ -544,14 +391,14 @@ export default function HomePage() {
                   transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/packages/${pkg.id}`}>
-                    <div className="group cursor-pointer bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
-                      <div className="relative h-56 overflow-hidden">
+                    <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
+                      <div className="relative h-52 overflow-hidden">
                         <img
                           src={pkg.imageUrl || packageImages[index % packageImages.length]}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                         <div className="absolute top-3 right-3">
                           <Badge className="bg-white/95 backdrop-blur-sm text-slate-900 shadow-sm text-xs font-semibold border-0">
@@ -562,7 +409,7 @@ export default function HomePage() {
 
                         {pkg.isFeatured && (
                           <div className="absolute top-3 left-3">
-                            <Badge className="bg-gradient-to-r from-orange-600 to-orange-500 text-white border-none text-xs font-semibold shadow-lg">
+                            <Badge className="bg-orange-600 text-white border-none text-xs font-semibold shadow-lg">
                               <Sparkles className="h-3 w-3 mr-1" /> FEATURED
                             </Badge>
                           </div>
@@ -570,16 +417,10 @@ export default function HomePage() {
 
                         <button
                           onClick={(e) => { e.preventDefault(); }}
-                          className="absolute bottom-3 right-3 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg"
+                          className="absolute bottom-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-white hover:scale-110 shadow-lg"
                         >
                           <Heart className="h-4 w-4 text-slate-600 hover:text-orange-600 transition-colors" />
                         </button>
-
-                        <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Badge className="bg-white/95 backdrop-blur-sm text-slate-900 shadow-sm text-xs font-semibold border-0">
-                            <Camera className="h-3 w-3 mr-1" /> {pkg.imageCount || 12} Photos
-                          </Badge>
-                        </div>
                       </div>
 
                       <div className="p-5">
@@ -610,7 +451,7 @@ export default function HomePage() {
                               <span className="text-xs text-slate-400 ml-1">/ person</span>
                             </div>
                           </div>
-                          <div className="w-10 h-10 bg-sky-50 rounded-full flex items-center justify-center group-hover:bg-gradient-to-r group-hover:from-sky-600 group-hover:to-sky-500 transition-all">
+                          <div className="w-9 h-9 bg-sky-50 rounded-full flex items-center justify-center group-hover:bg-sky-600 group-hover:text-white transition-all">
                             <ArrowRight className="h-4 w-4 text-sky-600 group-hover:text-white transition-colors" />
                           </div>
                         </div>
@@ -626,10 +467,9 @@ export default function HomePage() {
             <Link href="/packages">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white text-sm font-semibold px-10 py-6 rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5 group"
+                className="bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold px-10 py-6 rounded-full shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
               >
-                View All Packages 
-                <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                View All Packages <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
           </div>
@@ -659,7 +499,7 @@ export default function HomePage() {
           {destLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-80 rounded-3xl overflow-hidden animate-pulse">
+                <div key={i} className="h-72 rounded-2xl overflow-hidden animate-pulse">
                   <div className="w-full h-full bg-gray-200" />
                 </div>
               ))}
@@ -683,7 +523,7 @@ export default function HomePage() {
                   transition={{ delay: index * 0.08 }}
                 >
                   <Link href={`/destinations/${dest.id}`}>
-                    <div className="relative h-80 rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
+                    <div className="relative h-72 rounded-2xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500">
                       <img
                         src={dest.imageUrl || destinationImages[index % destinationImages.length]}
                         alt={dest.name}
@@ -746,7 +586,6 @@ export default function HomePage() {
                 desc: 'Professional and knowledgeable tour guides with years of expertise',
                 bgColor: 'bg-sky-50',
                 iconColor: 'text-sky-600',
-                gradient: 'from-sky-500 to-sky-600',
               },
               {
                 icon: Shield,
@@ -754,7 +593,6 @@ export default function HomePage() {
                 desc: 'Competitive pricing with no hidden charges and price match guarantee',
                 bgColor: 'bg-orange-50',
                 iconColor: 'text-orange-600',
-                gradient: 'from-orange-500 to-orange-600',
               },
               {
                 icon: Star,
@@ -762,7 +600,6 @@ export default function HomePage() {
                 desc: 'Your safety is our top priority with comprehensive travel insurance',
                 bgColor: 'bg-yellow-50',
                 iconColor: 'text-yellow-600',
-                gradient: 'from-yellow-500 to-yellow-600',
               },
               {
                 icon: Headphones,
@@ -770,7 +607,6 @@ export default function HomePage() {
                 desc: 'Round the clock customer support in multiple languages',
                 bgColor: 'bg-green-50',
                 iconColor: 'text-green-600',
-                gradient: 'from-green-500 to-green-600',
               },
             ].map((item, index) => (
               <motion.div
@@ -780,9 +616,8 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="p-8 rounded-3xl border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 h-full group bg-white relative overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                  <div className={`w-16 h-16 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 relative`}>
+                <div className="p-8 rounded-2xl border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full group bg-white">
+                  <div className={`w-16 h-16 ${item.bgColor} rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className={`h-7 w-7 ${item.iconColor}`} />
                   </div>
                   <h3 className="font-display text-lg mb-3 text-slate-900">{item.title}</h3>
@@ -795,7 +630,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -819,23 +654,20 @@ export default function HomePage() {
               {
                 name: 'John Smith',
                 role: 'Adventure Traveler',
-                text: 'Amazing experience! The tour was well organized and the guides were fantastic. Every detail was perfectly planned.',
+                text: 'Amazing experience! The tour was well organized and the guides were fantastic.',
                 rating: 5,
-                location: 'United Kingdom',
               },
               {
                 name: 'Sarah Johnson',
                 role: 'Family Traveler',
-                text: 'Perfect family vacation. Everything was taken care of. The kids loved every moment. Highly recommended!',
+                text: 'Perfect family vacation. Everything was taken care of. Highly recommended!',
                 rating: 5,
-                location: 'Australia',
               },
               {
                 name: 'Michael Brown',
                 role: 'Solo Traveler',
-                text: 'Best travel agency I have ever used. Professional service and great value. Will definitely book again.',
+                text: 'Best travel agency I have ever used. Professional service and great value.',
                 rating: 5,
-                location: 'United States',
               },
             ].map((testimonial, index) => (
               <motion.div
@@ -845,9 +677,7 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="p-8 rounded-3xl bg-white shadow-sm hover:shadow-2xl transition-all duration-300 h-full flex flex-col relative border border-gray-100">
-                  <Quote className="absolute top-6 right-6 h-8 w-8 text-orange-100" />
-                  
+                <div className="p-8 rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <div className="flex mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
                       <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
@@ -864,7 +694,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="font-semibold text-slate-900 text-sm">{testimonial.name}</p>
-                      <p className="text-xs text-slate-400">{testimonial.role} • {testimonial.location}</p>
+                      <p className="text-xs text-slate-400">{testimonial.role}</p>
                     </div>
                   </div>
                 </div>
@@ -875,49 +705,21 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-slate-900 via-sky-900 to-slate-900 relative overflow-hidden">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0">
-          <motion.div
-            className="absolute top-0 left-0 w-96 h-96 bg-sky-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-            }}
-            transition={{
-              duration: 15,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
-          <motion.div
-            className="absolute bottom-0 right-0 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"
-            animate={{
-              x: [0, -100, 0],
-              y: [0, 50, 0],
-            }}
-            transition={{
-              duration: 18,
-              repeat: Infinity,
-              repeatType: 'reverse',
-            }}
-          />
-        </div>
-
+      <section className="py-24 bg-gradient-to-br from-sky-700 via-sky-600 to-sky-700 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center gap-2 glass-card rounded-full px-5 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6">
               <Sparkles className="h-4 w-4 text-orange-400" />
               <span className="text-white/80 text-sm font-medium">Start Your Journey Today</span>
             </div>
 
             <h2 className="font-display text-4xl md:text-6xl mb-6 text-white leading-tight">
               Ready for Your Next
-              <span className="block gradient-text">Adventure?</span>
+              <span className="block text-orange-400">Adventure?</span>
             </h2>
             <p className="text-lg md:text-xl mb-10 text-white/70 max-w-2xl mx-auto leading-relaxed">
               Book your dream vacation today and create memories that last a lifetime
@@ -926,17 +728,16 @@ export default function HomePage() {
               <Link href="/packages">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white text-base font-semibold px-10 py-7 rounded-full shadow-xl shadow-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/40 transition-all hover:-translate-y-1 group"
+                  className="bg-orange-600 hover:bg-orange-700 text-white text-base font-semibold px-10 py-7 rounded-full shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
                 >
-                  Browse Packages 
-                  <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  Browse Packages <ArrowRight className="h-5 w-5 ml-2" />
                 </Button>
               </Link>
               <Link href="/contact">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="glass-card text-white hover:bg-white/10 text-base font-semibold px-10 py-7 rounded-full transition-all hover:-translate-y-1"
+                  className="text-white border-2 border-white/30 hover:bg-white/10 text-base font-semibold px-10 py-7 rounded-full backdrop-blur-sm transition-all hover:-translate-y-1"
                 >
                   <Headphones className="h-5 w-5 mr-2" /> Contact Us
                 </Button>
