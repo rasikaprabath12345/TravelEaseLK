@@ -70,9 +70,9 @@ export default function Navbar() {
         }
       `}</style>
 
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`}>
-        <div className="max-w-[1800px] mx-auto px-4 md:px-8">
-          <div className={`flex items-center justify-between transition-all duration-300 ${navHeightClass}`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`} suppressHydrationWarning>
+        <div className="max-w-[1800px] mx-auto px-4 md:px-8" suppressHydrationWarning>
+          <div className={`flex items-center justify-between transition-all duration-300 ${navHeightClass}`} suppressHydrationWarning>
             
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0 group">
