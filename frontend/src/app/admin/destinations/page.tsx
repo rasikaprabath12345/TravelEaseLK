@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // <-- මෙන්න මේක අනිවාර්යයි
+import { useRouter } from 'next/navigation';
 import { Search, Eye, Edit, Trash2, MapPin } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,7 +23,7 @@ interface Destination {
 
 export default function AdminDestinationsPage() {
   const [search, setSearch] = useState('');
-  const router = useRouter(); // <-- මෙන්න මේක අනිවාර්යයි
+  const router = useRouter(); 
   
   const { data: destinationsData, isLoading } = useQuery({
     queryKey: ['destinations', search],
@@ -45,7 +45,6 @@ export default function AdminDestinationsPage() {
             <h1 className="text-3xl font-bold mb-2">Manage Destinations</h1>
             <p className="text-gray-600 dark:text-gray-400">View, add, and manage travel destinations in TravelEase</p>
           </div>
-          {/* මෙන්න Button එකට onClick එක දාලා තියෙනවා */}
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white"
             onClick={() => router.push('/admin/destinations/create')}
@@ -120,9 +119,17 @@ export default function AdminDestinationsPage() {
                             <Button variant="ghost" size="sm" title="View Details">
                               <Eye className="h-4 w-4 text-blue-500" />
                             </Button>
-                            <Button variant="ghost" size="sm" title="Edit">
+                            
+                            {/* අලුතින් update කරපු Edit Button එක */}
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              title="Edit"
+                              onClick={() => router.push(`/admin/destinations/edit/${destination.id}`)}
+                            >
                               <Edit className="h-4 w-4 text-orange-500" />
                             </Button>
+                            
                             <Button variant="ghost" size="sm" title="Delete">
                               <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>
