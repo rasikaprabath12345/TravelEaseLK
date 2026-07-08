@@ -94,7 +94,12 @@ export default function AdminDestinationsPage() {
                           <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-md flex items-center justify-center overflow-hidden">
                               {destination?.imageUrl ? (
-                                <img src={destination.imageUrl} alt="Destination" className="w-full h-full object-cover" />
+                                <img 
+                                  src={destination.imageUrl} 
+                                  alt="Destination" 
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => { e.currentTarget.src = 'https://placehold.co/100x100/e2e8f0/94a3b8?text=No+Img'; }} 
+                                />
                               ) : (
                                 <MapPin className="text-gray-400" />
                               )}
@@ -116,11 +121,17 @@ export default function AdminDestinationsPage() {
                         </td>
                         <td className="px-6 py-4 text-right">
                           <div className="flex justify-end space-x-2">
-                            <Button variant="ghost" size="sm" title="View Details">
+                            {/* View Button */}
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              title="View Details"
+                              onClick={() => router.push(`/admin/destinations/view/${destination.id}`)}
+                            >
                               <Eye className="h-4 w-4 text-blue-500" />
                             </Button>
                             
-                            {/* අලුතින් update කරපු Edit Button එක */}
+                            {/* Edit Button */}
                             <Button 
                               variant="ghost" 
                               size="sm" 
@@ -130,6 +141,7 @@ export default function AdminDestinationsPage() {
                               <Edit className="h-4 w-4 text-orange-500" />
                             </Button>
                             
+                            {/* Delete Button */}
                             <Button variant="ghost" size="sm" title="Delete">
                               <Trash2 className="h-4 w-4 text-red-500" />
                             </Button>

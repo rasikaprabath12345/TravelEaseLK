@@ -75,6 +75,7 @@ export default function HomePage() {
   const { data: packagesData, isLoading: packagesLoading, error: packagesError } = useFeaturedPackages();
   const { data: destinationsData, isLoading: destLoading, error: destError } = useDestinations();
   const [activeCategory, setActiveCategory] = useState('all');
+  const [bgIndex, setBgIndex] = useState(0);
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
@@ -92,6 +93,22 @@ export default function HomePage() {
   const filteredPackages = activeCategory === 'all'
     ? featuredPackages
     : featuredPackages.filter((pkg: any) => pkg.category === activeCategory);
+
+  const heroBackgrounds = [
+    IMAGES.hero,
+    IMAGES.sigiriya,
+    IMAGES.ella,
+    IMAGES.yala,
+    IMAGES.mirissa,
+    IMAGES.galle
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroBackgrounds.length]);
 
   const packageImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.nuwaraeliya, IMAGES.galle, IMAGES.hero];
   const destinationImages = [IMAGES.sigiriya, IMAGES.ella, IMAGES.kandy, IMAGES.yala, IMAGES.mirissa, IMAGES.galle];
@@ -125,14 +142,14 @@ export default function HomePage() {
         }
 
         .glass-card {
-          background: rgba(255, 255, 255, 0.7);
+          background: rgba(255, 255, 255, 0.85);
           backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
         .gradient-text {
-          background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #f97316 100%);
+          background: linear-gradient(135deg, #38bdf8 0%, #22d3ee 50%, #fb923c 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
@@ -159,53 +176,28 @@ export default function HomePage() {
 
       <Navbar />
 
-      {/* Hero Section - Light & Airy */}
+      {/* Hero Section - Image Slideshow Background */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        {/* Soft Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-100 via-white to-orange-50" />
         
-        {/* Floating Light Orbs */}
-        <motion.div
-          className="absolute top-20 left-10 w-72 h-72 bg-sky-200/40 rounded-full blur-3xl"
-          animate={{
-            y: [0, -30, 0],
-            x: [0, 20, 0],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-        <motion.div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-orange-100/50 rounded-full blur-3xl"
-          animate={{
-            y: [0, 30, 0],
-            x: [0, -20, 0],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-100/30 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-
-        {/* Subtle Pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgb(14 165 233) 1px, transparent 0)`,
-          backgroundSize: '40px 40px',
-        }} />
+        {/* Dynamic Background Slider */}
+        <div className="absolute inset-0 z-0">
+          {heroBackgrounds.map((src, index) => (
+            <div
+              key={src}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === bgIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <img
+                src={src}
+                alt="Sri Lanka Destination"
+                className="w-full h-full object-cover"
+              />
+            </div>
+          ))}
+          {/* Overlay to ensure text readability and smooth transition to the next section */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/40 to-sky-50" />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -217,10 +209,10 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-md border border-sky-100 rounded-full px-6 py-2.5 mb-8 soft-shadow"
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-2.5 mb-8 soft-shadow"
           >
-            <Sparkles className="h-4 w-4 text-orange-500" />
-            <span className="font-display text-sm text-slate-700">
+            <Sparkles className="h-4 w-4 text-orange-400" />
+            <span className="font-display text-sm text-white font-medium">
               #1 Travel Agency in Sri Lanka
             </span>
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
@@ -230,11 +222,11 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-display text-5xl md:text-7xl lg:text-8xl text-slate-800 mb-6 leading-tight tracking-tight"
+            className="font-display text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight tracking-tight drop-shadow-lg"
           >
             Discover
-            <span className="block gradient-text">Sri Lanka</span>
-            <span className="block text-3xl md:text-4xl lg:text-5xl mt-4 font-normal text-slate-600">
+            <span className="block gradient-text drop-shadow-md">Sri Lanka</span>
+            <span className="block text-3xl md:text-4xl lg:text-5xl mt-4 font-normal text-white/90">
               The Pearl of the Indian Ocean
             </span>
           </motion.h1>
@@ -243,7 +235,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed drop-shadow"
           >
             From pristine beaches to ancient kingdoms, explore Sri Lanka's magic
             with expertly curated tours designed for unforgettable memories.
@@ -268,7 +260,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="bg-white/80 backdrop-blur-sm border-2 border-sky-200 text-slate-700 hover:bg-white hover:border-sky-300 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
+                className="bg-white/10 backdrop-blur-md border-2 border-white/30 text-white hover:bg-white hover:text-slate-900 font-semibold px-8 py-6 rounded-full text-base transition-all hover:-translate-y-0.5"
               >
                 <Play className="h-5 w-5 mr-2" /> Watch Video
               </Button>
@@ -287,7 +279,7 @@ export default function HomePage() {
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <MapPin className="h-5 w-5 text-sky-600" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 text-left">
                   <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Destination</p>
                   <input
                     type="text"
@@ -301,7 +293,7 @@ export default function HomePage() {
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <Calendar className="h-5 w-5 text-sky-600" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 text-left">
                   <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Date</p>
                   <input
                     type="text"
@@ -315,7 +307,7 @@ export default function HomePage() {
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <Users className="h-5 w-5 text-sky-600" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 text-left">
                   <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider mb-0.5">Guests</p>
                   <input
                     type="text"
@@ -343,18 +335,18 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1 }}
-            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-slate-600 text-sm"
+            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-white/90 text-sm font-medium drop-shadow-sm"
           >
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-green-400" />
               <span>Free Cancellation</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-green-400" />
               <span>Best Price Guarantee</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-green-400" />
               <span>24/7 Support</span>
             </div>
           </motion.div>
@@ -362,13 +354,13 @@ export default function HomePage() {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-6 h-10 border-2 border-sky-300/50 rounded-full flex items-start justify-center p-2">
+          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex items-start justify-center p-2">
             <motion.div
-              className="w-1 h-2 bg-sky-400 rounded-full"
+              className="w-1 h-2 bg-white rounded-full"
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
