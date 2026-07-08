@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Search, ArrowRight, Compass, Globe, Waves, Mountain, TreePine, Award, Star } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import { Badge } from '@/components/ui/badge';
-import { useDestinations } from '@/hooks/useDestinations';
+import Navbar from '../../components/layout/Navbar';
+import Footer from '../../components/layout/Footer';
+import { Badge } from '../../components/ui/badge';
+import { useDestinations } from '../../hooks/useDestinations';
 
 const categoryFilters = [
   { id: 'all', label: 'All', icon: Compass },
