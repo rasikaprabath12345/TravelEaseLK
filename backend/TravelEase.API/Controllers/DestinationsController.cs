@@ -42,9 +42,18 @@ public class DestinationsController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] UpdateDestinationDto dto)
+    [HttpPut("{id}")] // <-- මෙන්න මේකයි අපි වෙනස් කළේ ("{id}" එකතු කළා)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateDestinationDto dto)
     {
+        // URL එකෙන් එන ID එකයි, Data (dto) එක ඇතුලේ තියෙන ID එකයි සමානද කියලා බලන එක ආරක්ෂිතයි
+        // (ඔයාගේ UpdateDestinationDto එකේ Id property එකක් තියෙනවා නම් මේක පාවිච්චි කරන්න පුළුවන්)
+        /*
+        if (id != dto.Id) 
+        {
+            return BadRequest(new { success = false, message = "ID mismatch" });
+        }
+        */
+
         var destination = await _destinationService.UpdateAsync(dto);
         return Ok(new { success = true, data = destination, message = "Destination updated" });
     }

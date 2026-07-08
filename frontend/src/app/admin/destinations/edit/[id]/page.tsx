@@ -83,8 +83,8 @@ export default function EditDestinationPage() {
       // Backend එකට යවද්දී ID එකත් Data එක ඇතුලටම දාලා යවනවා
       const payload = {
         ...formData,
-        id: Number(id), // C# backend එකට id එක number එකක් විදියට යන්න ඕනේ
-        Id: Number(id)  // PascalCase support කිරීම සඳහා
+        id: Number(id),
+        Id: Number(id)
       };
 
       await api.put(`/destinations/${id}`, payload);
@@ -92,8 +92,17 @@ export default function EditDestinationPage() {
       router.push('/admin/destinations');
       router.refresh(); 
     } catch (err: any) {
-      console.error("Update Error:", err.response?.data);
-      setError(err.response?.data?.message || 'Failed to update destination. Please try again.');
+      // සම්පූර්ණ Error එකම Console එකේ print කිරීම
+      console.error("Full Error Object:", err);
+      console.error("Error Status:", err.response?.status);
+      
+      // වඩාත් පැහැදිලි Error Message එකක් UI එකේ පෙන්නීම
+      const errorMessage = err.response?.data?.title || 
+                           err.response?.data?.message || 
+                           (typeof err.response?.data === 'string' && err.response?.data !== '' ? err.response?.data : null) ||
+                           `Failed to update (Status: ${err.response?.status || 'Unknown'}). Please check console.`;
+                           
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -133,7 +142,7 @@ export default function EditDestinationPage() {
           
           <CardContent>
             {error && (
-              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
+              <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 font-medium">
                 {error}
               </div>
             )}
