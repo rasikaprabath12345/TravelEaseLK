@@ -8,6 +8,7 @@ public class User : BaseEntity
     public string PasswordHash { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
     public string? ProfileImage { get; set; }
+    public string? Country { get; set; }
     public string Role { get; set; } = "Customer"; // Customer, Admin
     public bool IsActive { get; set; } = true;
     

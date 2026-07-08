@@ -82,8 +82,36 @@ public class AuthService : IAuthService
     // මෙන්න අපි අලුතින් එකතු කළ කොටස
     public async Task<object> GetAllUsersAsync(string search)
     {
-        var dummyData = new[] { "User1", "User2" }; 
-        return await Task.FromResult(dummyData);
+        var users = await _unitOfWork.Repository<User>().GetAllAsync();
+        
+        // Filter by Customer role only to match admin customers view
+        var customers = users.Where(u => u.Role == "Customer");
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchLower = search.ToLower();
+            customers = customers.Where(u => 
+                u.FirstName.ToLower().Contains(searchLower) ||
+                u.LastName.ToLower().Contains(searchLower) ||
+                u.Email.ToLower().Contains(searchLower) ||
+                (u.Country != null && u.Country.ToLower().Contains(searchLower))
+            );
+        }
+
+        var result = customers.Select(u => new
+        {
+            u.Id,
+            u.FirstName,
+            u.LastName,
+            u.Email,
+            u.PhoneNumber,
+            u.Country,
+            u.Role,
+            u.IsActive,
+            CreatedAt = u.CreatedAt
+        }).ToList();
+
+        return new { success = true, data = result, total = result.Count };
     }
 
     private string GenerateJwtToken(User user)
