@@ -54,28 +54,26 @@ public class DestinationService : IDestinationService
     public async Task<DestinationDto?> GetByIdAsync(int id)
     {
         var destination = await _unitOfWork.Repository<Destination>().Query()
-            .Include(d => d.Images.OrderBy(i => i.Order))
-            .Include(d => d.Packages.Where(p => p.IsActive))
-            .FirstOrDefaultAsync(d => d.Id == id && d.IsActive);
+            .Where(d => d.Id == id && d.IsActive)
+            .Select(d => new DestinationDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Country = d.Country,
+                Description = d.Description,
+                ShortDescription = d.ShortDescription,
+                ImageUrl = d.ImageUrl,
+                BestTimeToVisit = d.BestTimeToVisit,
+                TravelTips = d.TravelTips,
+                Attractions = d.Attractions,
+                Latitude = d.Latitude,
+                Longitude = d.Longitude,
+                Images = d.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
+                PackageCount = d.Packages.Count(p => p.IsActive)
+            })
+            .FirstOrDefaultAsync();
 
-        if (destination == null) return null;
-
-        return new DestinationDto
-        {
-            Id = destination.Id,
-            Name = destination.Name,
-            Country = destination.Country,
-            Description = destination.Description,
-            ShortDescription = destination.ShortDescription,
-            ImageUrl = destination.ImageUrl,
-            BestTimeToVisit = destination.BestTimeToVisit,
-            TravelTips = destination.TravelTips,
-            Attractions = destination.Attractions,
-            Latitude = destination.Latitude,
-            Longitude = destination.Longitude,
-            Images = destination.Images?.Select(i => i.ImageUrl).ToList() ?? new(),
-            PackageCount = destination.Packages?.Count ?? 0
-        };
+        return destination;
     }
 
     public async Task<DestinationDto> CreateAsync(CreateDestinationDto dto)

@@ -57,23 +57,32 @@ public class DashboardService : IDashboardService
 
     public async Task<List<BookingAnalyticsDto>> GetBookingAnalyticsAsync()
     {
-        var months = new List<BookingAnalyticsDto>();
+        // Single query: fetch all non-cancelled bookings from the last 12 months
+        var startDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(-11);
         
+        var monthlyData = await _unitOfWork.Repository<Booking>().Query()
+            .Where(b => b.CreatedAt >= startDate && b.Status != "Cancelled")
+            .GroupBy(b => new { b.CreatedAt.Year, b.CreatedAt.Month })
+            .Select(g => new
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month,
+                BookingCount = g.Count(),
+                Revenue = g.Sum(b => b.TotalPrice)
+            })
+            .ToListAsync();
+
+        // Build the full 12-month list (including months with zero bookings)
+        var months = new List<BookingAnalyticsDto>();
         for (int i = 11; i >= 0; i--)
         {
             var date = DateTime.UtcNow.AddMonths(-i);
-            var monthStart = new DateTime(date.Year, date.Month, 1);
-            var monthEnd = monthStart.AddMonths(1).AddDays(-1);
-
-            var bookings = await _unitOfWork.Repository<Booking>().Query()
-                .Where(b => b.CreatedAt >= monthStart && b.CreatedAt <= monthEnd && b.Status != "Cancelled")
-                .ToListAsync();
-
+            var data = monthlyData.FirstOrDefault(d => d.Year == date.Year && d.Month == date.Month);
             months.Add(new BookingAnalyticsDto
             {
                 Month = date.ToString("MMM yyyy"),
-                BookingCount = bookings.Count,
-                Revenue = bookings.Sum(b => b.TotalPrice)
+                BookingCount = data?.BookingCount ?? 0,
+                Revenue = data?.Revenue ?? 0
             });
         }
 
@@ -83,15 +92,13 @@ public class DashboardService : IDashboardService
     public async Task<List<PopularDestinationDto>> GetPopularDestinationsAsync()
     {
         var destinations = await _unitOfWork.Repository<Booking>().Query()
-            .Include(b => b.Package)
-            .ThenInclude(p => p.Destination)
             .Where(b => b.Status != "Cancelled")
-            .GroupBy(b => b.Package.Destination)
+            .GroupBy(b => b.Package.DestinationId)
             .Select(g => new PopularDestinationDto
             {
-                Name = g.Key.Name,
+                Name = g.First().Package.Destination.Name,
                 BookingCount = g.Count(),
-                ImageUrl = g.Key.ImageUrl
+                ImageUrl = g.First().Package.Destination.ImageUrl
             })
             .OrderByDescending(d => d.BookingCount)
             .Take(5)

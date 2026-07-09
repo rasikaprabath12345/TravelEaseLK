@@ -30,9 +30,6 @@ public class PackageService : IPackageService
         decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, int page = 1, int pageSize = 10)
     {
         var query = _unitOfWork.Repository<Package>().Query()
-            .Include(p => p.Destination)
-            .Include(p => p.TourGuide)
-            .Include(p => p.Images)
             .Where(p => p.IsActive);
 
         if (!string.IsNullOrEmpty(search))
@@ -59,33 +56,88 @@ public class PackageService : IPackageService
         var packages = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
+            .Select(p => new PackageDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ShortDescription = p.ShortDescription,
+                Price = p.Price,
+                OriginalPrice = p.OriginalPrice,
+                Duration = p.Duration,
+                MaxSeats = p.MaxSeats,
+                AvailableSeats = p.AvailableSeats,
+                ImageUrl = p.ImageUrl,
+                DestinationId = p.DestinationId,
+                DestinationName = p.Destination != null ? p.Destination.Name : "",
+                TourGuideName = p.TourGuide != null ? p.TourGuide.Name : null,
+                IsFeatured = p.IsFeatured,
+                AverageRating = p.AverageRating,
+                Images = p.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
+                CreatedAt = p.CreatedAt
+            })
             .ToListAsync();
 
-        return packages.Select(MapToDto);
+        return packages;
     }
 
     public async Task<PackageDto?> GetByIdAsync(int id)
     {
         var package = await _unitOfWork.Repository<Package>().Query()
-            .Include(p => p.Destination)
-            .Include(p => p.TourGuide)
-            .Include(p => p.Images.OrderBy(i => i.Order))
-            .Include(p => p.Reviews.Where(r => r.IsApproved))
-            .FirstOrDefaultAsync(p => p.Id == id && p.IsActive);
+            .Where(p => p.Id == id && p.IsActive)
+            .Select(p => new PackageDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ShortDescription = p.ShortDescription,
+                Price = p.Price,
+                OriginalPrice = p.OriginalPrice,
+                Duration = p.Duration,
+                MaxSeats = p.MaxSeats,
+                AvailableSeats = p.AvailableSeats,
+                ImageUrl = p.ImageUrl,
+                DestinationId = p.DestinationId,
+                DestinationName = p.Destination != null ? p.Destination.Name : "",
+                TourGuideName = p.TourGuide != null ? p.TourGuide.Name : null,
+                IsFeatured = p.IsFeatured,
+                AverageRating = p.AverageRating,
+                Images = new List<string>(),
+                CreatedAt = p.CreatedAt
+            })
+            .FirstOrDefaultAsync();
 
-        return package == null ? null : MapToDto(package);
+        return package;
     }
 
     public async Task<IEnumerable<PackageDto>> GetFeaturedAsync()
     {
         var packages = await _unitOfWork.Repository<Package>().Query()
-            .Include(p => p.Destination)
-            .Include(p => p.Images)
             .Where(p => p.IsActive && p.IsFeatured)
             .Take(8)
+            .Select(p => new PackageDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                ShortDescription = p.ShortDescription,
+                Price = p.Price,
+                OriginalPrice = p.OriginalPrice,
+                Duration = p.Duration,
+                MaxSeats = p.MaxSeats,
+                AvailableSeats = p.AvailableSeats,
+                ImageUrl = p.ImageUrl,
+                DestinationId = p.DestinationId,
+                DestinationName = p.Destination != null ? p.Destination.Name : "",
+                TourGuideName = p.TourGuide != null ? p.TourGuide.Name : null,
+                IsFeatured = p.IsFeatured,
+                AverageRating = p.AverageRating,
+                Images = new List<string>(),
+                CreatedAt = p.CreatedAt
+            })
             .ToListAsync();
 
-        return packages.Select(MapToDto);
+        return packages;
     }
 
     public async Task<PackageDto> CreateAsync(CreatePackageDto dto)
@@ -113,16 +165,26 @@ public class PackageService : IPackageService
         await _unitOfWork.Repository<Package>().AddAsync(package);
         await _unitOfWork.SaveChangesAsync();
 
-        return MapToDto(package);
+        return new PackageDto
+        {
+            Id = package.Id,
+            Name = package.Name,
+            Description = package.Description,
+            Price = package.Price,
+            OriginalPrice = package.OriginalPrice,
+            Duration = package.Duration,
+            MaxSeats = package.MaxSeats,
+            AvailableSeats = package.AvailableSeats,
+            ImageUrl = package.ImageUrl,
+            DestinationId = package.DestinationId,
+            IsFeatured = package.IsFeatured,
+            CreatedAt = package.CreatedAt
+        };
     }
 
     public async Task<PackageDto> UpdateAsync(UpdatePackageDto dto)
     {
-        var package = await _unitOfWork.Repository<Package>().Query()
-            .Include(p => p.Destination)
-            .Include(p => p.TourGuide)
-            .Include(p => p.Images)
-            .FirstOrDefaultAsync(p => p.Id == dto.Id)
+        var package = await _unitOfWork.Repository<Package>().GetByIdAsync(dto.Id)
             ?? throw new Exception("Package not found");
 
         package.Name = dto.Name;
@@ -145,7 +207,21 @@ public class PackageService : IPackageService
         await _unitOfWork.Repository<Package>().UpdateAsync(package);
         await _unitOfWork.SaveChangesAsync();
 
-        return MapToDto(package);
+        return new PackageDto
+        {
+            Id = package.Id,
+            Name = package.Name,
+            Description = package.Description,
+            Price = package.Price,
+            OriginalPrice = package.OriginalPrice,
+            Duration = package.Duration,
+            MaxSeats = package.MaxSeats,
+            AvailableSeats = package.AvailableSeats,
+            ImageUrl = package.ImageUrl,
+            DestinationId = package.DestinationId,
+            IsFeatured = package.IsFeatured,
+            CreatedAt = package.CreatedAt
+        };
     }
 
     public async Task<bool> DeleteAsync(int id)
@@ -171,29 +247,5 @@ public class PackageService : IPackageService
             query = query.Where(p => p.DestinationId == destinationId.Value);
 
         return await query.CountAsync();
-    }
-
-    private PackageDto MapToDto(Package p)
-    {
-        return new PackageDto
-        {
-            Id = p.Id,
-            Name = p.Name,
-            Description = p.Description,
-            ShortDescription = p.ShortDescription,
-            Price = p.Price,
-            OriginalPrice = p.OriginalPrice,
-            Duration = p.Duration,
-            MaxSeats = p.MaxSeats,
-            AvailableSeats = p.AvailableSeats,
-            ImageUrl = p.ImageUrl,
-            DestinationId = p.DestinationId,
-            DestinationName = p.Destination?.Name ?? "",
-            TourGuideName = p.TourGuide?.Name,
-            IsFeatured = p.IsFeatured,
-            AverageRating = p.AverageRating,
-            Images = p.Images?.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList() ?? new(),
-            CreatedAt = p.CreatedAt
-        };
     }
 }

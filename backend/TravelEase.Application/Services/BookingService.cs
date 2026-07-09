@@ -26,10 +26,7 @@ public class BookingService : IBookingService
 
     public async Task<IEnumerable<BookingDto>> GetAllAsync(int? userId = null, string? status = null, int page = 1, int pageSize = 10)
     {
-        var query = _unitOfWork.Repository<Booking>().Query()
-            .Include(b => b.User)
-            .Include(b => b.Package)
-            .AsQueryable();
+        var query = _unitOfWork.Repository<Booking>().Query().AsQueryable();
 
         if (userId.HasValue)
             query = query.Where(b => b.UserId == userId.Value);
@@ -41,19 +38,58 @@ public class BookingService : IBookingService
             .OrderByDescending(b => b.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
+            .Select(b => new BookingDto
+            {
+                Id = b.Id,
+                BookingId = b.BookingId,
+                UserId = b.UserId,
+                CustomerName = b.FullName,
+                Email = b.Email,
+                PhoneNumber = b.PhoneNumber,
+                Country = b.Country,
+                NumberOfAdults = b.NumberOfAdults,
+                NumberOfChildren = b.NumberOfChildren,
+                TravelDate = b.TravelDate,
+                PickupLocation = b.PickupLocation,
+                SpecialRequests = b.SpecialRequests,
+                TotalPrice = b.TotalPrice,
+                Status = b.Status,
+                PackageName = b.Package != null ? b.Package.Name : "",
+                PackageImage = b.Package != null ? b.Package.ImageUrl : null,
+                CreatedAt = b.CreatedAt
+            })
             .ToListAsync();
 
-        return bookings.Select(MapToDto);
+        return bookings;
     }
 
     public async Task<BookingDto?> GetByIdAsync(int id)
     {
         var booking = await _unitOfWork.Repository<Booking>().Query()
-            .Include(b => b.User)
-            .Include(b => b.Package)
-            .FirstOrDefaultAsync(b => b.Id == id);
+            .Where(b => b.Id == id)
+            .Select(b => new BookingDto
+            {
+                Id = b.Id,
+                BookingId = b.BookingId,
+                UserId = b.UserId,
+                CustomerName = b.FullName,
+                Email = b.Email,
+                PhoneNumber = b.PhoneNumber,
+                Country = b.Country,
+                NumberOfAdults = b.NumberOfAdults,
+                NumberOfChildren = b.NumberOfChildren,
+                TravelDate = b.TravelDate,
+                PickupLocation = b.PickupLocation,
+                SpecialRequests = b.SpecialRequests,
+                TotalPrice = b.TotalPrice,
+                Status = b.Status,
+                PackageName = b.Package != null ? b.Package.Name : "",
+                PackageImage = b.Package != null ? b.Package.ImageUrl : null,
+                CreatedAt = b.CreatedAt
+            })
+            .FirstOrDefaultAsync();
 
-        return booking == null ? null : MapToDto(booking);
+        return booking;
     }
 
     public async Task<BookingDto> CreateAsync(CreateBookingDto dto, int userId)
@@ -97,7 +133,24 @@ public class BookingService : IBookingService
         await _unitOfWork.Repository<Booking>().AddAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        return MapToDto(booking);
+        return new BookingDto
+        {
+            Id = booking.Id,
+            BookingId = booking.BookingId,
+            UserId = booking.UserId,
+            CustomerName = booking.FullName,
+            Email = booking.Email,
+            PhoneNumber = booking.PhoneNumber,
+            Country = booking.Country,
+            NumberOfAdults = booking.NumberOfAdults,
+            NumberOfChildren = booking.NumberOfChildren,
+            TravelDate = booking.TravelDate,
+            TotalPrice = booking.TotalPrice,
+            Status = booking.Status,
+            PackageName = package.Name,
+            PackageImage = package.ImageUrl,
+            CreatedAt = booking.CreatedAt
+        };
     }
 
     public async Task<BookingDto> UpdateStatusAsync(UpdateBookingStatusDto dto)
@@ -127,18 +180,54 @@ public class BookingService : IBookingService
         await _unitOfWork.Repository<Booking>().UpdateAsync(booking);
         await _unitOfWork.SaveChangesAsync();
 
-        return MapToDto(booking);
+        return new BookingDto
+        {
+            Id = booking.Id,
+            BookingId = booking.BookingId,
+            UserId = booking.UserId,
+            CustomerName = booking.FullName,
+            Email = booking.Email,
+            PhoneNumber = booking.PhoneNumber,
+            Country = booking.Country,
+            NumberOfAdults = booking.NumberOfAdults,
+            NumberOfChildren = booking.NumberOfChildren,
+            TravelDate = booking.TravelDate,
+            TotalPrice = booking.TotalPrice,
+            Status = booking.Status,
+            PackageName = booking.Package?.Name ?? "",
+            PackageImage = booking.Package?.ImageUrl,
+            CreatedAt = booking.CreatedAt
+        };
     }
 
     public async Task<IEnumerable<BookingDto>> GetUserBookingsAsync(int userId)
     {
         var bookings = await _unitOfWork.Repository<Booking>().Query()
-            .Include(b => b.Package)
             .Where(b => b.UserId == userId)
             .OrderByDescending(b => b.CreatedAt)
+            .Select(b => new BookingDto
+            {
+                Id = b.Id,
+                BookingId = b.BookingId,
+                UserId = b.UserId,
+                CustomerName = b.FullName,
+                Email = b.Email,
+                PhoneNumber = b.PhoneNumber,
+                Country = b.Country,
+                NumberOfAdults = b.NumberOfAdults,
+                NumberOfChildren = b.NumberOfChildren,
+                TravelDate = b.TravelDate,
+                PickupLocation = b.PickupLocation,
+                SpecialRequests = b.SpecialRequests,
+                TotalPrice = b.TotalPrice,
+                Status = b.Status,
+                PackageName = b.Package != null ? b.Package.Name : "",
+                PackageImage = b.Package != null ? b.Package.ImageUrl : null,
+                CreatedAt = b.CreatedAt
+            })
             .ToListAsync();
 
-        return bookings.Select(MapToDto);
+        return bookings;
     }
 
     public async Task<int> GetTotalCountAsync(int? userId = null, string? status = null)
@@ -152,29 +241,5 @@ public class BookingService : IBookingService
             query = query.Where(b => b.Status == status);
 
         return await query.CountAsync();
-    }
-
-    private BookingDto MapToDto(Booking b)
-    {
-        return new BookingDto
-        {
-            Id = b.Id,
-            BookingId = b.BookingId,
-            UserId = b.UserId,
-            CustomerName = b.FullName,
-            Email = b.Email,
-            PhoneNumber = b.PhoneNumber,
-            Country = b.Country,
-            NumberOfAdults = b.NumberOfAdults,
-            NumberOfChildren = b.NumberOfChildren,
-            TravelDate = b.TravelDate,
-            PickupLocation = b.PickupLocation,
-            SpecialRequests = b.SpecialRequests,
-            TotalPrice = b.TotalPrice,
-            Status = b.Status,
-            PackageName = b.Package?.Name ?? "",
-            PackageImage = b.Package?.ImageUrl,
-            CreatedAt = b.CreatedAt
-        };
     }
 }
