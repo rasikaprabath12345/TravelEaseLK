@@ -119,11 +119,10 @@ export default function CustomerDashboard() {
                     <button
                       key={tab}
                       onClick={() => setActiveTab(tab)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
-                        activeTab === tab
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${activeTab === tab
                           ? 'bg-sky-500 text-white shadow'
                           : 'bg-sky-50 text-slate-600 hover:bg-sky-100'
-                      }`}
+                        }`}
                     >
                       {tab}
                     </button>
@@ -243,7 +242,7 @@ export default function CustomerDashboard() {
             <div className="bg-gradient-to-br from-sky-500 to-cyan-500 rounded-3xl p-5 text-white">
               <p className="font-bold mb-1.5">🌴 Travel Tip</p>
               <p className="text-white/90 text-sm leading-relaxed">
-                The best time to visit Sri Lanka's beaches is November–April. 
+                The best time to visit Sri Lanka's beaches is November–April.
                 For wildlife safaris, May–September is prime leopard season at Yala!
               </p>
               <Link href="/packages">

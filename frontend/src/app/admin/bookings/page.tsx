@@ -112,7 +112,7 @@ export default function AdminBookingsPage() {
                   return (
                     <motion.div key={booking.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.04 }}
                       className="p-4 hover:bg-slate-50 transition-colors flex flex-col gap-3.5 lg:grid lg:grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto] lg:gap-4 lg:px-5 lg:py-4 lg:items-center">
-                      
+
                       {/* Booking ID */}
                       <div className="flex justify-between items-center lg:block">
                         <span className="text-xs font-semibold text-slate-400 lg:hidden">Booking ID</span>
