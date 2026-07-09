@@ -16,6 +16,7 @@ public class BookingDto
     public string? SpecialRequests { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; } = string.Empty;
+    public string PaymentStatus { get; set; } = "Unpaid";
     public string PackageName { get; set; } = string.Empty;
     public string? PackageImage { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -41,4 +42,5 @@ public class UpdateBookingStatusDto
     public int Id { get; set; }
     public string Status { get; set; } = string.Empty;
     public string? Notes { get; set; }
+    public string? PaymentStatus { get; set; }
 }

@@ -54,6 +54,7 @@ public class BookingService : IBookingService
                 SpecialRequests = b.SpecialRequests,
                 TotalPrice = b.TotalPrice,
                 Status = b.Status,
+                PaymentStatus = b.PaymentStatus ?? "Unpaid",
                 PackageName = b.Package != null ? b.Package.Name : "",
                 PackageImage = b.Package != null ? b.Package.ImageUrl : null,
                 CreatedAt = b.CreatedAt
@@ -164,6 +165,8 @@ public class BookingService : IBookingService
         var oldStatus = booking.Status;
         booking.Status = dto.Status;
         booking.Notes = dto.Notes;
+        if (!string.IsNullOrEmpty(dto.PaymentStatus))
+            booking.PaymentStatus = dto.PaymentStatus;
         booking.UpdatedAt = DateTime.UtcNow;
 
         // If cancelled, restore seats
@@ -194,6 +197,7 @@ public class BookingService : IBookingService
             TravelDate = booking.TravelDate,
             TotalPrice = booking.TotalPrice,
             Status = booking.Status,
+            PaymentStatus = booking.PaymentStatus ?? "Unpaid",
             PackageName = booking.Package?.Name ?? "",
             PackageImage = booking.Package?.ImageUrl,
             CreatedAt = booking.CreatedAt
@@ -221,6 +225,7 @@ public class BookingService : IBookingService
                 SpecialRequests = b.SpecialRequests,
                 TotalPrice = b.TotalPrice,
                 Status = b.Status,
+                PaymentStatus = b.PaymentStatus ?? "Unpaid",
                 PackageName = b.Package != null ? b.Package.Name : "",
                 PackageImage = b.Package != null ? b.Package.ImageUrl : null,
                 CreatedAt = b.CreatedAt

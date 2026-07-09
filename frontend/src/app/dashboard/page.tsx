@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Calendar, MapPin, Clock, Star, Heart, User, Bell, LogOut,
-  Globe, Package, ChevronRight, TrendingUp, CheckCircle, AlertCircle, XCircle
+  Calendar, MapPin, Clock, User, Bell, LogOut,
+  Globe, ChevronRight, CheckCircle, AlertCircle, XCircle, MessageCircle, CreditCard
 } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
@@ -14,6 +14,9 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 import { useBookings } from '@/hooks/useBookings';
 import { formatPrice, formatDate } from '@/lib/utils';
+
+// ── CONFIG: Change to your WhatsApp business number (94XXXXXXXXX) ──
+const WA_BUSINESS = '94777123456';
 
 const statusConfig: Record<string, { label: string; color: string; icon: any; bg: string }> = {
   Confirmed: { label: 'Confirmed', color: 'text-green-700', icon: CheckCircle, bg: 'bg-green-50 border-green-200' },
@@ -149,33 +152,72 @@ export default function CustomerDashboard() {
                   <div className="space-y-3">
                     {filtered.slice(0, 5).map((booking: any, i: number) => {
                       const status = statusConfig[booking.status] || statusConfig.Pending;
+                      const isPaid = booking.paymentStatus === 'Paid';
+                      const waMsg = encodeURIComponent(
+                        `Hi TravelEase LK! I have made my bank transfer payment for:\n` +
+                        `📋 Booking ID: ${booking.bookingId}\n` +
+                        `🏝️ Package: ${booking.packageName}\n` +
+                        `💰 Amount: ${formatPrice(booking.totalPrice)}\n` +
+                        `📅 Travel Date: ${formatDate(booking.travelDate)}\n\n` +
+                        `Please find my payment receipt attached. Kindly confirm my booking.`
+                      );
+                      const waUrl = `https://wa.me/${WA_BUSINESS}?text=${waMsg}`;
                       return (
                         <motion.div
                           key={booking.id}
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: i * 0.06 }}
-                          className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-sky-200 hover:bg-sky-50/50 transition-all"
+                          className="flex flex-col gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-sky-200 hover:bg-sky-50/50 transition-all"
                         >
-                          <img
-                            src={booking.packageImage || packageImages[i % packageImages.length]}
-                            alt={booking.packageName}
-                            className="w-16 h-16 rounded-xl object-cover shrink-0"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-semibold text-slate-800 truncate">{booking.packageName}</p>
-                            <p className="text-slate-400 text-xs">ID: {booking.bookingId}</p>
-                            <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-500">
-                              <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{formatDate(booking.travelDate)}</span>
-                              <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" />{booking.numberOfAdults} Adults</span>
+                          {/* Top row */}
+                          <div className="flex items-center gap-4">
+                            <img
+                              src={booking.packageImage || packageImages[i % packageImages.length]}
+                              alt={booking.packageName}
+                              className="w-16 h-16 rounded-xl object-cover shrink-0"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-slate-800 truncate">{booking.packageName}</p>
+                              <p className="text-slate-400 text-xs font-mono">ID: <span className="text-sky-600 font-bold">{booking.bookingId}</span></p>
+                              <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-500">
+                                <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{formatDate(booking.travelDate)}</span>
+                                <span className="flex items-center gap-1"><User className="h-3.5 w-3.5" />{booking.numberOfAdults} Adults</span>
+                              </div>
+                            </div>
+                            <div className="text-right shrink-0">
+                              <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${status.bg} ${status.color}`}>
+                                <status.icon className="h-3 w-3" />
+                                {status.label}
+                              </div>
+                              <p className="font-bold text-slate-800 text-sm mt-1.5">{formatPrice(booking.totalPrice)}</p>
                             </div>
                           </div>
-                          <div className="text-right shrink-0">
-                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${status.bg} ${status.color}`}>
-                              <status.icon className="h-3 w-3" />
-                              {status.label}
+
+                          {/* Payment Row */}
+                          <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                            {/* Payment status pill */}
+                            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${
+                              isPaid
+                                ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                                : 'bg-amber-50 border-amber-200 text-amber-700'
+                            }`}>
+                              <CreditCard className="h-3 w-3" />
+                              {isPaid ? '✓ Payment Confirmed' : 'Payment Pending'}
                             </div>
-                            <p className="font-bold text-slate-800 text-sm mt-1.5">{formatPrice(booking.totalPrice)}</p>
+
+                            {/* WhatsApp Pay button — only for unpaid bookings */}
+                            {!isPaid && (
+                              <a
+                                href={waUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#25d366] hover:bg-[#1eb658] text-white text-xs font-bold shadow-md shadow-green-200 hover:shadow-green-300 transition-all hover:-translate-y-0.5"
+                              >
+                                <MessageCircle className="h-3.5 w-3.5" />
+                                Send Receipt via WhatsApp
+                              </a>
+                            )}
                           </div>
                         </motion.div>
                       );

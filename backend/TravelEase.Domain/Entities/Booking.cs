@@ -17,6 +17,7 @@ public class Booking : BaseEntity
     public string? SpecialRequests { get; set; }
     public decimal TotalPrice { get; set; }
     public string Status { get; set; } = "Pending"; // Pending, Confirmed, Cancelled, Completed
+    public string PaymentStatus { get; set; } = "Unpaid"; // Unpaid, Paid
     public string? Notes { get; set; }
     
     // Navigation

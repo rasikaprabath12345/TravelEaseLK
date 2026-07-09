@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar, Search, ChevronLeft, ChevronRight,
-  CheckCircle, AlertCircle, XCircle, Filter, RefreshCw
+  CheckCircle, AlertCircle, XCircle, Filter, RefreshCw, DollarSign
 } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
@@ -42,7 +42,17 @@ export default function AdminBookingsPage() {
   const handleStatusUpdate = async (id: number, newStatus: string) => {
     setUpdatingId(id);
     try {
-      await updateStatus.mutateAsync({ id, status: newStatus });
+      await updateStatus.mutateAsync({ id, status: newStatus } as any);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handlePaymentToggle = async (booking: any) => {
+    const newPaymentStatus = booking.paymentStatus === 'Paid' ? 'Unpaid' : 'Paid';
+    setUpdatingId(booking.id);
+    try {
+      await updateStatus.mutateAsync({ id: booking.id, status: booking.status, paymentStatus: newPaymentStatus } as any);
     } finally {
       setUpdatingId(null);
     }
@@ -102,16 +112,16 @@ export default function AdminBookingsPage() {
             </div>
           ) : (
             <>
-              <div className="hidden lg:grid grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto] gap-4 px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <div className="hidden lg:grid grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto_auto] gap-4 px-5 py-3 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 <span>Booking ID</span><span>Customer</span><span>Package</span><span>Travel Date</span>
-                <span>Amount</span><span>Status</span><span>Update</span>
+                <span>Amount</span><span>Payment</span><span>Status</span><span>Update</span>
               </div>
               <div className="divide-y divide-slate-100">
                 {bookings.map((booking: any, index: number) => {
                   const sc = statusConfig[booking.status] || statusConfig.Pending;
                   return (
                     <motion.div key={booking.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: index * 0.04 }}
-                      className="p-4 hover:bg-slate-50 transition-colors flex flex-col gap-3.5 lg:grid lg:grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto] lg:gap-4 lg:px-5 lg:py-4 lg:items-center">
+                      className="p-4 hover:bg-slate-50 transition-colors flex flex-col gap-3.5 lg:grid lg:grid-cols-[1fr_1.5fr_1fr_1fr_auto_auto_auto_auto] lg:gap-4 lg:px-5 lg:py-4 lg:items-center">
 
                       {/* Booking ID */}
                       <div className="flex justify-between items-center lg:block">
@@ -162,7 +172,24 @@ export default function AdminBookingsPage() {
                         </div>
                       </div>
 
-                      {/* Status */}
+                      {/* Payment Status Toggle */}
+                      <div className="flex justify-between items-center lg:block">
+                        <span className="text-xs font-semibold text-slate-400 lg:hidden">Payment</span>
+                        <button
+                          onClick={() => handlePaymentToggle(booking)}
+                          disabled={updatingId === booking.id}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all hover:scale-105 disabled:opacity-50 ${
+                            booking.paymentStatus === 'Paid'
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100'
+                              : 'bg-amber-50 border-amber-300 text-amber-700 hover:bg-amber-100'
+                          }`}
+                        >
+                          <DollarSign className="h-3 w-3" />
+                          {booking.paymentStatus === 'Paid' ? 'Paid ✓' : 'Unpaid'}
+                        </button>
+                      </div>
+
+                      {/* Booking Status */}
                       <div className="flex justify-between items-center lg:block">
                         <span className="text-xs font-semibold text-slate-400 lg:hidden">Status</span>
                         <div>
