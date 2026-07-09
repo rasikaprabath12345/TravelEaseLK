@@ -29,7 +29,7 @@ export function useCreateBooking() {
 export function useUpdateBookingStatus() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: number; status: string; notes?: string }) =>
+    mutationFn: (data: { id: number; status: string; notes?: string; paymentStatus?: string }) =>
       bookingService.updateStatus(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });

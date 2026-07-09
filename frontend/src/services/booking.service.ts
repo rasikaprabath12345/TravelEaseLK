@@ -29,7 +29,7 @@ export const bookingService = {
     return response.data;
   },
 
-  async updateStatus(data: { id: number; status: string; notes?: string }) {
+  async updateStatus(data: { id: number; status: string; notes?: string; paymentStatus?: string }) {
     const response = await api.put<ApiResponse<Booking>>('/bookings/status', data);
     return response.data;
   },

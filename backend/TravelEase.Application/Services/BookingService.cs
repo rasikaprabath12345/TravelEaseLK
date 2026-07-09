@@ -167,6 +167,12 @@ public class BookingService : IBookingService
         booking.Notes = dto.Notes;
         if (!string.IsNullOrEmpty(dto.PaymentStatus))
             booking.PaymentStatus = dto.PaymentStatus;
+        
+        if (dto.Status == "Confirmed" || dto.Status == "Completed")
+        {
+            booking.PaymentStatus = "Paid";
+        }
+        
         booking.UpdatedAt = DateTime.UtcNow;
 
         // If cancelled, restore seats

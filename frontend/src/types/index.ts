@@ -80,6 +80,7 @@ export interface Booking {
   specialRequests?: string;
   totalPrice: number;
   status: string;
+  paymentStatus?: string;
   packageName: string;
   packageImage?: string;
   createdAt: string;
