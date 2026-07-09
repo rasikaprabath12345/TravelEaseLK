@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, User, ChevronDown, X, Globe, LogOut,
@@ -15,10 +15,13 @@ import { useAuthStore } from '@/store/auth.store';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | 'language' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
 
   useEffect(() => {
@@ -47,8 +50,21 @@ export default function Navbar() {
     setIsOpen(false);
   }, [pathname]);
 
-  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile' | 'language') => {
+  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile') => {
     setActiveDropdown(activeDropdown === type ? null : type);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setIsSearchOpen(false);
+    router.push(`/packages?search=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
+  const handlePopularSearchClick = (term: string) => {
+    setIsSearchOpen(false);
+    setSearchQuery('');
+    router.push(`/packages?search=${encodeURIComponent(term)}`);
   };
 
   const isLightPage = pathname?.startsWith('/admin') || 
@@ -243,37 +259,16 @@ export default function Navbar() {
             {/* Right Side Buttons */}
             <div className="flex items-center gap-3 sm:gap-4.5">
               
-              {/* Language Dropdown */}
-              <div className="relative hidden lg:block">
-                <button
-                  onClick={() => toggleDropdown('language')}
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all text-sm font-semibold shrink-0 hover:bg-slate-100/50 ${
-                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white hover:text-rose-400'
-                  }`}
-                  aria-label="Language Selector"
-                >
-                  <Languages className="h-4.5 w-4.5" />
-                </button>
-                <AnimatePresence>
-                  {activeDropdown === 'language' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute right-0 top-full mt-2 w-44 bg-white border border-slate-200 shadow-xl rounded-xl p-1 z-50 overflow-hidden"
-                    >
-                      <button className="w-full flex items-center justify-between text-left px-3.5 py-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-800">
-                        <span>English (USD)</span>
-                        <span className="text-[10px] text-slate-400">EN</span>
-                      </button>
-                      <button className="w-full flex items-center justify-between text-left px-3.5 py-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-800">
-                        <span>Sinhala (LKR)</span>
-                        <span className="text-[10px] text-slate-400">සිංහල</span>
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Search Toggle Button */}
+              <button
+                onClick={() => setIsSearchOpen(true)}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
+                  isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white hover:text-rose-400'
+                }`}
+                aria-label="Open Search"
+              >
+                <Search className="h-4.5 w-4.5" />
+              </button>
 
               {/* Notification bell */}
               <div className="relative">
@@ -535,6 +530,68 @@ export default function Navbar() {
           )}
         </AnimatePresence>
       </nav>
+
+      {/* Search Overlay */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[60] flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: -20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: -20 }}
+              className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl p-6 relative border border-slate-100"
+            >
+              <button
+                onClick={() => setIsSearchOpen(false)}
+                className="absolute right-4 top-4 w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700 transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-lg text-slate-800 mb-4">
+                Search Tour Packages
+              </h3>
+
+              <form onSubmit={handleSearchSubmit} className="relative mb-6">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Where do you want to go? (e.g. Ella, Sigiriya...)"
+                  className="w-full h-12 rounded-xl border border-slate-200 pl-11 pr-4 text-sm focus:outline-none focus:border-rose-500 transition-colors text-slate-800"
+                  autoFocus
+                />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <Button type="submit" className="absolute right-1.5 top-1.5 h-9 bg-rose-500 hover:bg-rose-600 text-white rounded-lg text-xs font-bold px-4">
+                  Search
+                </Button>
+              </form>
+
+              <div>
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2.5">
+                  Popular Searches
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {['Ella', 'Galle', 'Sigiriya', 'Safari', 'Beach'].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => handlePopularSearchClick(term)}
+                      className="px-3.5 py-1.5 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 rounded-lg text-xs font-medium text-slate-600 transition-colors border border-slate-100"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
