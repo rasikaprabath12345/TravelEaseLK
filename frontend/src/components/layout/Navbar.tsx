@@ -385,7 +385,7 @@ export default function Navbar() {
                       onClick={() => toggleDropdown('profile')}
                       className={`flex items-center gap-2 hover:opacity-95 transition-opacity ${textColorClass}`}
                     >
-                      <div className="w-8.5 h-8.5 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center text-white text-[13px] font-bold shadow-md shadow-rose-500/10 hover:scale-102 transition-transform">
+                      <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-pink-600 rounded-full flex items-center justify-center text-white text-[13px] font-bold shadow-md shadow-rose-500/10 hover:scale-[1.02] transition-transform">
                         {user?.firstName?.charAt(0)}
                       </div>
                       <span className="text-[12.5px] font-bold tracking-wider hidden sm:block max-w-[90px] truncate">
@@ -505,7 +505,7 @@ export default function Navbar() {
                     <Globe className="h-5 w-5 text-[var(--nav-accent)]" />
                     <span className="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-800 text-base">TravelEase</span>
                   </div>
-                  <button onClick={() => setIsOpen(false)} className="w-8.5 h-8.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700">
+                  <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700">
                     <X className="h-5 w-5" />
                   </button>
                 </div>
