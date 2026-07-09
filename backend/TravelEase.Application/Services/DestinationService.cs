@@ -26,16 +26,12 @@ public class DestinationService : IDestinationService
     public async Task<IEnumerable<DestinationDto>> GetAllAsync(string? search = null)
     {
         var query = _unitOfWork.Repository<Destination>().Query()
-            .Include(d => d.Images)
-            .Include(d => d.Packages.Where(p => p.IsActive))
             .Where(d => d.IsActive);
 
         if (!string.IsNullOrEmpty(search))
             query = query.Where(d => d.Name.Contains(search) || d.Country.Contains(search));
 
-        var destinations = await query.ToListAsync();
-
-        return destinations.Select(d => new DestinationDto
+        var destinations = await query.Select(d => new DestinationDto
         {
             Id = d.Id,
             Name = d.Name,
@@ -48,9 +44,11 @@ public class DestinationService : IDestinationService
             Attractions = d.Attractions,
             Latitude = d.Latitude,
             Longitude = d.Longitude,
-            Images = d.Images?.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList() ?? new(),
-            PackageCount = d.Packages?.Count ?? 0
-        });
+            Images = d.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
+            PackageCount = d.Packages.Count(p => p.IsActive)
+        }).ToListAsync();
+
+        return destinations;
     }
 
     public async Task<DestinationDto?> GetByIdAsync(int id)

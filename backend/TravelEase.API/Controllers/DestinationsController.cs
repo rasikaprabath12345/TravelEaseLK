@@ -16,6 +16,12 @@ public class DestinationsController : ControllerBase
         _destinationService = destinationService;
     }
 
+    [HttpGet("ping")]
+    public IActionResult Ping()
+    {
+        return Ok("pong");
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] string? search)
     {
