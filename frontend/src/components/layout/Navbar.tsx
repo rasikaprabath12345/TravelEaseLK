@@ -17,7 +17,7 @@ import { formatPrice } from '@/lib/utils';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | 'wishlist' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'notifications' | 'profile' | 'wishlist' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
@@ -53,7 +53,7 @@ export default function Navbar() {
     setIsOpen(false);
   }, [pathname]);
 
-  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile' | 'wishlist') => {
+  const toggleDropdown = (type: 'notifications' | 'profile' | 'wishlist') => {
     setActiveDropdown(activeDropdown === type ? null : type);
   };
 
@@ -91,21 +91,7 @@ export default function Navbar() {
   const dividerClass = isLightNav ? 'bg-slate-200' : 'bg-white/20';
   const navHeightClass = scrolled ? 'h-14' : 'h-16'; 
 
-  // Popular Destinations details for Megamenu
-  const destinationsMega = [
-    { name: 'Ella & Central Highlands', desc: 'Scenic train rides, tea plantations, and cool mountain weather.', icon: Compass, link: '/destinations', tag: 'Highlands' },
-    { name: 'Galle & Southern Coast', desc: 'Historic colonial Dutch Fort, surfing spots, and sandy beaches.', icon: MapPin, link: '/destinations', tag: 'Coastline' },
-    { name: 'Cultural Triangle', desc: 'Explore Sigiriya, Anuradhapura, Polonnaruwa ancient history.', icon: Shield, link: '/destinations', tag: 'Heritage' },
-    { name: 'Trincomalee & East Coast', desc: 'Pristine whale-watching bays and golden white beaches.', icon: Globe, link: '/destinations', tag: 'Relaxation' },
-  ];
 
-  // Tour Package categories for Megamenu
-  const packagesMega = [
-    { name: 'Adventure & Trekking', desc: 'Hiking tours, white-water rafting, and camping.', icon: Briefcase, link: '/packages', badge: 'Active' },
-    { name: 'Wildlife & Safari', desc: 'National park safaris spotting leopards and elephants.', icon: Gift, link: '/packages', badge: 'Popular' },
-    { name: 'Honeymoon Specials', desc: 'Romantic getaways in premium beach resorts & villas.', icon: Star, link: '/packages', badge: 'Premium' },
-    { name: 'Cultural & Heritage', desc: 'Curated historic landmarks and UNESCO heritage tours.', icon: Compass, link: '/packages', badge: 'New' },
-  ];
 
   // Simulating Notifications
   const mockNotifications = [
@@ -153,96 +139,19 @@ export default function Navbar() {
                 </span>
               </Link>
 
-              {/* Packages with Megamenu */}
-              <div className="relative">
-                <button
-                  onClick={() => toggleDropdown('packages')}
-                  className={`flex items-center gap-1 px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100/50 group ${activeDropdown === 'packages' ? 'text-[var(--nav-accent)]' : ''}`}
-                >
-                  <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors group-hover:text-[var(--nav-accent)] ${textColorClass} ${activeDropdown === 'packages' ? 'text-[var(--nav-accent)]' : ''}`}>
-                    PACKAGES
-                  </span>
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'packages' ? 'rotate-180 text-[var(--nav-accent)]' : textMutedClass}`} />
-                </button>
-                
-                <AnimatePresence>
-                  {activeDropdown === 'packages' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 15 }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[480px] bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50 overflow-hidden"
-                    >
-                      <div className="mb-2.5 pb-2 border-b border-slate-100 flex items-center justify-between">
-                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-xs text-slate-400 uppercase tracking-widest">Tour Packages</span>
-                        <Link href="/packages" className="text-xs text-rose-500 font-bold hover:underline flex items-center gap-0.5">
-                          View All Packages <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
-                        </Link>
-                      </div>
-                      <div className="grid grid-cols-1 gap-2">
-                        {packagesMega.map((p) => (
-                          <Link key={p.name} href={p.link} className="flex gap-3 p-2.5 rounded-xl hover:bg-rose-50/50 transition-colors group">
-                            <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-rose-100 transition-colors">
-                              <p.icon className="h-5 w-5 text-rose-500" />
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center gap-2">
-                                <span className="font-semibold text-slate-800 text-sm">{p.name}</span>
-                                <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded-md uppercase">{p.badge}</span>
-                              </div>
-                              <p className="text-slate-400 text-xs mt-0.5">{p.desc}</p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Packages */}
+              <Link href="/packages" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  PACKAGES
+                </span>
+              </Link>
 
-              {/* Destinations with Megamenu */}
-              <div className="relative">
-                <button
-                  onClick={() => toggleDropdown('destinations')}
-                  className={`flex items-center gap-1 px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100/50 group ${activeDropdown === 'destinations' ? 'text-[var(--nav-accent)]' : ''}`}
-                >
-                  <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors group-hover:text-[var(--nav-accent)] ${textColorClass} ${activeDropdown === 'destinations' ? 'text-[var(--nav-accent)]' : ''}`}>
-                    DESTINATIONS
-                  </span>
-                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'destinations' ? 'rotate-180 text-[var(--nav-accent)]' : textMutedClass}`} />
-                </button>
-                
-                <AnimatePresence>
-                  {activeDropdown === 'destinations' && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 15 }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[540px] bg-white rounded-2xl border border-slate-200 shadow-xl p-4.5 z-50 overflow-hidden"
-                    >
-                      <div className="mb-3 pb-2 border-b border-slate-100 flex items-center justify-between">
-                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-xs text-slate-400 uppercase tracking-widest">Sri Lanka Travel Spots</span>
-                        <Link href="/destinations" className="text-xs text-rose-500 font-bold hover:underline flex items-center gap-0.5">
-                          Discover More <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
-                        </Link>
-                      </div>
-                      <div className="grid grid-cols-2 gap-3.5">
-                        {destinationsMega.map((d) => (
-                          <Link key={d.name} href={d.link} className="flex gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition-colors group">
-                            <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-rose-50 group-hover:text-rose-500 transition-colors text-slate-500">
-                              <d.icon className="h-4.5 w-4.5" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-semibold text-slate-800 text-[13px] truncate">{d.name}</p>
-                              <p className="text-slate-400 text-[11px] leading-tight line-clamp-2 mt-0.5">{d.desc}</p>
-                            </div>
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Destinations */}
+              <Link href="/destinations" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  DESTINATIONS
+                </span>
+              </Link>
 
               {/* About */}
               <Link href="/about" className="px-3.5 py-2 rounded-xl group relative">
