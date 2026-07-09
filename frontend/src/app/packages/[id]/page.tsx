@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { usePackage } from '@/hooks/usePackages';
 import { useCreateBooking } from '@/hooks/useBookings';
 import { useAuthStore } from '@/store/auth.store';
+import { useWishlistStore } from '@/store/wishlist.store';
 import { formatPrice, formatDate, generateWhatsAppUrl } from '@/lib/utils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -54,6 +55,7 @@ export default function PackageDetailPage() {
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [imgIdx, setImgIdx] = useState(0);
+  const { toggleItem, isInWishlist } = useWishlistStore();
 
   const pkg = packageData?.data;
 
