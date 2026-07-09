@@ -109,7 +109,7 @@ export default function AdminDestinationsPage() {
                       <span>{dest.packageCount || 0} packages</span>
                     </div>
                     <div className="flex gap-2">
-                      <Link href={`/admin/destinations/${dest.id}/edit`}>
+                      <Link href={`/admin/destinations/edit/${dest.id}`}>
                         <button className="w-8 h-8 bg-sky-50 hover:bg-sky-100 rounded-lg flex items-center justify-center text-sky-600 transition-colors">
                           <Edit className="h-3.5 w-3.5" />
                         </button>
