@@ -11,11 +11,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
+import { useWishlistStore } from '@/store/wishlist.store';
+import { formatPrice } from '@/lib/utils';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | 'wishlist' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   
@@ -23,6 +25,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuthStore();
+  const { items: wishlistItems, removeItem: removeWishlistItem } = useWishlistStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +53,7 @@ export default function Navbar() {
     setIsOpen(false);
   }, [pathname]);
 
-  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile') => {
+  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile' | 'wishlist') => {
     setActiveDropdown(activeDropdown === type ? null : type);
   };
 
@@ -259,16 +262,75 @@ export default function Navbar() {
             {/* Right Side Buttons */}
             <div className="flex items-center gap-3 sm:gap-4.5">
               
-              {/* Search Toggle Button */}
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
-                  isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white hover:text-rose-400'
-                }`}
-                aria-label="Open Search"
-              >
-                <Search className="h-4.5 w-4.5" />
-              </button>
+              {/* Wishlist Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('wishlist')}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
+                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
+                  }`}
+                  aria-label="Wishlist"
+                >
+                  {wishlistItems.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                      {wishlistItems.length}
+                    </span>
+                  )}
+                  <Heart className={`h-4.5 w-4.5 ${wishlistItems.length > 0 ? 'fill-rose-500 text-rose-500' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {activeDropdown === 'wishlist' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-50 overflow-hidden"
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800">Saved Tours</span>
+                        <span className="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full font-bold">
+                          {wishlistItems.length} Items
+                        </span>
+                      </div>
+                      <div className="space-y-3 max-h-60 overflow-y-auto">
+                        {wishlistItems.length === 0 ? (
+                          <div className="text-center py-6">
+                            <Heart className="h-9 w-9 text-slate-200 mx-auto mb-2" />
+                            <p className="text-slate-400 text-xs font-semibold">Your wishlist is empty</p>
+                          </div>
+                        ) : (
+                          wishlistItems.map((item) => (
+                            <div key={item.id} className="flex gap-2.5 p-1 rounded-xl hover:bg-slate-50 transition-colors group relative">
+                              {item.imageUrl ? (
+                                <img src={item.imageUrl} alt={item.name} className="w-10 h-10 rounded-lg object-cover shrink-0" />
+                              ) : (
+                                <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+                                  <Heart className="h-4.5 w-4.5 text-slate-300" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0 pr-6">
+                                <Link href={`/packages/${item.id}`} className="text-xs font-bold text-slate-800 hover:text-rose-500 block truncate">
+                                  {item.name}
+                                </Link>
+                                <span className="text-[10px] text-slate-400 block mt-0.5">{item.destinationName || 'Sri Lanka'}</span>
+                                <span className="text-xs font-bold text-slate-700 block mt-1">{formatPrice(item.price)}</span>
+                              </div>
+                              <button
+                                onClick={(e) => { e.preventDefault(); removeWishlistItem(item.id); }}
+                                className="absolute right-1 top-1 w-6 h-6 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-600 flex items-center justify-center transition-colors opacity-0 group-hover:opacity-100"
+                                aria-label="Remove item"
+                              >
+                                <X className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Notification bell */}
               <div className="relative">

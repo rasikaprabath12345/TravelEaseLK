@@ -14,6 +14,7 @@ import { usePackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice, isValidImageUrl } from '@/lib/utils';
 import Link from 'next/link';
+import { useWishlistStore } from '@/store/wishlist.store';
 
 const packageImages = [
   'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=800&q=80',
@@ -47,6 +48,7 @@ export default function PackagesPage() {
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
+  const { toggleItem, isInWishlist } = useWishlistStore();
 
   const { data: packagesData, isLoading } = usePackages({ search, destinationId, sortBy, page, pageSize: 12 });
   const { data: destinationsData } = useDestinations();
@@ -250,10 +252,20 @@ export default function PackagesPage() {
                         )}
 
                         <button
-                          onClick={e => e.preventDefault()}
+                          onClick={e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleItem({
+                              id: pkg.id,
+                              name: pkg.name,
+                              price: pkg.price,
+                              imageUrl: pkg.imageUrl,
+                              destinationName: pkg.destinationName
+                            });
+                          }}
                           className="absolute bottom-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:scale-110 shadow"
                         >
-                          <Heart className="h-4 w-4 text-slate-600 hover:text-red-500 transition-colors" />
+                          <Heart className={`h-4 w-4 transition-colors ${isInWishlist(pkg.id) ? 'fill-rose-500 text-rose-500' : 'text-slate-600 hover:text-rose-500'}`} />
                         </button>
 
                         <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
