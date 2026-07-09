@@ -5,6 +5,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function isValidImageUrl(url: string | null | undefined): boolean {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim().toLowerCase();
+  if (trimmed === 'main image url' || trimmed === 'image url' || trimmed === 'null' || trimmed === 'undefined') return false;
+  return trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/') || trimmed.startsWith('data:image');
+}
+
 export function formatPrice(price: number) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

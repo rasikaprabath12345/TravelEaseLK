@@ -33,7 +33,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useFeaturedPackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, isValidImageUrl } from '@/lib/utils';
 
 // 📌 INSTRUCTIONS FOR IMAGES:
 // 1. Create a folder named 'images' inside your 'public' folder (public/images).
@@ -502,7 +502,7 @@ export default function HomePage() {
                     <div className="group cursor-pointer bg-white rounded-3xl overflow-hidden border border-sky-100 soft-shadow card-hover">
                       <div className="relative h-56 overflow-hidden">
                         <img
-                          src={pkg.imageUrl || packageImages[index % packageImages.length]}
+                          src={isValidImageUrl(pkg.imageUrl) ? pkg.imageUrl : packageImages[index % packageImages.length]}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
@@ -640,7 +640,7 @@ export default function HomePage() {
                   <Link href={`/destinations/${dest.id}`}>
                     <div className="relative h-80 rounded-3xl overflow-hidden group cursor-pointer soft-shadow card-hover">
                       <img
-                        src={dest.imageUrl || destinationImages[index % destinationImages.length]}
+                        src={isValidImageUrl(dest.imageUrl) ? dest.imageUrl : destinationImages[index % destinationImages.length]}
                         alt={dest.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />

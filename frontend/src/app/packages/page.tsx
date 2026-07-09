@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice, isValidImageUrl } from '@/lib/utils';
 import Link from 'next/link';
 
 const packageImages = [
@@ -228,7 +228,7 @@ export default function PackagesPage() {
                       {/* Image */}
                       <div className="relative h-56 overflow-hidden">
                         <img
-                          src={pkg.imageUrl || packageImages[index % packageImages.length]}
+                          src={isValidImageUrl(pkg.imageUrl) ? pkg.imageUrl : packageImages[index % packageImages.length]}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
@@ -317,7 +317,7 @@ export default function PackagesPage() {
                     <div className="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-sky-100 shadow hover:shadow-xl transition-all hover:-translate-y-0.5 flex">
                       <div className="relative w-48 md:w-64 shrink-0 overflow-hidden">
                         <img
-                          src={pkg.imageUrl || packageImages[index % packageImages.length]}
+                          src={isValidImageUrl(pkg.imageUrl) ? pkg.imageUrl : packageImages[index % packageImages.length]}
                           alt={pkg.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />

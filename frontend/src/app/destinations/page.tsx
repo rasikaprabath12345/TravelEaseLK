@@ -8,6 +8,7 @@ import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import { Badge } from '../../components/ui/badge';
 import { useDestinations } from '../../hooks/useDestinations';
+import { isValidImageUrl } from '@/lib/utils';
 
 const categoryFilters = [
   { id: 'all', label: 'All', icon: Compass },
@@ -209,7 +210,7 @@ export default function DestinationsPage() {
                   <Link href={dest.id ? `/packages?destination=${dest.id}` : '/packages'}>
                     <div className="relative h-80 rounded-3xl overflow-hidden group cursor-pointer shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
                       <img
-                        src={dest.imageUrl || dest.img || destinationImages[index % destinationImages.length]}
+                        src={isValidImageUrl(dest.imageUrl) ? dest.imageUrl : (isValidImageUrl(dest.img) ? dest.img : destinationImages[index % destinationImages.length])}
                         alt={dest.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
