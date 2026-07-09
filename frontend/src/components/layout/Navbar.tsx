@@ -1,16 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, User, ChevronDown, X, Globe, LogOut } from 'lucide-react';
+import {
+  Search, User, ChevronDown, X, Globe, LogOut,
+  Bell, Heart, Settings, Shield, Compass, Briefcase,
+  MapPin, Gift, Star, Languages, Calendar, AlertCircle
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<'packages' | 'destinations' | 'notifications' | 'profile' | 'language' | null>(null);
+  
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuthStore();
 
@@ -19,20 +26,31 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Initial check on load
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { href: '/', label: 'HOME' },
-    { href: '/packages', label: 'PACKAGES' },
-    { href: '/destinations', label: 'DESTINATIONS' },
-    { href: '/about', label: 'ABOUT' },
-    { href: '/contact', label: 'CONTACT' },
-  ];
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  // සංශෝධනය: Home page ('/') එක හැර අනෙකුත් සියලුම පිටු Light Pages ලෙස සැලකීම වඩාත් සුදුසුය.
-  // නැතහොත් අවශ්‍ය පිටු පමණක් මෙලෙස එකතු කළ හැක.
+  // Close dropdowns on route change
+  useEffect(() => {
+    setActiveDropdown(null);
+    setIsOpen(false);
+  }, [pathname]);
+
+  const toggleDropdown = (type: 'packages' | 'destinations' | 'notifications' | 'profile' | 'language') => {
+    setActiveDropdown(activeDropdown === type ? null : type);
+  };
+
   const isLightPage = pathname?.startsWith('/admin') || 
                       pathname?.startsWith('/dashboard') || 
                       pathname?.startsWith('/login') || 
@@ -44,39 +62,58 @@ export default function Navbar() {
                       
   const isLightNav = scrolled || isLightPage;
 
-  // Background සහ Border අවස්ථාව අනුව වෙනස් වීම (පැහැදිලිව පෙනෙන පරිදි සකසා ඇත)
   const navBgClass = isLightNav 
-    ? 'bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] py-1.5' 
-    : 'bg-black/15 backdrop-blur-[3px] border-transparent py-2.5';
+    ? 'bg-white/90 backdrop-blur-lg border-b border-slate-200/80 shadow-[0_4px_30px_rgba(0,0,0,0.03)] py-1.5' 
+    : 'bg-slate-900/10 backdrop-blur-[4px] border-b border-white/5 py-3';
     
-  // සුදු පසුබිමේදී අකුරු පැහැදිලිව පෙනීමට Dark Color එකක් සහ සාමාන්‍ය අවස්ථාවේදී White Color එකක්
-  const textColorClass = isLightNav ? 'text-[#171717] font-bold' : 'text-white drop-shadow-md';
-  const textMutedClass = isLightNav ? 'text-gray-500 font-semibold' : 'text-white/85 drop-shadow-md';
-  const hamburgerClass = isLightNav ? 'bg-[#171717]' : 'bg-white shadow-sm';
-  const dividerClass = isLightNav ? 'bg-gray-200' : 'bg-white/30';
-  
-  // උස කලින් h-20 තිබූ එක h-16/14 දක්වා අඩු කර ඇත
+  const textColorClass = isLightNav ? 'text-slate-800 font-bold' : 'text-white drop-shadow-sm';
+  const textMutedClass = isLightNav ? 'text-slate-500 font-semibold' : 'text-white/80 drop-shadow-sm';
+  const hamburgerClass = isLightNav ? 'bg-slate-800' : 'bg-white';
+  const dividerClass = isLightNav ? 'bg-slate-200' : 'bg-white/20';
   const navHeightClass = scrolled ? 'h-14' : 'h-16'; 
+
+  // Popular Destinations details for Megamenu
+  const destinationsMega = [
+    { name: 'Ella & Central Highlands', desc: 'Scenic train rides, tea plantations, and cool mountain weather.', icon: Compass, link: '/destinations', tag: 'Highlands' },
+    { name: 'Galle & Southern Coast', desc: 'Historic colonial Dutch Fort, surfing spots, and sandy beaches.', icon: MapPin, link: '/destinations', tag: 'Coastline' },
+    { name: 'Cultural Triangle', desc: 'Explore Sigiriya, Anuradhapura, Polonnaruwa ancient history.', icon: Shield, link: '/destinations', tag: 'Heritage' },
+    { name: 'Trincomalee & East Coast', desc: 'Pristine whale-watching bays and golden white beaches.', icon: Globe, link: '/destinations', tag: 'Relaxation' },
+  ];
+
+  // Tour Package categories for Megamenu
+  const packagesMega = [
+    { name: 'Adventure & Trekking', desc: 'Hiking tours, white-water rafting, and camping.', icon: Briefcase, link: '/packages', badge: 'Active' },
+    { name: 'Wildlife & Safari', desc: 'National park safaris spotting leopards and elephants.', icon: Gift, link: '/packages', badge: 'Popular' },
+    { name: 'Honeymoon Specials', desc: 'Romantic getaways in premium beach resorts & villas.', icon: Star, link: '/packages', badge: 'Premium' },
+    { name: 'Cultural & Heritage', desc: 'Curated historic landmarks and UNESCO heritage tours.', icon: Compass, link: '/packages', badge: 'New' },
+  ];
+
+  // Simulating Notifications
+  const mockNotifications = [
+    { id: 1, title: 'Booking Confirmed!', desc: 'Your booking TE20260021 has been confirmed.', time: '2 hrs ago', unread: true },
+    { id: 2, title: 'Exclusive 10% Discount', desc: 'Use coupon SUMMERTREAT on Southern Coast packages.', time: '1 day ago', unread: false },
+    { id: 3, title: 'New Destination Added', desc: 'Explore Ella and the famous Nine Arch Bridge.', time: '3 days ago', unread: false },
+  ];
 
   return (
     <>
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        
         :root {
-          /* Premium Red Accent */
           --nav-accent: #e11d48; 
           --nav-accent-hover: #be123c;
         }
       `}</style>
 
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`} suppressHydrationWarning>
+      <nav ref={dropdownRef} className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`} suppressHydrationWarning>
         <div className="max-w-[1800px] mx-auto px-4 md:px-8" suppressHydrationWarning>
           <div className={`flex items-center justify-between transition-all duration-300 ${navHeightClass}`} suppressHydrationWarning>
             
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0 group">
-              <Globe className="h-6 w-6 text-[var(--nav-accent)] group-hover:rotate-12 transition-transform duration-500 drop-shadow-sm" strokeWidth={2.5} />
+              <div className="w-9 h-9 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform duration-300">
+                <Globe className="h-5 w-5 text-white group-hover:rotate-12 transition-transform duration-500" strokeWidth={2.5} />
+              </div>
               <div className="flex flex-col justify-center">
                 <span className={`font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight leading-none transition-colors duration-300 ${textColorClass}`}>
                   TravelEase
@@ -87,141 +124,414 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Right Side Container */}
-            <div className="flex items-center justify-end flex-1">
+            {/* Middle Nav Items */}
+            <div className="hidden xl:flex items-center gap-1.5 2xl:gap-3">
               
-              {/* Desktop Nav Links */}
-              <div className="hidden xl:flex items-center gap-6 2xl:gap-8 mr-8">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="relative group flex items-center py-2"
-                  >
-                    {/* Red Vertical Line Hover Effect */}
-                    <span className="absolute left-[-12px] h-[12px] w-[3px] bg-[var(--nav-accent)] opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-full shadow-[0_0_8px_rgba(225,29,72,0.4)]" />
-                    <span className={`font-['Inter'] text-[12px] font-bold tracking-[1px] group-hover:text-[var(--nav-accent)] transition-colors duration-300 ${textColorClass}`}>
-                      {link.label}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+              {/* Home */}
+              <Link href="/" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  HOME
+                </span>
+              </Link>
 
-              {/* Action Buttons & Icons */}
-              <div className="flex items-center gap-3 sm:gap-5">
-                
-                {/* Main Action Button (Red Pill Shape) */}
-                {isAuthenticated ? (
-                  <Link href={user?.role === 'Admin' ? '/admin/dashboard' : '/dashboard'} className="hidden sm:block">
-                    <Button className="bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-full font-['Inter'] text-[11px] font-bold tracking-wider px-6 h-9.5 md:h-10 transition-all shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_20px_rgba(225,29,72,0.5)] hover:-translate-y-0.5 border border-white/10">
-                      DASHBOARD
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link href="/register" className="hidden sm:block">
-                    <Button className="bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-full font-['Inter'] text-[11px] font-bold tracking-wider px-6 h-9.5 md:h-10 transition-all shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_20px_rgba(225,29,72,0.5)] hover:-translate-y-0.5 border border-white/10">
-                      SIGN UP
-                    </Button>
-                  </Link>
-                )}
-
-                {/* Custom 2-Line Hamburger Menu */}
+              {/* Packages with Megamenu */}
+              <div className="relative">
                 <button
-                  className="p-1 flex flex-col gap-[5px] items-center justify-center group xl:hidden"
-                  onClick={() => setIsOpen(!isOpen)}
+                  onClick={() => toggleDropdown('packages')}
+                  className={`flex items-center gap-1 px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100/50 group ${activeDropdown === 'packages' ? 'text-[var(--nav-accent)]' : ''}`}
                 >
-                  <span className={`w-6 h-[2px] rounded-full group-hover:bg-[var(--nav-accent)] transition-colors ${hamburgerClass}`} />
-                  <span className={`w-6 h-[2px] rounded-full group-hover:bg-[var(--nav-accent)] transition-colors ${hamburgerClass}`} />
+                  <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors group-hover:text-[var(--nav-accent)] ${textColorClass} ${activeDropdown === 'packages' ? 'text-[var(--nav-accent)]' : ''}`}>
+                    PACKAGES
+                  </span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'packages' ? 'rotate-180 text-[var(--nav-accent)]' : textMutedClass}`} />
                 </button>
-
-                {/* Divider Line */}
-                <div className={`hidden sm:block w-[1px] h-6 transition-colors duration-300 ${dividerClass}`} />
-
-                {/* Red Search Circle */}
-                <button aria-label="Search" className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] flex items-center justify-center transition-all text-white shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:shadow-[0_6px_20px_rgba(225,29,72,0.5)] shrink-0 hover:-translate-y-0.5 border border-white/10">
-                  <Search className="h-4 w-4" strokeWidth={2.5} />
-                </button>
-
-                {/* User / Auth Dropdown */}
-                <div className="hidden sm:flex items-center">
-                  {isAuthenticated ? (
-                    <div className="flex items-center gap-1.5 group cursor-pointer">
-                      <span className={`font-['Inter'] text-[12px] font-bold tracking-wider uppercase group-hover:text-[var(--nav-accent)] transition-colors duration-300 ${textColorClass}`}>
-                        {user?.firstName || 'USER'}
-                      </span>
-                      <ChevronDown className={`h-4 w-4 group-hover:text-[var(--nav-accent)] transition-colors duration-300 ${textMutedClass}`} />
-                      <button onClick={logout} className={`ml-1 hover:text-[var(--nav-accent)] transition-colors duration-300 ${textMutedClass}`} title="Logout">
-                        <LogOut className="h-[15px] w-[15px]" strokeWidth={2} />
-                      </button>
-                    </div>
-                  ) : (
-                    <Link href="/login" className="flex items-center gap-1 group">
-                      <span className={`font-['Inter'] text-[12px] font-bold tracking-wider group-hover:text-[var(--nav-accent)] transition-colors duration-300 ${textColorClass}`}>
-                        LOGIN
-                      </span>
-                      <ChevronDown className={`h-4 w-4 group-hover:text-[var(--nav-accent)] transition-colors duration-300 ${textMutedClass}`} />
-                    </Link>
+                
+                <AnimatePresence>
+                  {activeDropdown === 'packages' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 15 }}
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[480px] bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50 overflow-hidden"
+                    >
+                      <div className="mb-2.5 pb-2 border-b border-slate-100 flex items-center justify-between">
+                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-xs text-slate-400 uppercase tracking-widest">Tour Packages</span>
+                        <Link href="/packages" className="text-xs text-rose-500 font-bold hover:underline flex items-center gap-0.5">
+                          View All Packages <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
+                        </Link>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {packagesMega.map((p) => (
+                          <Link key={p.name} href={p.link} className="flex gap-3 p-2.5 rounded-xl hover:bg-rose-50/50 transition-colors group">
+                            <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-rose-100 transition-colors">
+                              <p.icon className="h-5 w-5 text-rose-500" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-semibold text-slate-800 text-sm">{p.name}</span>
+                                <span className="px-1.5 py-0.5 bg-rose-100 text-rose-600 text-[9px] font-bold rounded-md uppercase">{p.badge}</span>
+                              </div>
+                              <p className="text-slate-400 text-xs mt-0.5">{p.desc}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
                   )}
-                </div>
+                </AnimatePresence>
               </div>
+
+              {/* Destinations with Megamenu */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('destinations')}
+                  className={`flex items-center gap-1 px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100/50 group ${activeDropdown === 'destinations' ? 'text-[var(--nav-accent)]' : ''}`}
+                >
+                  <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors group-hover:text-[var(--nav-accent)] ${textColorClass} ${activeDropdown === 'destinations' ? 'text-[var(--nav-accent)]' : ''}`}>
+                    DESTINATIONS
+                  </span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'destinations' ? 'rotate-180 text-[var(--nav-accent)]' : textMutedClass}`} />
+                </button>
+                
+                <AnimatePresence>
+                  {activeDropdown === 'destinations' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 15 }}
+                      className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-[540px] bg-white rounded-2xl border border-slate-200 shadow-xl p-4.5 z-50 overflow-hidden"
+                    >
+                      <div className="mb-3 pb-2 border-b border-slate-100 flex items-center justify-between">
+                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-xs text-slate-400 uppercase tracking-widest">Sri Lanka Travel Spots</span>
+                        <Link href="/destinations" className="text-xs text-rose-500 font-bold hover:underline flex items-center gap-0.5">
+                          Discover More <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
+                        </Link>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3.5">
+                        {destinationsMega.map((d) => (
+                          <Link key={d.name} href={d.link} className="flex gap-2.5 p-2 rounded-xl hover:bg-slate-50 transition-colors group">
+                            <div className="w-9 h-9 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-rose-50 group-hover:text-rose-500 transition-colors text-slate-500">
+                              <d.icon className="h-4.5 w-4.5" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-slate-800 text-[13px] truncate">{d.name}</p>
+                              <p className="text-slate-400 text-[11px] leading-tight line-clamp-2 mt-0.5">{d.desc}</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* About */}
+              <Link href="/about" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  ABOUT
+                </span>
+              </Link>
+
+              {/* Contact */}
+              <Link href="/contact" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  CONTACT
+                </span>
+              </Link>
+            </div>
+
+            {/* Right Side Buttons */}
+            <div className="flex items-center gap-3 sm:gap-4.5">
+              
+              {/* Language Dropdown */}
+              <div className="relative hidden lg:block">
+                <button
+                  onClick={() => toggleDropdown('language')}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all text-sm font-semibold shrink-0 hover:bg-slate-100/50 ${
+                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white hover:text-rose-400'
+                  }`}
+                  aria-label="Language Selector"
+                >
+                  <Languages className="h-4.5 w-4.5" />
+                </button>
+                <AnimatePresence>
+                  {activeDropdown === 'language' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 top-full mt-2 w-44 bg-white border border-slate-200 shadow-xl rounded-xl p-1 z-50 overflow-hidden"
+                    >
+                      <button className="w-full flex items-center justify-between text-left px-3.5 py-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-800">
+                        <span>English (USD)</span>
+                        <span className="text-[10px] text-slate-400">EN</span>
+                      </button>
+                      <button className="w-full flex items-center justify-between text-left px-3.5 py-2 hover:bg-slate-50 rounded-lg text-xs font-semibold text-slate-800">
+                        <span>Sinhala (LKR)</span>
+                        <span className="text-[10px] text-slate-400">සිංහල</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Notification bell */}
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown('notifications')}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
+                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
+                  }`}
+                  aria-label="Notifications"
+                >
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full animate-pulse" />
+                  <Bell className="h-4.5 w-4.5" />
+                </button>
+
+                <AnimatePresence>
+                  {activeDropdown === 'notifications' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-50 overflow-hidden"
+                    >
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800">Notifications</span>
+                        <span className="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full font-bold">1 New</span>
+                      </div>
+                      <div className="space-y-3 max-h-60 overflow-y-auto">
+                        {mockNotifications.map((notif) => (
+                          <div key={notif.id} className="flex gap-2.5 p-1 rounded-xl hover:bg-slate-50 transition-colors">
+                            <AlertCircle className={`h-4.5 w-4.5 shrink-0 mt-0.5 ${notif.unread ? 'text-rose-500' : 'text-slate-400'}`} />
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-xs ${notif.unread ? 'font-semibold text-slate-800' : 'text-slate-600'}`}>{notif.title}</p>
+                              <p className="text-[11px] text-slate-400 truncate mt-0.5">{notif.desc}</p>
+                              <span className="text-[9px] text-slate-300 block mt-1">{notif.time}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Divider Line */}
+              <div className={`hidden sm:block w-[1px] h-5 transition-colors duration-300 ${dividerClass}`} />
+
+              {/* User profile dropdown or Sign In */}
+              <div className="relative">
+                {isAuthenticated ? (
+                  <>
+                    <button
+                      onClick={() => toggleDropdown('profile')}
+                      className={`flex items-center gap-2 hover:opacity-95 transition-opacity ${textColorClass}`}
+                    >
+                      <div className="w-8.5 h-8.5 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center text-white text-[13px] font-bold shadow-md shadow-rose-500/10 hover:scale-102 transition-transform">
+                        {user?.firstName?.charAt(0)}
+                      </div>
+                      <span className="text-[12.5px] font-bold tracking-wider hidden sm:block max-w-[90px] truncate">
+                        {user?.firstName}
+                      </span>
+                      <ChevronDown className="h-4 w-4 opacity-70 hidden sm:block" />
+                    </button>
+
+                    <AnimatePresence>
+                      {activeDropdown === 'profile' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-50 overflow-hidden"
+                        >
+                          {/* User card info */}
+                          <div className="flex items-center gap-3 pb-3 border-b border-slate-100 mb-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center text-white text-base font-bold shrink-0">
+                              {user?.firstName?.charAt(0)}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-semibold text-slate-800 text-sm truncate">{user?.firstName} {user?.lastName}</p>
+                              <p className="text-slate-400 text-xs truncate leading-tight">{user?.email}</p>
+                              <span className="inline-block px-1.5 py-0.5 bg-rose-50 text-[10px] text-rose-500 font-bold rounded mt-1 border border-rose-100">{user?.role}</span>
+                            </div>
+                          </div>
+
+                          {/* Options */}
+                          <div className="space-y-1">
+                            {user?.role === 'Admin' && (
+                              <Link href="/admin/dashboard" className="flex items-center gap-2.5 px-2.5 py-2 hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold transition-colors">
+                                <Shield className="h-4 w-4 text-slate-400" />
+                                Admin Panel
+                              </Link>
+                            )}
+                            <Link href="/dashboard" className="flex items-center gap-2.5 px-2.5 py-2 hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold transition-colors">
+                              <Calendar className="h-4 w-4 text-slate-400" />
+                              My Bookings
+                            </Link>
+                            <Link href="/wishlist" className="flex items-center gap-2.5 px-2.5 py-2 hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold transition-colors">
+                              <Heart className="h-4 w-4 text-slate-400" />
+                              Wishlist
+                            </Link>
+                            <Link href="/settings" className="flex items-center gap-2.5 px-2.5 py-2 hover:bg-slate-50 text-slate-700 hover:text-slate-900 rounded-xl text-xs font-semibold transition-colors">
+                              <Settings className="h-4 w-4 text-slate-400" />
+                              Settings
+                            </Link>
+                            <button
+                              onClick={logout}
+                              className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-rose-50 text-rose-600 hover:text-rose-700 rounded-xl text-xs font-bold transition-colors text-left"
+                            >
+                              <LogOut className="h-4 w-4" />
+                              Logout
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </>
+                ) : (
+                  <div className="hidden sm:flex items-center gap-2">
+                    <Link href="/login">
+                      <Button variant="ghost" className={`font-['Inter'] text-[12px] font-bold tracking-wider px-4.5 rounded-xl border border-transparent transition-all ${
+                        isLightNav ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
+                      }`}>
+                        LOGIN
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button className="bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-xl font-['Inter'] text-[11px] font-bold tracking-wider px-5 h-9 transition-all shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:-translate-y-0.5 border border-white/5">
+                        SIGN UP
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Hamburger menu for mobile */}
+              <button
+                className="p-1.5 flex flex-col gap-[5px] items-center justify-center group xl:hidden shrink-0"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle Navigation Menu"
+              >
+                <span className={`w-5.5 h-[2.5px] rounded-full transition-all group-hover:bg-[var(--nav-accent)] ${hamburgerClass} ${isOpen ? 'rotate-45 translate-y-[7.5px]' : ''}`} />
+                <span className={`w-5.5 h-[2.5px] rounded-full transition-all group-hover:bg-[var(--nav-accent)] ${hamburgerClass} ${isOpen ? 'opacity-0 scale-0' : ''}`} />
+                <span className={`w-5.5 h-[2.5px] rounded-full transition-all group-hover:bg-[var(--nav-accent)] ${hamburgerClass} ${isOpen ? '-rotate-45 -translate-y-[7.5px]' : ''}`} />
+              </button>
+
             </div>
           </div>
         </div>
 
-        {/* Mobile / Tablet Menu Dropdown */}
+        {/* Mobile / Tablet Menu Drawer */}
         <AnimatePresence>
           {isOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.08)] xl:hidden overflow-hidden"
-            >
-              <div className="px-6 py-4 flex flex-col gap-1 max-w-[1800px] mx-auto">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="flex items-center py-3.5 font-['Inter'] text-[13px] font-bold tracking-widest text-[#171717] hover:text-[var(--nav-accent)] border-b border-gray-100 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {link.label}
+            <>
+              {/* Overlay Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.4 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsOpen(false)}
+                className="fixed inset-0 bg-slate-900 xl:hidden z-40"
+              />
+              
+              {/* Drawer Content */}
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 right-0 w-80 max-w-[90vw] h-screen bg-white shadow-2xl xl:hidden z-50 flex flex-col p-6 overflow-y-auto"
+              >
+                <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-5">
+                  <div className="flex items-center gap-2">
+                    <Globe className="h-5 w-5 text-[var(--nav-accent)]" />
+                    <span className="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-800 text-base">TravelEase</span>
+                  </div>
+                  <button onClick={() => setIsOpen(false)} className="w-8.5 h-8.5 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                {/* Mobile Navigation Links */}
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <Link href="/" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                    HOME
                   </Link>
-                ))}
-                
-                <div className="pt-5 pb-3 flex flex-col gap-2.5">
+
+                  <div className="py-1">
+                    <div className="px-4 py-2 font-['Plus_Jakarta_Sans'] text-xs font-bold tracking-widest text-slate-400 uppercase">Categories</div>
+                    <div className="pl-4 flex flex-col gap-1 mt-1">
+                      <Link href="/packages" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                        Tours & Packages
+                      </Link>
+                      <Link href="/destinations" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                        Destinations
+                      </Link>
+                    </div>
+                  </div>
+
+                  <Link href="/about" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                    ABOUT US
+                  </Link>
+                  <Link href="/contact" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                    CONTACT
+                  </Link>
+                </div>
+
+                {/* Mobile Profile & Actions */}
+                <div className="border-t border-slate-100 pt-5 mt-auto">
                   {isAuthenticated ? (
-                    <>
-                      <Link href={user?.role === 'Admin' ? '/admin/dashboard' : '/dashboard'} onClick={() => setIsOpen(false)}>
-                        <Button className="w-full bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-full font-bold tracking-widest h-11 text-[12px] shadow-md border border-red-500/10">
-                          MY DASHBOARD
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center text-white text-base font-bold shadow-md shrink-0">
+                          {user?.firstName?.charAt(0)}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-slate-800 text-sm truncate">{user?.firstName} {user?.lastName}</p>
+                          <p className="text-slate-400 text-xs truncate leading-none mt-1">{user?.email}</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        {user?.role === 'Admin' && (
+                          <Link href="/admin/dashboard" className="col-span-2">
+                            <Button className="w-full bg-slate-900 text-white rounded-xl text-xs font-semibold h-10">
+                              Admin Panel
+                            </Button>
+                          </Link>
+                        )}
+                        <Link href="/dashboard" className="w-full">
+                          <Button variant="outline" className="w-full rounded-xl text-xs font-semibold h-10 border-slate-200 text-slate-700">
+                            Bookings
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          onClick={logout}
+                          className="w-full rounded-xl text-xs font-bold h-10 border-rose-200 text-rose-600 hover:bg-rose-50"
+                        >
+                          Logout
                         </Button>
-                      </Link>
-                      <Button 
-                        variant="outline" 
-                        className="w-full rounded-full border-gray-200 text-[#171717] hover:text-[var(--nav-accent)] font-bold tracking-widest h-11 text-[12px] hover:bg-gray-50 transition-colors"
-                        onClick={() => { logout(); setIsOpen(false); }}
-                      >
-                        LOG OUT
-                      </Button>
-                    </>
+                      </div>
+                    </div>
                   ) : (
-                    <>
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full rounded-full border-gray-200 text-[#171717] hover:text-[var(--nav-accent)] font-bold tracking-widest h-11 text-[12px] hover:bg-gray-50 transition-colors">
-                          LOGIN
+                    <div className="flex flex-col gap-2">
+                      <Link href="/login">
+                        <Button variant="outline" className="w-full rounded-xl text-xs font-bold h-11 border-slate-200 text-slate-700">
+                          LOG IN
                         </Button>
                       </Link>
-                      <Link href="/register" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-full font-bold tracking-widest h-11 text-[12px] shadow-md border border-red-500/10">
+                      <Link href="/register">
+                        <Button className="w-full bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-xl text-xs font-bold h-11 shadow-md">
                           SIGN UP
                         </Button>
                       </Link>
-                    </>
+                    </div>
                   )}
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
       </nav>

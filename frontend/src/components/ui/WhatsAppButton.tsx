@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
-const WHATSAPP_NUMBER = '0703348191';       // ← ඔයාගේ WhatsApp number (94XXXXXXXXX)
+const WHATSAPP_NUMBER = '94703348191';       // ← ඔයාගේ WhatsApp number (94XXXXXXXXX)
 const MESSENGER_PAGE_ID = 'traveleaselk';   // ← ඔයාගේ Facebook Page username or ID
 const DEFAULT_WA_MSG = 'Hello! I am interested in booking a travel package with TravelEase LK. Could you please assist me?';
 // ──────────────────────────────────────────────────────────────────────────
