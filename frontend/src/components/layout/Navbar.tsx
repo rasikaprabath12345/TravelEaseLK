@@ -272,11 +272,11 @@ export default function Navbar() {
                   aria-label="Wishlist"
                 >
                   {wishlistItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[8px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm">
                       {wishlistItems.length}
                     </span>
                   )}
-                  <Heart className={`h-4.5 w-4.5 ${wishlistItems.length > 0 ? 'fill-rose-500 text-rose-500' : ''}`} />
+                  <Heart className={`h-4 w-4 ${wishlistItems.length > 0 ? 'fill-rose-500 text-rose-500' : ''}`} />
                 </button>
 
                 <AnimatePresence>
