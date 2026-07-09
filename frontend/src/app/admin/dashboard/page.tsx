@@ -182,7 +182,7 @@ export default function AdminDashboard() {
                 </div>
               ) : popularDestinations.map((dest: any, i: number) => (
                 <motion.div
-                  key={dest.name || i}
+                  key={`${dest.name}-${i}`}
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
