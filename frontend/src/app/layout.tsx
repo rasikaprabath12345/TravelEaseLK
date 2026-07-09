@@ -3,6 +3,7 @@ import { Inter, Figtree } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers"; // ඔයාගේ providers file එක මෙතනට import කරන්න
 import { cn } from "@/lib/utils";
+import WhatsAppButton from "@/components/ui/WhatsAppButton";
 
 const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +20,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {children}
         </Providers>
+        <WhatsAppButton />
       </body>
     </html>
   );
-}
+}
