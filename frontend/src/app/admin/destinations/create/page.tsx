@@ -9,9 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import api from '@/services/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function CreateDestinationPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -46,7 +48,8 @@ export default function CreateDestinationPage() {
       // Backend එකේ Create Endpoint එකට දත්ත යැවීම
       await api.post('/destinations', formData);
       
-      // සාර්ථකව Save වූ පසු නැවතත් ලැයිස්තුවට යාම
+      queryClient.invalidateQueries({ queryKey: ['destinations'] });
+      
       router.push('/admin/destinations');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create destination. Please try again.');

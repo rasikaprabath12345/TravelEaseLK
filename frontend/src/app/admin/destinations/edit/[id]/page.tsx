@@ -9,11 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import api from '@/services/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function EditDestinationPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id; 
+  const queryClient = useQueryClient();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true); 
@@ -90,8 +92,9 @@ export default function EditDestinationPage() {
 
       await api.put(`/destinations/${id}`, payload);
       
+      queryClient.invalidateQueries({ queryKey: ['destinations'] });
+      
       router.push('/admin/destinations');
-      router.refresh(); 
     } catch (err: any) {
       // සම්පූර්ණ Error එකම Console එකේ print කිරීම
       console.error("Full Error Object:", err);

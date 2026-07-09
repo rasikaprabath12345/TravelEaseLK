@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function NewPackagePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -69,7 +71,8 @@ export default function NewPackagePage() {
       // Backend එකේ Create Endpoint එකට දත්ත යැවීම
       await api.post('/packages', formData);
       
-      // සාර්ථකව Save වූ පසු නැවතත් Packages ලැයිස්තුවට යාම
+      queryClient.invalidateQueries({ queryKey: ['packages'] });
+      
       router.push('/admin/packages');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create package. Please try again.');

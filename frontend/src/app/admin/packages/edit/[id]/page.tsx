@@ -10,11 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useQuery } from '@tanstack/react-query';
 import api from '@/services/api';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function EditPackagePage() {
   const router = useRouter();
   const params = useParams();
   const packageId = params.id;
+  const queryClient = useQueryClient();
   
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
@@ -96,8 +98,8 @@ export default function EditPackagePage() {
     setError('');
 
     try {
-      // Backend එකේ Update (PUT) Endpoint එකට යැවීම
       await api.put('/packages', formData);
+      queryClient.invalidateQueries({ queryKey: ['packages'] });
       router.push('/admin/packages');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to update package.');
