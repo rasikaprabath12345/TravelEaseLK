@@ -177,8 +177,23 @@ export default function PackageDetailPage() {
 
         {/* Action Buttons */}
         <div className="absolute top-20 right-6 flex gap-2">
-          <button className="w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all">
-            <Heart className="h-4 w-4" />
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (pkg) {
+                toggleItem({
+                  id: pkg.id,
+                  name: pkg.name,
+                  price: pkg.price,
+                  imageUrl: pkg.imageUrl,
+                  destinationName: pkg.destinationName
+                });
+              }
+            }}
+            className="w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+            aria-label="Add to wishlist"
+          >
+            <Heart className={`h-4 w-4 ${pkg && isInWishlist(pkg.id) ? 'fill-red-500 text-red-500' : 'text-white'}`} />
           </button>
           <button className="w-10 h-10 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all">
             <Share2 className="h-4 w-4" />
