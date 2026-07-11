@@ -69,7 +69,7 @@ export default function Navbar() {
       {/* ── Top Bar ── */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${solid
-            ? 'bg-white/98 backdrop-blur-sm shadow-[0_1px_0_0_#e2e8f0]'
+            ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-800/50'
             : 'bg-transparent'
           }`}
         suppressHydrationWarning
