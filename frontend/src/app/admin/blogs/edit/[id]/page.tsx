@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { useBlog, useUpdateBlog } from '@/hooks/useBlogs';
 import { useQueryClient } from '@tanstack/react-query';
+import BlogBuilder from '@/components/admin/blog-builder';
 
 interface EditBlogPageProps {
   params: Promise<{ id: string }>;
@@ -75,6 +76,12 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    if (!formData.content || formData.content.trim() === '') {
+      setError('Please add some content to the article using the builder before saving.');
+      setIsLoading(false);
+      return;
+    }
 
     // Format tags from comma-separated string to string array
     const tags = formData.tagsString
@@ -198,17 +205,12 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
                 />
               </div>
 
-              {/* Content */}
+              {/* Content Visual Builder */}
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Article Body Content <span className="text-red-500">*</span></label>
-                <textarea 
-                  name="content" 
-                  value={formData.content} 
-                  onChange={handleChange} 
-                  rows={10}
-                  className="w-full flex min-h-[160px] rounded-xl border border-slate-200 bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Type your story, experiences or tips here..." 
-                  required
+                <BlogBuilder
+                  value={formData.content}
+                  onChange={(htmlVal) => setFormData((prev) => ({ ...prev, content: htmlVal }))}
                 />
               </div>
 

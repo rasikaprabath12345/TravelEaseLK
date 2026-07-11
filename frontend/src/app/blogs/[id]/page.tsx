@@ -86,11 +86,11 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   const readTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+    <div className="min-h-screen bg-white flex flex-col justify-between">
       <div>
         <Navbar />
 
-        <div className="pt-28 pb-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="pt-28 pb-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button
             onClick={() => router.push('/blogs')}
@@ -153,7 +153,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
-            className="relative h-[300px] md:h-[450px] rounded-3xl overflow-hidden shadow-lg border border-slate-200 mb-10"
+            className="relative h-[320px] sm:h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden shadow-xl border border-slate-200 mb-12 w-full"
           >
             <img
               src={blog.imageUrl || 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=1200&q=80'}
@@ -163,68 +163,71 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           </motion.div>
 
           {/* Article Body */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div className="lg:col-span-3">
-              {/* Content Panel */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-6 sm:p-8 md:p-10 prose prose-slate max-w-none text-slate-700 font-['Inter'] leading-relaxed"
-              >
-                {/* We use dangerouslySetInnerHTML to allow simple formatting or rich text (markup). 
-                    If it contains basic returns, let's output them nicely. */}
-                {blog.content.startsWith('<') ? (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
-                    className="space-y-6 [&>p]:text-slate-600 [&>p]:leading-relaxed [&>h2]:font-['Plus_Jakarta_Sans'] [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5"
-                  />
-                ) : (
-                  <div className="space-y-6 text-slate-600 leading-relaxed whitespace-pre-line text-sm md:text-base">
-                    {blog.content}
-                  </div>
-                )}
-              </motion.div>
-            </div>
+          <div className="w-full">
+            {/* Content Panel */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="prose prose-slate max-w-none text-slate-700 font-['Inter'] leading-relaxed text-sm md:text-base lg:text-lg"
+            >
+              {/* We use dangerouslySetInnerHTML to allow simple formatting or rich text (markup). 
+                  If it contains basic returns, let's output them nicely. */}
+              {blog.content.startsWith('<') ? (
+                <div
+                  dangerouslySetInnerHTML={{ __html: blog.content }}
+                  className="space-y-6 [&>p]:text-slate-600 [&>p]:leading-relaxed [&>h2]:font-['Plus_Jakarta_Sans'] [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
+                />
+              ) : (
+                <div className="space-y-6 text-slate-600 leading-relaxed whitespace-pre-line text-sm md:text-base lg:text-lg">
+                  {blog.content}
+                </div>
+              )}
+            </motion.div>
 
-            {/* Sidebar with Actions and Quick Links */}
-            <div className="space-y-6">
+            {/* Share and Booking CTAs */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
               {/* Share Card */}
-              <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm">
-                <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800 mb-3.5 flex items-center gap-1.5">
+              <div className="bg-slate-50 rounded-[2rem] border border-slate-200/80 p-6 shadow-sm flex flex-col justify-center">
+                <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800 mb-4 flex items-center gap-1.5">
                   <Share2 className="h-4 w-4 text-slate-400" /> Share This Story
                 </h3>
-                <div className="flex gap-2">
-                  <button className="flex-1 py-2 bg-sky-50 text-sky-600 hover:bg-sky-100 rounded-xl flex items-center justify-center transition-colors">
+                <div className="flex gap-2.5">
+                  <button className="flex-1 py-3 bg-sky-50 text-sky-600 hover:bg-sky-100 rounded-2xl flex items-center justify-center transition-colors" title="Share on Twitter">
                     <Twitter className="h-4 w-4" />
                   </button>
-                  <button className="flex-1 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl flex items-center justify-center transition-colors">
+                  <button className="flex-1 py-3 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-2xl flex items-center justify-center transition-colors" title="Share on Facebook">
                     <Facebook className="h-4 w-4" />
                   </button>
                   <button
                     onClick={handleShareCopy}
-                    className={`flex-1 py-2 rounded-xl flex items-center justify-center transition-colors ${
+                    className={`flex-1 py-3 rounded-2xl flex items-center justify-center transition-all ${
                       copied ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                     }`}
+                    title="Copy Link"
                   >
-                    {copied ? <span className="text-[10px] font-bold uppercase">Copied!</span> : <LinkIcon className="h-4 w-4" />}
+                    {copied ? <span className="text-[10px] font-extrabold uppercase tracking-wider">Copied!</span> : <LinkIcon className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Booking Promo Card */}
-              <div className="bg-gradient-to-br from-slate-900 to-slate-950 text-white rounded-2xl p-5 shadow-md relative overflow-hidden group">
+              {/* Booking Promo Banner */}
+              <div className="md:col-span-2 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white rounded-[2rem] p-6 shadow-md relative overflow-hidden group flex flex-col md:flex-row items-center justify-between gap-6">
                 <div className="absolute -top-12 -right-12 w-24 h-24 bg-rose-500/10 rounded-full group-hover:scale-150 transition-transform duration-500" />
-                <div className="relative z-10">
-                  <div className="w-8 h-8 bg-rose-500/10 rounded-lg flex items-center justify-center mb-3">
-                    <Compass className="h-4.5 w-4.5 text-rose-400" />
+                <div className="relative z-10 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-rose-500/10 rounded-lg flex items-center justify-center">
+                      <Compass className="h-4.5 w-4.5 text-rose-400" />
+                    </div>
+                    <h4 className="font-['Plus_Jakarta_Sans'] font-extrabold text-base">Ready to Explore Sri Lanka?</h4>
                   </div>
-                  <h4 className="font-['Plus_Jakarta_Sans'] font-extrabold text-sm mb-1">Ready to Explore?</h4>
-                  <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
                     Book a customized tour package to Sri Lanka with TravelEase LK and enjoy a stress-free adventure.
                   </p>
+                </div>
+                <div className="relative z-10 w-full md:w-auto">
                   <Link href="/packages">
-                    <Button className="w-full bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-bold h-9">
+                    <Button className="w-full md:w-auto bg-rose-500 hover:bg-rose-600 text-white rounded-2xl text-xs font-bold px-6 py-5 shadow-lg shadow-rose-500/15">
                       Browse Tour Packages
                     </Button>
                   </Link>
