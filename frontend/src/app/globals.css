@@ -115,6 +115,7 @@
   border: 1px solid #e2e8f0;
   overflow: hidden;
   background-color: #ffffff;
+  max-width: 36rem; /* Limit width so it doesn't stretch on wide pages */
 }
 
 .infotable-block .bg-slate-50 {
@@ -146,12 +147,14 @@
   text-transform: uppercase !important;
   font-size: 0.75rem !important;
   letter-spacing: 0.05em !important;
-  width: 10rem !important;
+  width: 35% !important; /* Balanced column division */
   vertical-align: top !important;
-  padding-right: 1rem !important;
+  padding-right: 1.25rem !important;
+  border-right: 1px solid #e2e8f0 !important; /* Vertical column divider */
 }
 
 .infotable-block td:last-child {
+  padding-left: 1.25rem !important;
   color: #334155 !important;
   font-size: 0.875rem !important;
 }
