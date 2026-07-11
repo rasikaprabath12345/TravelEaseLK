@@ -153,6 +153,13 @@ export default function Navbar() {
                 </span>
               </Link>
 
+              {/* Vlogs */}
+              <Link href="/blogs" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  VLOGS
+                </span>
+              </Link>
+
               {/* About */}
               <Link href="/about" className="px-3.5 py-2 rounded-xl group relative">
                 <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
@@ -433,6 +440,9 @@ export default function Navbar() {
                       </Link>
                       <Link href="/destinations" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Destinations
+                      </Link>
+                      <Link href="/blogs" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                        Palace Vlogs & Blogs
                       </Link>
                     </div>
                   </div>
