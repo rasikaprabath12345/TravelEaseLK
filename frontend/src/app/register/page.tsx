@@ -67,13 +67,13 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-orange-600 via-sky-800 to-slate-900">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=1200&q=80"
-          alt="Mirissa Beach Sri Lanka"
-          className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-60"
+          src="https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=1200&q=80"
+          alt="Sri Lanka Travel"
+          className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-900/80 via-slate-900/70 to-slate-900/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-slate-900/80 to-slate-900/95" />
 
         <div className="relative z-10 flex flex-col justify-between p-12 w-full">
           <Link href="/" className="flex items-center gap-3">
@@ -137,11 +137,26 @@ export default function RegisterPage() {
             <p className="font-bold text-slate-900 text-lg">TravelEase LK</p>
           </Link>
 
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-            <div className="mb-7">
-              <h1 className="text-2xl font-bold text-slate-900 mb-1">Create your account</h1>
-              <p className="text-slate-500 text-sm">Join TravelEaseLK for amazing travel experiences</p>
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
+            {/* Mobile Banner Image */}
+            <div className="relative h-36 w-full lg:hidden">
+              <img
+                src="https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=800&q=80"
+                alt="Sri Lanka Travel"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent" />
+              <div className="absolute bottom-4 left-6 right-6">
+                <h1 className="text-xl font-bold text-white leading-none">Create your account</h1>
+                <p className="text-white/80 text-[11px] mt-1.5 leading-none">Join TravelEaseLK for amazing travel experiences</p>
+              </div>
             </div>
+
+            <div className="p-8">
+              <div className="hidden lg:block mb-7">
+                <h1 className="text-2xl font-bold text-slate-900 mb-1">Create your account</h1>
+                <p className="text-slate-500 text-sm">Join TravelEaseLK for amazing travel experiences</p>
+              </div>
 
             {error && (
               <motion.div
@@ -253,7 +268,8 @@ export default function RegisterPage() {
               </Link>
             </p>
           </div>
-        </motion.div>
+        </div>
+      </motion.div>
       </div>
     </div>
   );

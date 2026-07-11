@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
 const WHATSAPP_NUMBER = '94703348191';       // ← ඔයාගේ WhatsApp number (94XXXXXXXXX)
@@ -10,6 +11,15 @@ const DEFAULT_WA_MSG = 'Hello! I am interested in booking a travel package with 
 
 export default function SocialFloatingButtons() {
   const [hoveredBtn, setHoveredBtn] = useState<'wa' | 'msg' | null>(null);
+  const pathname = usePathname();
+
+  if (
+    pathname?.startsWith('/login') ||
+    pathname?.startsWith('/register') ||
+    pathname?.startsWith('/admin')
+  ) {
+    return null;
+  }
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(DEFAULT_WA_MSG)}`;
   const messengerUrl = `https://m.me/${MESSENGER_PAGE_ID}`;
