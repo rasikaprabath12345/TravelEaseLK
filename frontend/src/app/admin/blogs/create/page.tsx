@@ -87,10 +87,10 @@ export default function CreateBlogPage() {
       <Navbar />
 
       <div className="pt-24 pb-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={() => router.push('/admin/blogs')}
           className="mb-6 -ml-4 text-slate-500 hover:text-slate-900"
         >
@@ -103,7 +103,7 @@ export default function CreateBlogPage() {
             <CardTitle className="text-2xl font-bold font-sans text-slate-900">Create Travel Blog Article</CardTitle>
             <p className="text-sm text-slate-500 mt-1">Publish interesting places, travel guides, and tourist news in Sri Lanka.</p>
           </CardHeader>
-          
+
           <CardContent className="p-6 md:p-8">
             {error && (
               <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm font-semibold rounded-r-xl">
@@ -116,12 +116,12 @@ export default function CreateBlogPage() {
                 {/* Title */}
                 <div className="space-y-2 md:col-span-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Article Title <span className="text-red-500">*</span></label>
-                  <Input 
-                    name="title" 
-                    value={formData.title} 
-                    onChange={handleChange} 
-                    placeholder="e.g. Ella Odyssey Train: Scenic Rail Route Guide" 
-                    required 
+                  <Input
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    placeholder="e.g. Ella Odyssey Train: Scenic Rail Route Guide"
+                    required
                     className="rounded-xl border-slate-200 h-11"
                   />
                 </div>
@@ -129,11 +129,11 @@ export default function CreateBlogPage() {
                 {/* Author */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Author Name</label>
-                  <Input 
-                    name="author" 
-                    value={formData.author} 
-                    onChange={handleChange} 
-                    placeholder="e.g. Rasika Prabath" 
+                  <Input
+                    name="author"
+                    value={formData.author}
+                    onChange={handleChange}
+                    placeholder="e.g. Rasika Prabath"
                     className="rounded-xl border-slate-200 h-11"
                   />
                 </div>
@@ -141,11 +141,11 @@ export default function CreateBlogPage() {
                 {/* Tags */}
                 <div className="space-y-2">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Tags (comma-separated)</label>
-                  <Input 
-                    name="tagsString" 
-                    value={formData.tagsString} 
-                    onChange={handleChange} 
-                    placeholder="e.g. Ella, Train, Ella Rock, Hiking" 
+                  <Input
+                    name="tagsString"
+                    value={formData.tagsString}
+                    onChange={handleChange}
+                    placeholder="e.g. Ella, Train, Ella Rock, Hiking"
                     className="rounded-xl border-slate-200 h-11"
                   />
                 </div>
@@ -154,11 +154,11 @@ export default function CreateBlogPage() {
               {/* Excerpt */}
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Short Summary / Excerpt</label>
-                <Input 
-                  name="excerpt" 
-                  value={formData.excerpt} 
-                  onChange={handleChange} 
-                  placeholder="A short hook sentence or description of the article..." 
+                <Input
+                  name="excerpt"
+                  value={formData.excerpt}
+                  onChange={handleChange}
+                  placeholder="A short hook sentence or description of the article..."
                   className="rounded-xl border-slate-200 h-11"
                 />
               </div>
@@ -191,9 +191,8 @@ export default function CreateBlogPage() {
                 <button
                   type="button"
                   onClick={handleTogglePublished}
-                  className={`w-12 h-6 flex items-center rounded-full p-1 transition-all ${
-                    formData.isPublished ? 'bg-rose-500 justify-end' : 'bg-slate-200 justify-start'
-                  }`}
+                  className={`w-12 h-6 flex items-center rounded-full p-1 transition-all ${formData.isPublished ? 'bg-rose-500 justify-end' : 'bg-slate-200 justify-start'
+                    }`}
                 >
                   <motion.div layout className="bg-white w-4.5 h-4.5 rounded-full shadow-sm" />
                 </button>
@@ -209,8 +208,8 @@ export default function CreateBlogPage() {
                 >
                   Cancel
                 </Button>
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={isLoading}
                   className="bg-rose-500 hover:bg-rose-600 text-white min-w-[150px] rounded-xl font-bold shadow-md hover:-translate-y-0.5 transition-all"
                 >
