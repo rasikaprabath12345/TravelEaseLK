@@ -23,6 +23,9 @@ export default function AdminSettingsPage() {
   const [aboutCover, setAboutCover] = useState('');
   const [contactCover, setContactCover] = useState('');
 
+  // WhatsApp Config
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+
   useEffect(() => {
     // Load home hero images
     const savedHero = localStorage.getItem('site_hero_backgrounds');
@@ -49,6 +52,9 @@ export default function AdminSettingsPage() {
     setDestinationsCover(localStorage.getItem('site_destinations_cover') || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80');
     setAboutCover(localStorage.getItem('site_about_cover') || 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80');
     setContactCover(localStorage.getItem('site_contact_cover') || 'https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=1200&q=80');
+    
+    // Load WhatsApp configuration number
+    setWhatsappNumber(localStorage.getItem('site_whatsapp_number') || '94703348191');
   }, []);
 
   const handleSave = () => {
@@ -58,6 +64,7 @@ export default function AdminSettingsPage() {
       localStorage.setItem('site_destinations_cover', destinationsCover);
       localStorage.setItem('site_about_cover', aboutCover);
       localStorage.setItem('site_contact_cover', contactCover);
+      localStorage.setItem('site_whatsapp_number', whatsappNumber.replace('+', '').trim());
 
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -68,12 +75,13 @@ export default function AdminSettingsPage() {
   };
 
   const handleReset = () => {
-    if (confirm('Are you sure you want to reset all covers to defaults?')) {
+    if (confirm('Are you sure you want to reset all covers and settings to defaults?')) {
       localStorage.removeItem('site_hero_backgrounds');
       localStorage.removeItem('site_packages_cover');
       localStorage.removeItem('site_destinations_cover');
       localStorage.removeItem('site_about_cover');
       localStorage.removeItem('site_contact_cover');
+      localStorage.removeItem('site_whatsapp_number');
       
       // Reload states
       setHeroBackgrounds(['/images/1.jpg', '/images/2.jpg', '/images/3.jpg']);
@@ -81,6 +89,7 @@ export default function AdminSettingsPage() {
       setDestinationsCover('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80');
       setAboutCover('https://images.unsplash.com/photo-1549366021-9f761d450615?w=1200&q=80');
       setContactCover('https://images.unsplash.com/photo-1616401775305-e4614a3e5a5c?w=1200&q=80');
+      setWhatsappNumber('94703348191');
       
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
@@ -178,6 +187,26 @@ export default function AdminSettingsPage() {
                       </span>
                     </div>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-2xl border-slate-200 shadow-sm">
+              <CardHeader className="border-b border-slate-100">
+                <CardTitle className="text-lg font-bold">Contact & Social Channels</CardTitle>
+                <p className="text-xs text-slate-400">Configure central contact phone numbers used across the site</p>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">WhatsApp Business Number</label>
+                  <Input
+                    type="text"
+                    value={whatsappNumber}
+                    onChange={(e) => setWhatsappNumber(e.target.value)}
+                    placeholder="e.g. 94703348191"
+                    className="rounded-xl border-slate-200 h-11"
+                  />
+                  <p className="text-[10px] text-slate-400">Format: Country code + subscriber number (no spaces, +, or leading zeroes). E.g., for Sri Lanka use 94703348191.</p>
                 </div>
               </CardContent>
             </Card>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Calendar, MapPin, Clock, User, Bell, LogOut,
@@ -16,7 +16,7 @@ import { useBookings } from '@/hooks/useBookings';
 import { formatPrice, formatDate } from '@/lib/utils';
 
 // ── CONFIG: Change to your WhatsApp business number (94XXXXXXXXX) ──
-const WA_BUSINESS = '94777123456';
+const DEFAULT_WA_BUSINESS = '94703348191';
 
 const statusConfig: Record<string, { label: string; color: string; icon: any; bg: string }> = {
   Confirmed: { label: 'Confirmed', color: 'text-green-700', icon: CheckCircle, bg: 'bg-green-50 border-green-200' },
@@ -42,6 +42,14 @@ export default function CustomerDashboard() {
   const { data: bookingsData } = useBookings();
   const bookings = bookingsData?.data || [];
   const [activeTab, setActiveTab] = useState<'all' | 'confirmed' | 'pending' | 'completed'>('all');
+  const [waBusiness, setWaBusiness] = useState(DEFAULT_WA_BUSINESS);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_whatsapp_number');
+    if (saved) {
+      setWaBusiness(saved);
+    }
+  }, []);
 
   const filtered = activeTab === 'all' ? bookings : bookings.filter((b: any) => b.status?.toLowerCase() === activeTab);
 
@@ -161,7 +169,7 @@ export default function CustomerDashboard() {
                         `📅 Travel Date: ${formatDate(booking.travelDate)}\n\n` +
                         `Please find my payment receipt attached. Kindly confirm my booking.`
                       );
-                      const waUrl = `https://wa.me/${WA_BUSINESS}?text=${waMsg}`;
+                      const waUrl = `https://wa.me/${waBusiness}?text=${waMsg}`;
                       return (
                         <motion.div
                           key={booking.id}

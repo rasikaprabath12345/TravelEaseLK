@@ -51,11 +51,17 @@ export default function PackageDetailPage() {
   const { data: packageData, isLoading } = usePackage(Number(params.id));
   const createBooking = useCreateBooking();
   const [bookingSuccess, setBookingSuccess] = useState<any>(null);
+  const [whatsappNumber, setWhatsappNumber] = useState('94703348191');
   const [activeTab, setActiveTab] = useState('overview');
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [imgIdx, setImgIdx] = useState(0);
   const { toggleItem, isInWishlist } = useWishlistStore();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_whatsapp_number');
+    if (saved) setWhatsappNumber(saved);
+  }, []);
 
   const pkg = packageData?.data;
 
@@ -477,7 +483,7 @@ export default function PackageDetailPage() {
                       </Button>
 
                       <a
-                        href={`https://wa.me/94771234567?text=Hi%20TravelEaseLK!%20I'm%20interested%20in%20booking%20"${encodeURIComponent(pkg.name)}"%20for%20${adults}%20adult(s).`}
+                        href={`https://wa.me/${whatsappNumber}?text=Hi%20TravelEaseLK!%20I'm%20interested%20in%20booking%20"${encodeURIComponent(pkg.name)}"%20for%20${adults}%20adult(s).`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

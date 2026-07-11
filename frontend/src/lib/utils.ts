@@ -35,8 +35,17 @@ export function generateWhatsAppUrl(data: {
   phoneNumber?: string;
   phone?: string;
 }) {
-  const phone = data.phone || "94770000000";
-  const message = `Booking confirmed! ID: ${data.bookingId}, Package: ${data.packageName}, Date: ${data.travelDate}, Guests: ${data.numberOfAdults || 0} Adults, ${data.numberOfChildren || 0} Children. Customer: ${data.fullName || "N/A"}`;
+  let phone = data.phone;
+  if (!phone) {
+    if (typeof window !== 'undefined') {
+      phone = localStorage.getItem('site_whatsapp_number') || "94703348191";
+    } else {
+      phone = "94703348191";
+    }
+  }
+  
+  const displayDate = data.travelDate ? data.travelDate.split('T')[0] : '';
+  const message = `Dear TravelEase LK Support,\n\nI would like to share my booking confirmation details:\n\n• Booking ID: ${data.bookingId}\n• Tour Package: ${data.packageName}\n• Travel Date: ${displayDate}\n• Guests: ${data.numberOfAdults || 0} Adult(s) & ${data.numberOfChildren || 0} Child(ren)\n• Customer Name: ${data.fullName || "N/A"}\n\nPlease let me know the next steps for payment verification and tour confirmation.\n\nThank you!`;
   
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }

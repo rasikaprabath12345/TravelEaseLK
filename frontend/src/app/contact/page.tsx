@@ -45,6 +45,7 @@ const tourTypes = [
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [waNumber, setWaNumber] = useState('94703348191');
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
@@ -64,6 +65,8 @@ export default function ContactPage() {
   useEffect(() => {
     const saved = localStorage.getItem('site_contact_cover');
     if (saved) setCoverImage(saved);
+    const savedWa = localStorage.getItem('site_whatsapp_number');
+    if (savedWa) setWaNumber(savedWa);
   }, []);
 
   return (
@@ -113,25 +116,40 @@ export default function ContactPage() {
       {/* Contact Cards */}
       <section className="relative z-10 -mt-10 px-4 pb-8">
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {contactInfo.map((item, i) => (
-            <motion.a
-              key={item.title}
-              href={item.href}
-              target={item.href.startsWith('http') ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className={`bg-white rounded-2xl p-5 border border-sky-100 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group cursor-pointer`}
-            >
-              <div className={`w-11 h-11 bg-${item.color}-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                <item.icon className={`h-5 w-5 text-${item.color}-600`} />
-              </div>
-              <p className="font-semibold text-slate-800 text-sm mb-0.5">{item.title}</p>
-              <p className="text-slate-700 font-medium text-sm">{item.detail}</p>
-              <p className="text-slate-400 text-xs mt-0.5">{item.sub}</p>
-            </motion.a>
-          ))}
+          {contactInfo.map((item, idx) => {
+            let detail = item.detail;
+            let href = item.href;
+            if (idx === 1) {
+              const cleanWa = waNumber.replace('+', '').trim();
+              if (cleanWa.startsWith('94') && cleanWa.length === 11) {
+                detail = `+94 ${cleanWa.substring(2, 4)} ${cleanWa.substring(4, 7)} ${cleanWa.substring(7)}`;
+              } else if (cleanWa.startsWith('0') && cleanWa.length === 10) {
+                detail = `+94 ${cleanWa.substring(1, 3)} ${cleanWa.substring(3, 6)} ${cleanWa.substring(6)}`;
+              } else {
+                detail = cleanWa.startsWith('+') ? cleanWa : `+${cleanWa}`;
+              }
+              href = `https://wa.me/${cleanWa}?text=Hi%20TravelEaseLK!%20I'd%20like%20to%20inquire%20about%20a%20tour.`;
+            }
+            return (
+              <motion.a
+                key={item.title}
+                href={href}
+                target={href.startsWith('http') ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                className={`bg-white rounded-2xl p-5 border border-sky-100 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group cursor-pointer`}
+              >
+                <div className={`w-11 h-11 bg-${item.color}-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                  <item.icon className={`h-5 w-5 text-${item.color}-600`} />
+                </div>
+                <p className="font-semibold text-slate-800 text-sm mb-0.5">{item.title}</p>
+                <p className="text-slate-700 font-medium text-sm">{detail}</p>
+                <p className="text-slate-400 text-xs mt-0.5">{item.sub}</p>
+              </motion.a>
+            );
+          })}
         </div>
       </section>
 
@@ -237,7 +255,7 @@ export default function ContactPage() {
                           )}
                         </Button>
                         <a
-                          href="https://wa.me/94771234567?text=Hi%20TravelEaseLK!%20I'd%20like%20to%20inquire%20about%20a%20tour."
+                          href={`https://wa.me/${waNumber.replace('+', '').trim()}?text=Hi%20TravelEaseLK!%20I'd%20like%20to%20inquire%20about%20a%20tour.`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -306,7 +324,7 @@ export default function ContactPage() {
 
               {/* Quick WhatsApp CTA */}
               <a
-                href="https://wa.me/94771234567?text=Hi%20TravelEaseLK!%20I'm%20interested%20in%20booking%20a%20tour."
+                href={`https://wa.me/${waNumber.replace('+', '').trim()}?text=Hi%20TravelEaseLK!%20I'm%20interested%20in%20booking%20a%20tour.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 rounded-2xl p-5 text-white transition-all hover:-translate-y-0.5 hover:shadow-xl"

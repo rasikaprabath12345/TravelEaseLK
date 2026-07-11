@@ -1,17 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 // ── CONFIG ─────────────────────────────────────────────────────────────────
-const WHATSAPP_NUMBER = '94703348191';       // ← ඔයාගේ WhatsApp number (94XXXXXXXXX)
+const DEFAULT_WHATSAPP_NUMBER = '94703348191';       // ← ඔයාගේ WhatsApp number (94XXXXXXXXX)
 const MESSENGER_PAGE_ID = 'traveleaselk';   // ← ඔයාගේ Facebook Page username or ID
 const DEFAULT_WA_MSG = 'Hello! I am interested in booking a travel package with TravelEase LK. Could you please assist me?';
 // ──────────────────────────────────────────────────────────────────────────
 
 export default function SocialFloatingButtons() {
   const [hoveredBtn, setHoveredBtn] = useState<'wa' | 'msg' | null>(null);
+  const [whatsappNumber, setWhatsappNumber] = useState(DEFAULT_WHATSAPP_NUMBER);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const saved = localStorage.getItem('site_whatsapp_number');
+    if (saved) {
+      setWhatsappNumber(saved);
+    }
+  }, []);
 
   if (
     pathname?.startsWith('/login') ||
@@ -21,7 +29,7 @@ export default function SocialFloatingButtons() {
     return null;
   }
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(DEFAULT_WA_MSG)}`;
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(DEFAULT_WA_MSG)}`;
   const messengerUrl = `https://m.me/${MESSENGER_PAGE_ID}`;
 
 
