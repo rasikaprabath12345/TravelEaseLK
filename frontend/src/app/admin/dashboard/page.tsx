@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import {
   Users, Package, Calendar, DollarSign, TrendingUp,
   MapPin, BarChart3, ArrowUpRight, ChevronRight,
-  AlertCircle, CheckCircle, Package as PkgIcon, Plus, Image as ImageIcon
+  AlertCircle, CheckCircle, Package as PkgIcon, Plus, Image as ImageIcon,
+  BookOpen
 } from 'lucide-react';
 import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
@@ -27,6 +28,7 @@ const adminLinks = [
   { href: '/admin/packages', label: 'Packages', icon: Package, color: 'sky', desc: 'Create & manage tour packages' },
   { href: '/admin/destinations', label: 'Destinations', icon: MapPin, color: 'orange', desc: 'Manage Sri Lanka destinations' },
   { href: '/admin/bookings', label: 'Bookings', icon: Calendar, color: 'emerald', desc: 'View & update all bookings' },
+  { href: '/admin/blogs', label: 'Blogs', icon: BookOpen, color: 'rose', desc: 'Create & manage Sri Lankan travel blogs' },
   { href: '/admin/customers', label: 'Customers', icon: Users, color: 'purple', desc: 'Customer database & details' },
   { href: '/admin/settings', label: 'Page Covers', icon: ImageIcon, color: 'pink', desc: 'Customize site cover images' },
 ];

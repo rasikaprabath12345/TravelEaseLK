@@ -76,6 +76,7 @@ export default function Navbar() {
     pathname?.startsWith('/register') ||
     pathname?.startsWith('/packages') ||
     pathname?.startsWith('/destinations') ||
+    pathname?.startsWith('/blogs') ||
     pathname?.startsWith('/about') ||
     pathname?.startsWith('/contact');
 
@@ -150,6 +151,13 @@ export default function Navbar() {
               <Link href="/destinations" className="px-3.5 py-2 rounded-xl group relative">
                 <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   DESTINATIONS
+                </span>
+              </Link>
+
+              {/* Blogs */}
+              <Link href="/blogs" className="px-3.5 py-2 rounded-xl group relative">
+                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                  BLOGS
                 </span>
               </Link>
 
@@ -430,6 +438,9 @@ export default function Navbar() {
                       </Link>
                       <Link href="/destinations" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Destinations
+                      </Link>
+                      <Link href="/blogs" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                        Blogs
                       </Link>
                     </div>
                   </div>
