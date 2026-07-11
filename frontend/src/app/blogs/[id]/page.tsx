@@ -21,7 +21,7 @@ function renderContent(content: string) {
     return (
       <div
         dangerouslySetInnerHTML={{ __html: content }}
-        className="space-y-6 [&>p]:max-w-3xl [&>p]:mx-auto [&>p]:text-slate-600 [&>p]:leading-relaxed [&>p]:text-sm [&>p]:md:text-base [&>p]:lg:text-lg [&>h2]:max-w-3xl [&>h2]:mx-auto [&>h2]:font-sans [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:max-w-3xl [&>ul]:mx-auto [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:max-w-3xl [&>ol]:mx-auto [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:max-w-3xl [&_blockquote]:mx-auto [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
+        className="space-y-6 w-full text-slate-600 leading-relaxed text-sm md:text-base lg:text-lg [&>p]:text-slate-600 [&>p]:leading-relaxed [&>p]:text-sm [&>p]:md:text-base [&>p]:lg:text-lg [&>h2]:font-sans [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-none [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
       />
     );
   }
@@ -79,11 +79,11 @@ function renderContent(content: string) {
         if (part.type === 'image') {
           return (
             <figure key={index} className="my-8 flex flex-col items-center">
-              <div className="w-full rounded-[2rem] overflow-hidden shadow-md border border-slate-200/60 bg-slate-50">
+              <div className="w-full rounded-none overflow-hidden shadow-md border border-slate-200/60 bg-slate-50">
                 <img
                   src={part.url}
                   alt={part.caption || 'TravelEase LK Travel Place'}
-                  className="w-full h-auto object-cover max-h-[600px] hover:scale-[1.01] transition-transform duration-500"
+                  className="w-full h-auto object-cover max-h-[600px] hover:scale-[1.01] transition-transform duration-500 rounded-none"
                 />
               </div>
               {part.caption && (
@@ -96,7 +96,7 @@ function renderContent(content: string) {
         }
 
         return (
-          <div key={index} className="max-w-3xl mx-auto space-y-5 text-slate-600 leading-relaxed font-sans text-sm md:text-base lg:text-lg">
+          <div key={index} className="w-full space-y-5 text-slate-600 leading-relaxed font-sans text-sm md:text-base lg:text-lg">
             {part.value.split('\n\n').map((para, pIdx) => {
               if (!para.trim()) return null;
               return (
@@ -217,7 +217,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
               </div>
             )}
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-slate-900 tracking-tight leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-sans font-bold text-slate-900 tracking-tight leading-tight mb-5">
               {blog.title}
             </h1>
 
@@ -251,12 +251,12 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
-            className="relative h-[320px] sm:h-[400px] md:h-[500px] rounded-[2.5rem] overflow-hidden shadow-xl border border-slate-200 mb-12 w-full"
+            className="relative h-[320px] sm:h-[400px] md:h-[500px] rounded-none overflow-hidden shadow-xl border border-slate-200 mb-12 w-full"
           >
             <img
               src={blog.imageUrl || 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=1200&q=80'}
               alt={blog.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-none"
             />
           </motion.div>
 
@@ -332,12 +332,12 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {otherBlogs.map(item => (
-                  <Link key={item.id} href={`/blogs/${item.id}`} className="group flex flex-col bg-white border border-slate-200/80 rounded-2xl overflow-hidden hover:shadow-lg transition-all">
-                    <div className="relative h-32 overflow-hidden bg-slate-100">
+                  <Link key={item.id} href={`/blogs/${item.id}`} className="group flex flex-col bg-white border border-slate-200/80 rounded-none overflow-hidden hover:shadow-lg transition-all">
+                    <div className="relative h-32 overflow-hidden bg-slate-100 rounded-none">
                       <img
                         src={item.imageUrl || 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=400&q=80'}
                         alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-none"
                       />
                     </div>
                     <div className="p-4.5 flex-1 flex flex-col justify-between">

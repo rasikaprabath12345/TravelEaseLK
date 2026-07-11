@@ -208,10 +208,13 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
               {/* Content Visual Builder */}
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Article Body Content <span className="text-red-500">*</span></label>
-                <BlogBuilder
-                  value={formData.content}
-                  onChange={(htmlVal) => setFormData((prev) => ({ ...prev, content: htmlVal }))}
-                />
+                {formData.id > 0 && (
+                  <BlogBuilder
+                    value={formData.content}
+                    onChange={(htmlVal) => setFormData((prev) => ({ ...prev, content: htmlVal }))}
+                    autoSaveKey={`edit-${blogId}`}
+                  />
+                )}
               </div>
 
               {/* Banner Image Upload */}
