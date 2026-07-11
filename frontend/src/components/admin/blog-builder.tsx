@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
@@ -525,7 +525,7 @@ export default function BlogBuilder({ value, onChange, autoSaveKey }: BlogBuilde
                         block.ctaColor === 'slate'   ? 'bg-slate-800 text-white' :
                         block.ctaColor === 'emerald' ? 'bg-emerald-500 text-white' :
                                                        'bg-rose-500 text-white'}`}>
-                        {block.ctaLabel || 'Book Now'} ->
+                        {block.ctaLabel || 'Book Now'} &rarr;
                       </div>
                     </div>
                   </div>
