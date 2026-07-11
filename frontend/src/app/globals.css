@@ -24,6 +24,8 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 199 89% 48%;
     --radius: 0.75rem;
+    --nav-accent: #e11d48;
+    --nav-accent-hover: #be123c;
   }
 }
 
@@ -41,7 +43,7 @@
   body {
     background: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: var(--font-sans), system-ui, sans-serif;
   }
 }
 

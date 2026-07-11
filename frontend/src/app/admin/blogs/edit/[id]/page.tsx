@@ -140,7 +140,7 @@ export default function EditBlogPage({ params }: EditBlogPageProps) {
 
         <Card className="rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
           <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-6 md:p-8">
-            <CardTitle className="text-2xl font-bold font-['Plus_Jakarta_Sans'] text-slate-900 flex items-center gap-2">
+            <CardTitle className="text-2xl font-bold font-sans text-slate-900 flex items-center gap-2">
               <BookOpen className="h-6.5 w-6.5 text-rose-500" /> Edit Travel Blog Article
             </CardTitle>
             <p className="text-sm text-slate-500 mt-1">Modify and update your travel story, guide, or hidden place entry.</p>

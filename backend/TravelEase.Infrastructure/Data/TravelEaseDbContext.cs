@@ -68,6 +68,8 @@ public class TravelEaseDbContext : DbContext
                 .WithMany(g => g.Packages)
                 .HasForeignKey(e => e.TourGuideId)
                 .OnDelete(DeleteBehavior.SetNull);
+            entity.HasIndex(e => e.IsActive);
+            entity.HasIndex(e => e.IsFeatured);
         });
 
         // PackageImage
@@ -95,6 +97,7 @@ public class TravelEaseDbContext : DbContext
                 .WithMany(p => p.Bookings)
                 .HasForeignKey(e => e.PackageId)
                 .OnDelete(DeleteBehavior.Restrict);
+            entity.HasIndex(e => e.Status);
         });
 
         // Review
@@ -134,6 +137,13 @@ public class TravelEaseDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Blog
+        modelBuilder.Entity<Blog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.IsPublished);
         });
 
         // Seed Admin User (password: Admin@123)

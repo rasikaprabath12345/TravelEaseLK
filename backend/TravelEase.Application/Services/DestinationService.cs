@@ -25,7 +25,7 @@ public class DestinationService : IDestinationService
 
     public async Task<IEnumerable<DestinationDto>> GetAllAsync(string? search = null)
     {
-        var query = _unitOfWork.Repository<Destination>().Query()
+        var query = _unitOfWork.Repository<Destination>().Query().AsNoTracking()
             .Where(d => d.IsActive);
 
         if (!string.IsNullOrEmpty(search))
@@ -53,7 +53,7 @@ public class DestinationService : IDestinationService
 
     public async Task<DestinationDto?> GetByIdAsync(int id)
     {
-        var destination = await _unitOfWork.Repository<Destination>().Query()
+        var destination = await _unitOfWork.Repository<Destination>().Query().AsNoTracking()
             .Where(d => d.Id == id && d.IsActive)
             .Select(d => new DestinationDto
             {

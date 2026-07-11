@@ -31,7 +31,7 @@ public class BlogService : IBlogService
 
     public async Task<IEnumerable<BlogDto>> GetAllAsync(string? search = null, bool? isPublished = null, int page = 1, int pageSize = 10)
     {
-        var query = _unitOfWork.Repository<Blog>().Query();
+        var query = _unitOfWork.Repository<Blog>().Query().AsNoTracking();
 
         if (isPublished.HasValue)
         {
@@ -58,7 +58,7 @@ public class BlogService : IBlogService
 
     public async Task<BlogDto?> GetByIdAsync(int id)
     {
-        var blog = await _unitOfWork.Repository<Blog>().GetByIdAsync(id);
+        var blog = await _unitOfWork.Repository<Blog>().Query().AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
         if (blog == null) return null;
 
         return MapToDto(blog);
@@ -132,7 +132,7 @@ public class BlogService : IBlogService
 
     public async Task<int> GetTotalCountAsync(string? search = null, bool? isPublished = null)
     {
-        var query = _unitOfWork.Repository<Blog>().Query();
+        var query = _unitOfWork.Repository<Blog>().Query().AsNoTracking();
 
         if (isPublished.HasValue)
         {

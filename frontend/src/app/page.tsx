@@ -185,24 +185,11 @@ export default function HomePage() {
   return (
     <div className="font-body bg-gradient-to-b from-sky-50/50 via-white to-sky-50/30 overflow-x-hidden">
       <style jsx global>{`
-        @import url('https://cdn.jsdelivr.net/npm/@fontsource/plus-jakarta-sans@5.0.16/index.min.css');
-        @import url('https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/index.min.css');
-
         :root {
           --tl-primary: #0ea5e9;
           --tl-primary-light: #e0f2fe;
           --tl-accent: #f97316;
           --tl-accent-light: #ffedd5;
-        }
-
-        .font-display {
-          font-family: 'Plus Jakarta Sans', sans-serif;
-          font-weight: 700;
-        }
-
-        .font-body {
-          font-family: 'Inter', sans-serif;
-          font-weight: 400;
         }
 
         * {
@@ -539,6 +526,8 @@ export default function HomePage() {
                         <img
                           src={isValidImageUrl(pkg.imageUrl) ? pkg.imageUrl : packageImages[index % packageImages.length]}
                           alt={pkg.name}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -645,7 +634,7 @@ export default function HomePage() {
                 className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow group"
               >
                 <div className="h-48 overflow-hidden relative">
-                  <img src={exp.image} alt={exp.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={exp.image} alt={exp.title} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute top-3 left-3">
                     <Badge className="bg-sky-500 text-white text-[10px] font-semibold border-none px-2.5 py-1">
                       {exp.tag}
@@ -810,6 +799,8 @@ export default function HomePage() {
                       <img
                         src={isValidImageUrl(dest.imageUrl) ? dest.imageUrl : destinationImages[index % destinationImages.length]}
                         alt={dest.name}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-slate-900/20 to-transparent" />

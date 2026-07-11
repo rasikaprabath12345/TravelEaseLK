@@ -37,7 +37,7 @@ export const serializeBlocksToHtml = (blocks: BlogBlock[]): string => {
       const escapedVal = escapeHtml(block.value);
       switch (block.type) {
         case 'heading':
-          return `<h2 class="text-2xl font-bold font-['Plus_Jakarta_Sans'] text-slate-800 mt-8 mb-4">${escapedVal}</h2>`;
+          return `<h2 class="text-2xl font-bold font-sans text-slate-800 mt-8 mb-4">${escapedVal}</h2>`;
         case 'quote':
           return `<blockquote class="border-l-4 border-rose-500 pl-4 py-2 my-6 italic text-slate-600 bg-slate-50 rounded-r-xl pr-4">${escapedVal}</blockquote>`;
         case 'image':

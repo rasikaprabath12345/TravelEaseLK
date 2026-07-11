@@ -67,7 +67,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           <Navbar />
           <div className="max-w-md mx-auto px-4 py-32 text-center">
             <Compass className="h-16 w-16 text-slate-300 mx-auto mb-4 animate-bounce" />
-            <h2 className="font-['Plus_Jakarta_Sans'] font-extrabold text-2xl text-slate-800 mb-2">Article Not Found</h2>
+            <h2 className="font-sans font-extrabold text-2xl text-slate-800 mb-2">Article Not Found</h2>
             <p className="text-slate-500 text-sm mb-6">The article you are looking for might have been removed or unpublished.</p>
             <Link href="/blogs">
               <Button className="bg-rose-500 hover:bg-rose-600 text-white rounded-xl">
@@ -119,7 +119,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
               </div>
             )}
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-['Plus_Jakarta_Sans'] font-extrabold text-slate-900 tracking-tight leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-slate-900 tracking-tight leading-tight mb-5">
               {blog.title}
             </h1>
 
@@ -169,14 +169,14 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="prose prose-slate max-w-none text-slate-700 font-['Inter'] leading-relaxed text-sm md:text-base lg:text-lg"
+              className="prose prose-slate max-w-none text-slate-700 font-sans leading-relaxed text-sm md:text-base lg:text-lg"
             >
               {/* We use dangerouslySetInnerHTML to allow simple formatting or rich text (markup). 
                   If it contains basic returns, let's output them nicely. */}
               {blog.content.startsWith('<') ? (
                 <div
                   dangerouslySetInnerHTML={{ __html: blog.content }}
-                  className="space-y-6 [&>p]:text-slate-600 [&>p]:leading-relaxed [&>h2]:font-['Plus_Jakarta_Sans'] [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
+                  className="space-y-6 [&>p]:text-slate-600 [&>p]:leading-relaxed [&>h2]:font-sans [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
                 />
               ) : (
                 <div className="space-y-6 text-slate-600 leading-relaxed whitespace-pre-line text-sm md:text-base lg:text-lg">
@@ -189,7 +189,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
               {/* Share Card */}
               <div className="bg-slate-50 rounded-[2rem] border border-slate-200/80 p-6 shadow-sm flex flex-col justify-center">
-                <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800 mb-4 flex items-center gap-1.5">
+                <h3 className="font-sans font-bold text-sm text-slate-800 mb-4 flex items-center gap-1.5">
                   <Share2 className="h-4 w-4 text-slate-400" /> Share This Story
                 </h3>
                 <div className="flex gap-2.5">
@@ -219,7 +219,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
                     <div className="w-8 h-8 bg-rose-500/10 rounded-lg flex items-center justify-center">
                       <Compass className="h-4.5 w-4.5 text-rose-400" />
                     </div>
-                    <h4 className="font-['Plus_Jakarta_Sans'] font-extrabold text-base">Ready to Explore Sri Lanka?</h4>
+                    <h4 className="font-sans font-extrabold text-base">Ready to Explore Sri Lanka?</h4>
                   </div>
                   <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
                     Book a customized tour package to Sri Lanka with TravelEase LK and enjoy a stress-free adventure.
@@ -239,7 +239,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           {/* Related Articles Section */}
           {otherBlogs.length > 0 && (
             <div className="mt-16 border-t border-slate-200/80 pt-12">
-              <h3 className="font-['Plus_Jakarta_Sans'] font-extrabold text-2xl text-slate-900 mb-8 flex items-center gap-2">
+              <h3 className="font-sans font-extrabold text-2xl text-slate-900 mb-8 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-rose-500" /> Recommended Reads
               </h3>
 

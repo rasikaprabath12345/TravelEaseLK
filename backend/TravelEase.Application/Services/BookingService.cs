@@ -26,7 +26,7 @@ public class BookingService : IBookingService
 
     public async Task<IEnumerable<BookingDto>> GetAllAsync(int? userId = null, string? status = null, int page = 1, int pageSize = 10)
     {
-        var query = _unitOfWork.Repository<Booking>().Query().AsQueryable();
+        var query = _unitOfWork.Repository<Booking>().Query().AsNoTracking().AsQueryable();
 
         if (userId.HasValue)
             query = query.Where(b => b.UserId == userId.Value);
@@ -66,7 +66,7 @@ public class BookingService : IBookingService
 
     public async Task<BookingDto?> GetByIdAsync(int id)
     {
-        var booking = await _unitOfWork.Repository<Booking>().Query()
+        var booking = await _unitOfWork.Repository<Booking>().Query().AsNoTracking()
             .Where(b => b.Id == id)
             .Select(b => new BookingDto
             {
@@ -212,7 +212,7 @@ public class BookingService : IBookingService
 
     public async Task<IEnumerable<BookingDto>> GetUserBookingsAsync(int userId)
     {
-        var bookings = await _unitOfWork.Repository<Booking>().Query()
+        var bookings = await _unitOfWork.Repository<Booking>().Query().AsNoTracking()
             .Where(b => b.UserId == userId)
             .OrderByDescending(b => b.CreatedAt)
             .Select(b => new BookingDto
@@ -243,7 +243,7 @@ public class BookingService : IBookingService
 
     public async Task<int> GetTotalCountAsync(int? userId = null, string? status = null)
     {
-        var query = _unitOfWork.Repository<Booking>().Query().AsQueryable();
+        var query = _unitOfWork.Repository<Booking>().Query().AsNoTracking().AsQueryable();
 
         if (userId.HasValue)
             query = query.Where(b => b.UserId == userId.Value);

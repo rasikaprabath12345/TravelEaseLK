@@ -60,7 +60,7 @@ public class DashboardService : IDashboardService
         // Single query: fetch all non-cancelled bookings from the last 12 months
         var startDate = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).AddMonths(-11);
         
-        var monthlyData = await _unitOfWork.Repository<Booking>().Query()
+        var monthlyData = await _unitOfWork.Repository<Booking>().Query().AsNoTracking()
             .Where(b => b.CreatedAt >= startDate && b.Status != "Cancelled")
             .GroupBy(b => new { b.CreatedAt.Year, b.CreatedAt.Month })
             .Select(g => new
@@ -91,7 +91,7 @@ public class DashboardService : IDashboardService
 
     public async Task<List<PopularDestinationDto>> GetPopularDestinationsAsync()
     {
-        var destinations = await _unitOfWork.Repository<Booking>().Query()
+        var destinations = await _unitOfWork.Repository<Booking>().Query().AsNoTracking()
             .Where(b => b.Status != "Cancelled")
             .GroupBy(b => b.Package.DestinationId)
             .Select(g => new PopularDestinationDto

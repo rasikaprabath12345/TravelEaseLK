@@ -29,7 +29,7 @@ public class PackageService : IPackageService
     public async Task<IEnumerable<PackageDto>> GetAllAsync(string? search = null, int? destinationId = null,
         decimal? minPrice = null, decimal? maxPrice = null, string? sortBy = null, int page = 1, int pageSize = 10)
     {
-        var query = _unitOfWork.Repository<Package>().Query()
+        var query = _unitOfWork.Repository<Package>().Query().AsNoTracking()
             .Where(p => p.IsActive);
 
         if (!string.IsNullOrEmpty(search))
@@ -83,7 +83,7 @@ public class PackageService : IPackageService
 
     public async Task<PackageDto?> GetByIdAsync(int id)
     {
-        var package = await _unitOfWork.Repository<Package>().Query()
+        var package = await _unitOfWork.Repository<Package>().Query().AsNoTracking()
             .Where(p => p.Id == id && p.IsActive)
             .Select(p => new PackageDto
             {
@@ -112,7 +112,7 @@ public class PackageService : IPackageService
 
     public async Task<IEnumerable<PackageDto>> GetFeaturedAsync()
     {
-        var packages = await _unitOfWork.Repository<Package>().Query()
+        var packages = await _unitOfWork.Repository<Package>().Query().AsNoTracking()
             .Where(p => p.IsActive && p.IsFeatured)
             .Take(8)
             .Select(p => new PackageDto
@@ -238,7 +238,7 @@ public class PackageService : IPackageService
 
     public async Task<int> GetTotalCountAsync(string? search = null, int? destinationId = null)
     {
-        var query = _unitOfWork.Repository<Package>().Query().Where(p => p.IsActive);
+        var query = _unitOfWork.Repository<Package>().Query().AsNoTracking().Where(p => p.IsActive);
 
         if (!string.IsNullOrEmpty(search))
             query = query.Where(p => p.Name.Contains(search));

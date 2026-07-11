@@ -103,14 +103,6 @@ export default function Navbar() {
 
   return (
     <>
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-        :root {
-          --nav-accent: #e11d48; 
-          --nav-accent-hover: #be123c;
-        }
-      `}</style>
-
       <nav ref={dropdownRef} className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`} suppressHydrationWarning>
         <div className="max-w-[1800px] mx-auto px-4 md:px-8" suppressHydrationWarning>
           <div className={`flex items-center justify-between transition-all duration-300 ${navHeightClass}`} suppressHydrationWarning>
@@ -121,10 +113,10 @@ export default function Navbar() {
                 <Globe className="h-5 w-5 text-white group-hover:rotate-12 transition-transform duration-500" strokeWidth={2.5} />
               </div>
               <div className="flex flex-col justify-center">
-                <span className={`font-['Plus_Jakarta_Sans'] font-bold text-lg tracking-tight leading-none transition-colors duration-300 ${textColorClass}`}>
+                <span className={`font-sans font-bold text-lg tracking-tight leading-none transition-colors duration-300 ${textColorClass}`}>
                   TravelEase
                 </span>
-                <span className={`font-['Inter'] text-[8px] tracking-[0.2em] mt-0.5 uppercase font-bold transition-colors duration-300 ${textMutedClass}`}>
+                <span className={`font-sans text-[8px] tracking-[0.2em] mt-0.5 uppercase font-bold transition-colors duration-300 ${textMutedClass}`}>
                   Sri Lanka
                 </span>
               </div>
@@ -135,42 +127,42 @@ export default function Navbar() {
 
               {/* Home */}
               <Link href="/" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   HOME
                 </span>
               </Link>
 
               {/* Packages */}
               <Link href="/packages" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   PACKAGES
                 </span>
               </Link>
 
               {/* Destinations */}
               <Link href="/destinations" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   DESTINATIONS
                 </span>
               </Link>
 
               {/* Blogs */}
               <Link href="/blogs" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   BLOGS
                 </span>
               </Link>
 
               {/* About */}
               <Link href="/about" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   ABOUT
                 </span>
               </Link>
 
               {/* Contact */}
               <Link href="/contact" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
+                <span className={`font-sans text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
                   CONTACT
                 </span>
               </Link>
@@ -204,7 +196,7 @@ export default function Navbar() {
                       className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-50 overflow-hidden"
                     >
                       <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800">Saved Tours</span>
+                        <span className="font-sans font-bold text-sm text-slate-800">Saved Tours</span>
                         <span className="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full font-bold">
                           {wishlistItems.length} Items
                         </span>
@@ -269,7 +261,7 @@ export default function Navbar() {
                       className="absolute right-0 top-full mt-2 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-50 overflow-hidden"
                     >
                       <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                        <span className="font-['Plus_Jakarta_Sans'] font-bold text-sm text-slate-800">Notifications</span>
+                        <span className="font-sans font-bold text-sm text-slate-800">Notifications</span>
                         <span className="text-[10px] bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full font-bold">1 New</span>
                       </div>
                       <div className="space-y-3 max-h-60 overflow-y-auto">
@@ -364,13 +356,13 @@ export default function Navbar() {
                 ) : (
                   <div className="hidden sm:flex items-center gap-2">
                     <Link href="/login">
-                      <Button variant="ghost" className={`font-['Inter'] text-[12px] font-bold tracking-wider px-4.5 rounded-xl border border-transparent transition-all ${isLightNav ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
+                      <Button variant="ghost" className={`font-sans text-[12px] font-bold tracking-wider px-4.5 rounded-xl border border-transparent transition-all ${isLightNav ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
                         }`}>
                         LOGIN
                       </Button>
                     </Link>
                     <Link href="/register">
-                      <Button className="bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-xl font-['Inter'] text-[11px] font-bold tracking-wider px-5 h-9 transition-all shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:-translate-y-0.5 border border-white/5">
+                      <Button className="bg-[var(--nav-accent)] hover:bg-[var(--nav-accent-hover)] text-white rounded-xl font-sans text-[11px] font-bold tracking-wider px-5 h-9 transition-all shadow-[0_4px_14px_rgba(225,29,72,0.35)] hover:-translate-y-0.5 border border-white/5">
                         SIGN UP
                       </Button>
                     </Link>
@@ -417,7 +409,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-5">
                   <div className="flex items-center gap-2">
                     <Globe className="h-5 w-5 text-[var(--nav-accent)]" />
-                    <span className="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-800 text-base">TravelEase</span>
+                    <span className="font-sans font-extrabold text-slate-800 text-base">TravelEase</span>
                   </div>
                   <button onClick={() => setIsOpen(false)} className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-700">
                     <X className="h-5 w-5" />
@@ -426,29 +418,29 @@ export default function Navbar() {
 
                 {/* Mobile Navigation Links */}
                 <div className="flex flex-col gap-1.5 flex-1">
-                  <Link href="/" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                  <Link href="/" className="px-4 py-3 font-sans text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
                     HOME
                   </Link>
 
                   <div className="py-1">
-                    <div className="px-4 py-2 font-['Plus_Jakarta_Sans'] text-xs font-bold tracking-widest text-slate-400 uppercase">Categories</div>
+                    <div className="px-4 py-2 font-sans text-xs font-bold tracking-widest text-slate-400 uppercase">Categories</div>
                     <div className="pl-4 flex flex-col gap-1 mt-1">
-                      <Link href="/packages" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                      <Link href="/packages" className="px-4 py-2.5 font-sans text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Tours & Packages
                       </Link>
-                      <Link href="/destinations" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                      <Link href="/destinations" className="px-4 py-2.5 font-sans text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Destinations
                       </Link>
-                      <Link href="/blogs" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
+                      <Link href="/blogs" className="px-4 py-2.5 font-sans text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Blogs
                       </Link>
                     </div>
                   </div>
 
-                  <Link href="/about" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                  <Link href="/about" className="px-4 py-3 font-sans text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
                     ABOUT US
                   </Link>
-                  <Link href="/contact" className="px-4 py-3 font-['Inter'] text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
+                  <Link href="/contact" className="px-4 py-3 font-sans text-sm font-bold text-slate-700 hover:bg-slate-50 hover:text-rose-500 rounded-xl transition-all">
                     CONTACT
                   </Link>
                 </div>
@@ -532,7 +524,7 @@ export default function Navbar() {
                 <X className="h-5 w-5" />
               </button>
 
-              <h3 className="font-['Plus_Jakarta_Sans'] font-bold text-lg text-slate-800 mb-4">
+              <h3 className="font-sans font-bold text-lg text-slate-800 mb-4">
                 Search Tour Packages
               </h3>
 

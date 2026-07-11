@@ -55,7 +55,7 @@ export default function BlogsPage() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-400 text-xs font-bold uppercase tracking-wider mb-4">
                 <Sparkles className="h-3.5 w-3.5" /> Sri Lankan Travel Insights
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-['Plus_Jakarta_Sans'] font-extrabold tracking-tight mb-5 bg-clip-text bg-gradient-to-r from-white via-slate-100 to-rose-100">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold tracking-tight mb-5 bg-clip-text bg-gradient-to-r from-white via-slate-100 to-rose-100">
                 Wanderlust Sri Lanka
               </h1>
               <p className="max-w-2xl mx-auto text-slate-300 text-base md:text-lg font-medium leading-relaxed mb-8">
@@ -127,7 +127,7 @@ export default function BlogsPage() {
           ) : filteredBlogs.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-3xl border border-slate-200/80 shadow-sm">
               <Compass className="h-16 w-16 text-slate-300 mx-auto mb-4 animate-spin" style={{ animationDuration: '6s' }} />
-              <h3 className="font-['Plus_Jakarta_Sans'] font-extrabold text-xl text-slate-800 mb-1">No articles found</h3>
+              <h3 className="font-sans font-extrabold text-xl text-slate-800 mb-1">No articles found</h3>
               <p className="text-slate-500 text-sm max-w-sm mx-auto">
                 We couldn't find any travel articles matching your filter. Try searching for other keywords.
               </p>
@@ -171,7 +171,7 @@ export default function BlogsPage() {
                       </span>
                     </div>
 
-                    <h3 className="font-['Plus_Jakarta_Sans'] font-extrabold text-slate-900 text-lg mb-2 line-clamp-2 leading-snug group-hover:text-rose-500 transition-colors">
+                    <h3 className="font-sans font-extrabold text-slate-900 text-lg mb-2 line-clamp-2 leading-snug group-hover:text-rose-500 transition-colors">
                       <Link href={`/blogs/${blog.id}`}>{blog.title}</Link>
                     </h3>
 
