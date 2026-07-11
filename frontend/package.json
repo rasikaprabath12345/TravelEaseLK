@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"dotnet run --project ../backend/TravelEase.API --urls http://localhost:5000\"",
+    "dev": "next dev",
+    "dev:all": "concurrently \"next dev\" \"dotnet run --project ../backend/TravelEase.API --urls http://localhost:5000\"",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
+
   "dependencies": {
     "@base-ui/react": "^1.6.0",
     "@hookform/resolvers": "^5.4.0",

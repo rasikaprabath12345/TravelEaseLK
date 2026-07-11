@@ -90,20 +90,34 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
+  /* ─── Performance Utilities ────────────────────────── */
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 
-  @keyframes float {
+  /* GPU-composite hints for animated elements */
+  .animate-float,
+  .will-gpu {
+    will-change: transform;
+    transform: translateZ(0);
+  }
 
-    0%,
-    100% {
-      transform: translateY(0px);
-    }
+  /* Lazy-paint off-screen content sections */
+  .content-lazy {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
+  }
 
-    50% {
-      transform: translateY(-10px);
-    }
+  /* Optimized image rendering */
+  img {
+    image-rendering: auto;
+    text-rendering: optimizeSpeed;
   }
 }
 

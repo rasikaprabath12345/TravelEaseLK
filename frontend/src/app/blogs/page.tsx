@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Search, Calendar, User, ArrowRight, Compass, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Input } from '@/components/ui/input';
 import { useBlogs } from '@/hooks/useBlogs';
 import { formatDate } from '@/lib/utils';
@@ -39,7 +37,6 @@ export default function BlogsPage() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
       <div>
-        <Navbar />
 
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-slate-900 pt-36 pb-20 text-white">
@@ -237,7 +234,6 @@ export default function BlogsPage() {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 }

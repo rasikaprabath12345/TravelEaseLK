@@ -6,8 +6,6 @@ import {
   Search, Grid, List, MapPin, Clock, Users, Star, ArrowRight,
   SlidersHorizontal, Sparkles, Heart, Camera, Filter, X
 } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePackages } from '@/hooks/usePackages';
@@ -68,7 +66,6 @@ export default function PackagesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50/50 via-white to-white overflow-x-hidden">
-      <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-4 overflow-hidden text-center text-white">
@@ -417,8 +414,6 @@ export default function PackagesPage() {
           )}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

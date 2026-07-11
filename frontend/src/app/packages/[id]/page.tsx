@@ -7,8 +7,6 @@ import {
   MapPin, Calendar, Users, Star, Clock, CheckCircle, XCircle, MessageCircle,
   Heart, Share2, ArrowLeft, Camera, Shield, Award, ChevronLeft, ChevronRight
 } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -104,7 +102,6 @@ export default function PackageDetailPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-white">
-        <Navbar />
         <div className="pt-20">
           <div className="h-[500px] bg-sky-100 animate-pulse" />
           <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -123,7 +120,6 @@ export default function PackageDetailPage() {
   if (!pkg) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <Navbar />
         <div className="text-center mt-32">
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Package Not Found</h2>
           <p className="text-slate-500 mb-6">This tour package doesn't exist or has been removed.</p>
@@ -143,7 +139,6 @@ export default function PackageDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navbar />
 
       {/* Hero Image Carousel */}
       <div className="relative h-[55vh] min-h-[420px] overflow-hidden pt-16">
@@ -533,8 +528,6 @@ export default function PackageDetailPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

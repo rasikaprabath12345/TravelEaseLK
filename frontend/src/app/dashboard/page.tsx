@@ -7,8 +7,6 @@ import {
   Globe, ChevronRight, CheckCircle, AlertCircle, XCircle, MessageCircle, CreditCard
 } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
@@ -62,7 +60,6 @@ export default function CustomerDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/30 to-white">
-      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -304,8 +301,6 @@ export default function CustomerDashboard() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

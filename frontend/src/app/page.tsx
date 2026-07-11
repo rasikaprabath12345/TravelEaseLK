@@ -32,8 +32,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useFeaturedPackages } from '@/hooks/usePackages';
@@ -238,8 +236,6 @@ export default function HomePage() {
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-sky-500 via-cyan-400 to-orange-400 origin-left z-50"
         style={{ scaleX }}
       />
-
-      <Navbar />
 
       {/* Hero Section - Elevated Slideshow Background */}
       <section className="relative h-[95vh] min-h-[780px] flex flex-col justify-end overflow-hidden">
@@ -1025,8 +1021,6 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

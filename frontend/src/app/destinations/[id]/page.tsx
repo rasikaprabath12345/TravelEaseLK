@@ -4,8 +4,6 @@ import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Star, Clock } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,7 +22,6 @@ export default function DestinationDetailPage() {
   if (isLoading || !destination) {
     return (
       <div className="min-h-screen">
-        <Navbar />
         <div className="pt-24 max-w-7xl mx-auto px-4">
           <div className="animate-pulse space-y-4">
             <div className="h-96 bg-gray-200 rounded-2xl" />
@@ -36,7 +33,6 @@ export default function DestinationDetailPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Navbar />
 
       <div className="pt-20 pb-12">
         {/* Hero */}
@@ -153,8 +149,6 @@ export default function DestinationDetailPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

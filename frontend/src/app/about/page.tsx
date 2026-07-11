@@ -7,8 +7,6 @@ import {
   Clock, CheckCircle, Sparkles, ArrowRight
 } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
 
 const stats = [
@@ -75,7 +73,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 overflow-hidden text-center text-white">
@@ -341,8 +338,6 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }

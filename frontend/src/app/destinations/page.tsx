@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Search, ArrowRight, Compass, Globe, Waves, Mountain, TreePine, Award, Star } from 'lucide-react';
 import Link from 'next/link';
-import Navbar from '../../components/layout/Navbar';
-import Footer from '../../components/layout/Footer';
 import { Badge } from '../../components/ui/badge';
 import { useDestinations } from '../../hooks/useDestinations';
 import { isValidImageUrl } from '@/lib/utils';
@@ -75,7 +73,6 @@ export default function DestinationsPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
-      <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-24 overflow-hidden text-center text-white">
@@ -247,8 +244,6 @@ export default function DestinationsPage() {
           )}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 }
