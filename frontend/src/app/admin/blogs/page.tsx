@@ -235,7 +235,7 @@ export default function AdminBlogsPage() {
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-xs">
                   {paginatedBlogs.map((blog) => {
-                    const isVlog = !!blog.videoUrl;
+                    const isVlog = !!(blog.videoUrl && blog.videoUrl.trim());
                     const tags = blog.tags ? JSON.parse(blog.tags) as string[] : [];
                     
                     return (

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calendar, User, Play, X, Compass, Clock, BookOpen, AlertCircle } from 'lucide-react';
+import { Search, Calendar, User, X, Compass, BookOpen, AlertCircle } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,20 +10,8 @@ import { useBlogs } from '@/hooks/useBlogs';
 import { formatDate } from '@/lib/utils';
 import type { Blog } from '@/types';
 
-// Helper to convert YouTube URL to Embed URL
-function getYouTubeEmbedUrl(url?: string) {
-  if (!url) return '';
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  if (match && match[2].length === 11) {
-    return `https://www.youtube.com/embed/${match[2]}?autoplay=1`;
-  }
-  return '';
-}
-
 export default function BlogsPage() {
   const [search, setSearch] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'vlog' | 'blog'>('all');
   const [filterPalace, setFilterPalace] = useState<string>('all');
   const [selectedBlog, setSelectedBlog] = useState<Blog | null>(null);
 
@@ -33,17 +21,12 @@ export default function BlogsPage() {
 
   // Filter local logic for quick responsive feedback
   const filteredBlogs = blogs.filter((blog) => {
-    // Type Filter
-    if (filterType === 'vlog' && !blog.videoUrl) return false;
-    if (filterType === 'blog' && blog.videoUrl) return false;
-
     // Palace Tag Filter
     if (filterPalace !== 'all') {
       const tags = blog.tags ? JSON.parse(blog.tags) as string[] : [];
       const hasPalaceTag = tags.some((t) => t.toLowerCase() === filterPalace.toLowerCase());
       if (!hasPalaceTag) return false;
     }
-
     return true;
   });
 
@@ -68,10 +51,10 @@ export default function BlogsPage() {
               Heritage & History
             </div>
             <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-rose-400 tracking-tight leading-tight">
-              Sri Lankan Palaces
+              Palace Blogs & Articles
             </h1>
             <p className="mt-4 text-lg text-slate-400 font-medium leading-relaxed">
-              Step back in time to explore the architectural marvels, royal fortress-temples, and ancient kingdoms of Sri Lanka through immersive video logs and stories.
+              Step back in time to explore the architectural marvels, royal fortress-temples, and ancient kingdoms of Sri Lanka through immersive articles and stories.
             </p>
           </motion.div>
         </div>
@@ -80,26 +63,8 @@ export default function BlogsPage() {
       {/* Filters & Search */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 bg-slate-950/40 border border-slate-800/80 rounded-3xl p-5 backdrop-blur-xl mb-12">
-          {/* Tabs */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            {/* Media Type Filter */}
-            <div className="flex rounded-xl bg-slate-900 border border-slate-850 p-1">
-              {(['all', 'vlog', 'blog'] as const).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => setFilterType(type)}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                    filterType === type
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25'
-                      : 'text-slate-450 hover:text-white'
-                  }`}
-                >
-                  {type === 'all' ? 'All Content' : type === 'vlog' ? 'Vlogs (Videos)' : 'Articles'}
-                </button>
-              ))}
-            </div>
-
-            {/* Palace Categories Filter */}
+          {/* Category Tabs */}
+          <div className="flex flex-wrap gap-2">
             <div className="flex rounded-xl bg-slate-900 border border-slate-850 p-1">
               {['all', 'Sigiriya', 'Kandy', 'Polonnaruwa'].map((palace) => (
                 <button
@@ -107,8 +72,8 @@ export default function BlogsPage() {
                   onClick={() => setFilterPalace(palace)}
                   className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                     filterPalace === palace
-                      ? 'bg-slate-850 text-white border border-slate-700'
-                      : 'text-slate-450 hover:text-white border border-transparent'
+                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25'
+                      : 'text-slate-450 hover:text-white'
                   }`}
                 >
                   {palace === 'all' ? 'All Places' : palace}
@@ -122,7 +87,7 @@ export default function BlogsPage() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
             <Input
               type="text"
-              placeholder="Search palaces and vlogs..."
+              placeholder="Search palace stories..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-slate-900 border-slate-800 text-white placeholder-slate-500 pl-10 rounded-xl h-10 text-sm focus:border-rose-500 focus:ring-rose-500"
@@ -140,7 +105,7 @@ export default function BlogsPage() {
         ) : filteredBlogs.length === 0 ? (
           <div className="text-center py-20 bg-slate-950/20 border border-dashed border-slate-800 rounded-3xl">
             <AlertCircle className="h-12 w-12 text-slate-600 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-slate-350">No Vlogs or Articles Found</h3>
+            <h3 className="text-lg font-bold text-slate-350">No Articles Found</h3>
             <p className="text-slate-500 text-sm mt-1">Try tweaking your search or filter selection.</p>
           </div>
         ) : (
@@ -150,7 +115,6 @@ export default function BlogsPage() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {filteredBlogs.map((blog) => {
-              const isVlog = !!blog.videoUrl;
               const tags = blog.tags ? (JSON.parse(blog.tags) as string[]) : [];
 
               return (
@@ -174,23 +138,9 @@ export default function BlogsPage() {
                       </div>
                     )}
 
-                    {/* Vlog Overlay - Play Button */}
-                    {isVlog && (
-                      <div className="absolute inset-0 bg-slate-950/45 flex items-center justify-center group-hover:bg-slate-950/30 transition-colors duration-300">
-                        <div className="w-14 h-14 bg-rose-600/90 text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-rose-500 transition-transform duration-300">
-                          <Play className="h-6 w-6 fill-white ml-1" />
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Badges */}
+                    {/* Tag Badges */}
                     <div className="absolute top-4 left-4 flex gap-1.5">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-wider ${
-                        isVlog ? 'bg-rose-600 text-white shadow' : 'bg-indigo-650 text-white'
-                      }`}>
-                        {isVlog ? 'Vlog' : 'Article'}
-                      </span>
-                      {tags.slice(0, 1).map((t) => (
+                      {tags.slice(0, 2).map((t) => (
                         <span key={t} className="px-2.5 py-1 bg-slate-900/90 border border-slate-750 text-slate-300 rounded-lg text-[10px] font-bold">
                           {t}
                         </span>
@@ -221,8 +171,8 @@ export default function BlogsPage() {
                     </p>
 
                     <div className="mt-auto pt-5 border-t border-slate-850/80 flex items-center justify-between text-xs font-bold text-slate-400 group-hover:text-rose-400 transition-colors">
-                      <span>{isVlog ? 'Watch Vlog' : 'Read Article'}</span>
-                      <Play className="h-3 w-3 fill-current rotate-0" />
+                      <span>Read Article</span>
+                      <BookOpen className="h-3.5 w-3.5" />
                     </div>
                   </div>
                 </motion.div>
@@ -232,7 +182,7 @@ export default function BlogsPage() {
         )}
       </div>
 
-      {/* Detail / Playback Modal */}
+      {/* Detail Reader Modal */}
       <AnimatePresence>
         {selectedBlog && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10">
@@ -248,7 +198,7 @@ export default function BlogsPage() {
             {/* Modal Box */}
             <motion.div
               layoutId={`blog-card-${selectedBlog.id}`}
-              className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-4xl max-h-[85vh] overflow-y-auto shadow-2xl relative z-10 flex flex-col"
+              className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-3xl max-h-[85vh] overflow-y-auto shadow-2xl relative z-10 flex flex-col"
             >
               {/* Close Button */}
               <button
@@ -258,39 +208,24 @@ export default function BlogsPage() {
                 <X className="h-4.5 w-4.5" />
               </button>
 
-              {/* Vlog Video Embed */}
-              {selectedBlog.videoUrl && getYouTubeEmbedUrl(selectedBlog.videoUrl) ? (
-                <div className="aspect-video w-full bg-slate-950 overflow-hidden rounded-t-3xl border-b border-slate-800">
-                  <iframe
-                    src={getYouTubeEmbedUrl(selectedBlog.videoUrl)}
-                    title={selectedBlog.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0"
+              {/* Cover Image for Articles */}
+              {selectedBlog.imageUrl && (
+                <div className="relative w-full h-[300px] overflow-hidden rounded-t-3xl border-b border-slate-800">
+                  <img
+                    src={selectedBlog.imageUrl}
+                    alt={selectedBlog.title}
+                    className="object-cover w-full h-full"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
                 </div>
-              ) : (
-                /* Cover Image for Articles */
-                selectedBlog.imageUrl && (
-                  <div className="relative w-full h-[300px] overflow-hidden rounded-t-3xl border-b border-slate-800">
-                    <img
-                      src={selectedBlog.imageUrl}
-                      alt={selectedBlog.title}
-                      className="object-cover w-full h-full"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
-                  </div>
-                )
               )}
 
               {/* Text Info */}
               <div className="p-6 sm:p-8 flex-1">
                 {/* Meta */}
                 <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mb-3.5">
-                  <span className={`px-2.5 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-wider ${
-                    selectedBlog.videoUrl ? 'bg-rose-600/20 text-rose-400 border border-rose-500/20' : 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/20'
-                  }`}>
-                    {selectedBlog.videoUrl ? 'Video Vlog' : 'Article'}
+                  <span className="px-2.5 py-0.5 rounded-lg text-[9px] font-bold uppercase tracking-wider bg-rose-600/20 text-rose-450 border border-rose-500/20">
+                    Palace Blog
                   </span>
                   
                   <div className="flex items-center gap-1.5">

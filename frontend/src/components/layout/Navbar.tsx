@@ -153,10 +153,10 @@ export default function Navbar() {
                 </span>
               </Link>
 
-              {/* Vlogs */}
+              {/* Blogs */}
               <Link href="/blogs" className="px-3.5 py-2 rounded-xl group relative">
                 <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
-                  VLOGS
+                  BLOGS
                 </span>
               </Link>
 
@@ -442,7 +442,7 @@ export default function Navbar() {
                         Destinations
                       </Link>
                       <Link href="/blogs" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
-                        Palace Vlogs & Blogs
+                        Palace Blogs
                       </Link>
                     </div>
                   </div>
