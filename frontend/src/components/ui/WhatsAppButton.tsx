@@ -20,7 +20,6 @@ export default function SocialFloatingButtons() {
   ) {
     return null;
   }
-  
 
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(DEFAULT_WA_MSG)}`;
   const messengerUrl = `https://m.me/${MESSENGER_PAGE_ID}`;
