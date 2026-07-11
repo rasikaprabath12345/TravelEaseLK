@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { useBlog, useBlogs } from '@/hooks/useBlogs';
 import { formatDate } from '@/lib/utils';
 import { useState } from 'react';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 interface BlogDetailPageProps {
   params: Promise<{ id: string }>;
@@ -135,6 +137,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+        <Navbar />
         <div>
           <div className="max-w-4xl mx-auto px-4 pt-32 pb-16">
             <div className="h-6 w-24 bg-slate-200 animate-pulse rounded mb-6" />
@@ -148,6 +151,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -155,6 +159,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   if (!blog) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+        <Navbar />
         <div>
           <div className="max-w-md mx-auto px-4 py-32 text-center">
             <Compass className="h-16 w-16 text-slate-300 mx-auto mb-4 animate-bounce" />
@@ -167,6 +172,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
             </Link>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -177,6 +183,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between">
+      <Navbar />
       <div>
 
         <div className="pt-28 pb-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -348,6 +355,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

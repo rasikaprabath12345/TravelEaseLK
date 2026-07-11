@@ -13,6 +13,8 @@ import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice, isValidImageUrl } from '@/lib/utils';
 import Link from 'next/link';
 import { useWishlistStore } from '@/store/wishlist.store';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const packageImages = [
   'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=800&q=80',
@@ -66,6 +68,7 @@ export default function PackagesPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-sky-50/50 via-white to-white overflow-x-hidden">
+      <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 px-4 overflow-hidden text-center text-white">
@@ -414,6 +417,7 @@ export default function PackagesPage() {
           )}
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

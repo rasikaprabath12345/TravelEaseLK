@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { useBlogs } from '@/hooks/useBlogs';
 import { formatDate } from '@/lib/utils';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const POPULAR_TAGS = ['All', 'Ella', 'Sigiriya', 'Galle', 'Wildlife', 'Cultural', 'Beaches', 'Hiking'];
 
@@ -36,6 +38,7 @@ export default function BlogsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+      <Navbar />
       <div>
 
         {/* Hero Section */}
@@ -234,6 +237,7 @@ export default function BlogsPage() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

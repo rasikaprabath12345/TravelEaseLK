@@ -11,6 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name is required'),
@@ -69,6 +71,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
+      <Navbar />
 
       {/* Hero */}
       <section className="relative pt-32 pb-20 overflow-hidden text-center text-white">
@@ -366,6 +369,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

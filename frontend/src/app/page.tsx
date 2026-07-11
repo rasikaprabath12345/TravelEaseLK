@@ -37,6 +37,8 @@ import { Badge } from '@/components/ui/badge';
 import { useFeaturedPackages } from '@/hooks/usePackages';
 import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice, isValidImageUrl } from '@/lib/utils';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const IMAGES = {
   hero1: 'https://images.unsplash.com/photo-1588416936097-41850ab3d86d?w=1600&q=80',
@@ -182,6 +184,7 @@ export default function HomePage() {
 
   return (
     <div className="font-body bg-gradient-to-b from-sky-50/50 via-white to-sky-50/30 overflow-x-hidden">
+      <Navbar />
       <style jsx global>{`
         :root {
           --tl-primary: #0ea5e9;
@@ -1021,6 +1024,7 @@ export default function HomePage() {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { useDestination } from '@/hooks/useDestinations';
 import { usePackages } from '@/hooks/usePackages';
 import { formatPrice } from '@/lib/utils';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 export default function DestinationDetailPage() {
   const params = useParams();
@@ -21,18 +23,23 @@ export default function DestinationDetailPage() {
 
   if (isLoading || !destination) {
     return (
-      <div className="min-h-screen">
-        <div className="pt-24 max-w-7xl mx-auto px-4">
+      <div className="min-h-screen flex flex-col justify-between bg-gray-50 dark:bg-gray-900">
+        <Navbar />
+        <div className="pt-24 max-w-7xl mx-auto px-4 flex-1">
           <div className="animate-pulse space-y-4">
             <div className="h-96 bg-gray-200 rounded-2xl" />
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-between">
+      <Navbar />
+      <div>
+
 
       <div className="pt-20 pb-12">
         {/* Hero */}
@@ -149,6 +156,8 @@ export default function DestinationDetailPage() {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }

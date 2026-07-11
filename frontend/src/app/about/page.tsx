@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const stats = [
   { value: '15,000+', label: 'Happy Travelers', icon: Users, color: 'sky' },
@@ -73,6 +75,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
+      <Navbar />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 overflow-hidden text-center text-white">
@@ -338,6 +341,7 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

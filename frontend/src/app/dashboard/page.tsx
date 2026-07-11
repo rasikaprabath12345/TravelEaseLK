@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/store/auth.store';
 import { useBookings } from '@/hooks/useBookings';
 import { formatPrice, formatDate } from '@/lib/utils';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 // ── CONFIG: Change to your WhatsApp business number (94XXXXXXXXX) ──
 const DEFAULT_WA_BUSINESS = '94703348191';
@@ -59,7 +61,10 @@ export default function CustomerDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-sky-50/30 to-white flex flex-col justify-between">
+      <Navbar />
+      <div>
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-16">
 
@@ -301,6 +306,8 @@ export default function CustomerDashboard() {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }

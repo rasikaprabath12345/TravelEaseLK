@@ -19,6 +19,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
 
 const bookingSchema = z.object({
   fullName: z.string().min(2, 'Name is required'),
@@ -101,7 +103,8 @@ export default function PackageDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white flex flex-col justify-between">
+        <Navbar />
         <div className="pt-20">
           <div className="h-[500px] bg-sky-100 animate-pulse" />
           <div className="max-w-7xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -113,14 +116,16 @@ export default function PackageDetailPage() {
             <div className="h-80 bg-sky-100 rounded-3xl animate-pulse" />
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (!pkg) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-        <div className="text-center mt-32">
+      <div className="min-h-screen flex flex-col justify-between bg-white">
+        <Navbar />
+        <div className="text-center mt-32 mb-32">
           <h2 className="text-2xl font-bold text-slate-800 mb-2">Package Not Found</h2>
           <p className="text-slate-500 mb-6">This tour package doesn't exist or has been removed.</p>
           <Link href="/packages">
@@ -129,6 +134,7 @@ export default function PackageDetailPage() {
             </Button>
           </Link>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -138,7 +144,10 @@ export default function PackageDetailPage() {
     : null;
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col justify-between">
+      <Navbar />
+      <div>
+
 
       {/* Hero Image Carousel */}
       <div className="relative h-[55vh] min-h-[420px] overflow-hidden pt-16">
@@ -528,6 +537,8 @@ export default function PackageDetailPage() {
           </div>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
