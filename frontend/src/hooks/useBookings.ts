@@ -5,6 +5,7 @@ export function useBookings(params?: { status?: string; page?: number; pageSize?
   return useQuery({
     queryKey: ['bookings', params],
     queryFn: () => bookingService.getAll(params),
+    refetchInterval: 10000, // auto refetch bookings list every 10 seconds
   });
 }
 

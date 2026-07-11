@@ -10,6 +10,7 @@ export function useBlogs(params?: { search?: string; isPublished?: boolean; page
   return useQuery({
     queryKey: ['blogs', search, isPublished, page, pageSize],
     queryFn: () => blogService.getAll(search, isPublished, page, pageSize),
+    refetchInterval: 30000, // auto refetch blogs list every 30 seconds
   });
 }
 
