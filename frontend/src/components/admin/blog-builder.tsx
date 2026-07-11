@@ -230,10 +230,15 @@ export default function BlogBuilder({ value, onChange }: BlogBuilderProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-wrap gap-2 items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="h-4 w-4 text-rose-500" />
-          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Visual Article Builder</span>
+      <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4 text-rose-500" />
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">Visual Article Builder</span>
+          </div>
+          <p className="text-[10px] text-slate-400 max-w-md leading-relaxed">
+            Construct your article dynamically. Click buttons to add paragraphs, headings, quotes, or images. Use the <strong>Up / Down arrows</strong> on the left side of each block to place them anywhere (at the top, middle, or bottom).
+          </p>
         </div>
         
         <div className="flex flex-wrap gap-1.5">

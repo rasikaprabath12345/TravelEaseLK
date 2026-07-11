@@ -16,6 +16,102 @@ interface BlogDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
+function renderContent(content: string) {
+  if (content.startsWith('<')) {
+    return (
+      <div
+        dangerouslySetInnerHTML={{ __html: content }}
+        className="space-y-6 [&>p]:max-w-3xl [&>p]:mx-auto [&>p]:text-slate-600 [&>p]:leading-relaxed [&>p]:text-sm [&>p]:md:text-base [&>p]:lg:text-lg [&>h2]:max-w-3xl [&>h2]:mx-auto [&>h2]:font-sans [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:max-w-3xl [&>ul]:mx-auto [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:max-w-3xl [&>ol]:mx-auto [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:max-w-3xl [&_blockquote]:mx-auto [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
+      />
+    );
+  }
+
+  const regex = /\[image:\s*([^\s|\]]+)(?:\s*\|\s*([^\]]+))?\]|!\[(.*?)\]\((.*?)\)|\[img:\s*([^\s|\]]+)\]/g;
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = regex.exec(content)) !== null) {
+    const matchIndex = match.index;
+    if (matchIndex > lastIndex) {
+      parts.push({
+        type: 'text',
+        value: content.substring(lastIndex, matchIndex)
+      });
+    }
+
+    let url = '';
+    let caption = '';
+
+    if (match[1]) {
+      url = match[1];
+      caption = match[2] || '';
+    } else if (match[4]) {
+      url = match[4];
+      caption = match[3] || '';
+    } else if (match[5]) {
+      url = match[5];
+    }
+
+    parts.push({
+      type: 'image',
+      url: url.trim(),
+      caption: caption.trim()
+    });
+
+    lastIndex = regex.lastIndex;
+  }
+
+  if (lastIndex < content.length) {
+    parts.push({
+      type: 'text',
+      value: content.substring(lastIndex)
+    });
+  }
+
+  if (parts.length === 0) {
+    parts.push({ type: 'text', value: content });
+  }
+
+  return (
+    <div className="space-y-6">
+      {parts.map((part, index) => {
+        if (part.type === 'image') {
+          return (
+            <figure key={index} className="my-8 flex flex-col items-center">
+              <div className="w-full rounded-[2rem] overflow-hidden shadow-md border border-slate-200/60 bg-slate-50">
+                <img
+                  src={part.url}
+                  alt={part.caption || 'TravelEase LK Travel Place'}
+                  className="w-full h-auto object-cover max-h-[600px] hover:scale-[1.01] transition-transform duration-500"
+                />
+              </div>
+              {part.caption && (
+                <figcaption className="text-center text-xs sm:text-sm text-slate-400 mt-3 font-medium italic">
+                  {part.caption}
+                </figcaption>
+              )}
+            </figure>
+          );
+        }
+
+        return (
+          <div key={index} className="max-w-3xl mx-auto space-y-5 text-slate-600 leading-relaxed font-sans text-sm md:text-base lg:text-lg">
+            {part.value.split('\n\n').map((para, pIdx) => {
+              if (!para.trim()) return null;
+              return (
+                <p key={pIdx} className="mb-4">
+                  {para}
+                </p>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function BlogDetailPage({ params }: BlogDetailPageProps) {
   const router = useRouter();
   const { id } = use(params);
@@ -90,21 +186,23 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
       <div>
         <Navbar />
 
-        <div className="pt-28 pb-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="pt-28 pb-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
-          <button
-            onClick={() => router.push('/blogs')}
-            className="group inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 text-xs font-bold uppercase tracking-wider mb-6 transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
-            Back to Articles
-          </button>
+          <div className="max-w-3xl mx-auto mb-6">
+            <button
+              onClick={() => router.push('/blogs')}
+              className="group inline-flex items-center gap-2 text-slate-500 hover:text-slate-900 text-xs font-bold uppercase tracking-wider transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
+              Back to Articles
+            </button>
+          </div>
 
           {/* Article Header */}
           <motion.header
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-8 max-w-3xl mx-auto"
           >
             {blog.tags.length > 0 && (
               <div className="flex gap-2 mb-4">
@@ -119,7 +217,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
               </div>
             )}
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold text-slate-900 tracking-tight leading-tight mb-5">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-slate-900 tracking-tight leading-tight mb-5">
               {blog.title}
             </h1>
 
@@ -169,24 +267,13 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="prose prose-slate max-w-none text-slate-700 font-sans leading-relaxed text-sm md:text-base lg:text-lg"
+              className="prose prose-slate max-w-none text-slate-700 font-sans leading-relaxed"
             >
-              {/* We use dangerouslySetInnerHTML to allow simple formatting or rich text (markup). 
-                  If it contains basic returns, let's output them nicely. */}
-              {blog.content.startsWith('<') ? (
-                <div
-                  dangerouslySetInnerHTML={{ __html: blog.content }}
-                  className="space-y-6 [&>p]:text-slate-600 [&>p]:leading-relaxed [&>h2]:font-sans [&>h2]:font-extrabold [&>h2]:text-slate-800 [&>h2]:text-2xl [&>h2]:mt-8 [&>h2]:mb-4 [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ol]:list-decimal [&>ol]:pl-5 [&_img]:rounded-3xl [&_img]:shadow-md [&_img]:max-h-[550px] [&_img]:w-full [&_img]:object-cover [&_img]:my-8 [&_figure]:my-8 [&_figcaption]:text-center [&_figcaption]:text-slate-400 [&_figcaption]:text-xs [&_figcaption]:mt-2 [&_blockquote]:border-l-4 [&_blockquote]:border-rose-500 [&_blockquote]:pl-4 [&_blockquote]:py-2 [&_blockquote]:my-6 [&_blockquote]:italic [&_blockquote]:text-slate-600 [&_blockquote]:bg-slate-50 [&_blockquote]:rounded-r-xl [&_blockquote]:pr-4"
-                />
-              ) : (
-                <div className="space-y-6 text-slate-600 leading-relaxed whitespace-pre-line text-sm md:text-base lg:text-lg">
-                  {blog.content}
-                </div>
-              )}
+              {renderContent(blog.content)}
             </motion.div>
 
             {/* Share and Booking CTAs */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
+            <div className="max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-slate-200/60">
               {/* Share Card */}
               <div className="bg-slate-50 rounded-[2rem] border border-slate-200/80 p-6 shadow-sm flex flex-col justify-center">
                 <h3 className="font-sans font-bold text-sm text-slate-800 mb-4 flex items-center gap-1.5">
