@@ -20,7 +20,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<'notifications' | 'profile' | 'wishlist' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const router = useRouter();
@@ -70,26 +70,26 @@ export default function Navbar() {
     router.push(`/packages?search=${encodeURIComponent(term)}`);
   };
 
-  const isLightPage = pathname?.startsWith('/admin') || 
-                      pathname?.startsWith('/dashboard') || 
-                      pathname?.startsWith('/login') || 
-                      pathname?.startsWith('/register') ||
-                      pathname?.startsWith('/packages') || 
-                      pathname?.startsWith('/destinations') ||
-                      pathname?.startsWith('/about') ||
-                      pathname?.startsWith('/contact');
-                      
+  const isLightPage = pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/login') ||
+    pathname?.startsWith('/register') ||
+    pathname?.startsWith('/packages') ||
+    pathname?.startsWith('/destinations') ||
+    pathname?.startsWith('/about') ||
+    pathname?.startsWith('/contact');
+
   const isLightNav = scrolled || isLightPage;
 
-  const navBgClass = isLightNav 
-    ? 'bg-white/90 backdrop-blur-lg border-b border-slate-200/80 shadow-[0_4px_30px_rgba(0,0,0,0.03)] py-1.5' 
+  const navBgClass = isLightNav
+    ? 'bg-white/90 backdrop-blur-lg border-b border-slate-200/80 shadow-[0_4px_30px_rgba(0,0,0,0.03)] py-1.5'
     : 'bg-slate-900/10 backdrop-blur-[4px] border-b border-white/5 py-3';
-    
+
   const textColorClass = isLightNav ? 'text-slate-800 font-bold' : 'text-white drop-shadow-sm';
   const textMutedClass = isLightNav ? 'text-slate-500 font-semibold' : 'text-white/80 drop-shadow-sm';
   const hamburgerClass = isLightNav ? 'bg-slate-800' : 'bg-white';
   const dividerClass = isLightNav ? 'bg-slate-200' : 'bg-white/20';
-  const navHeightClass = scrolled ? 'h-14' : 'h-16'; 
+  const navHeightClass = scrolled ? 'h-14' : 'h-16';
 
 
 
@@ -113,7 +113,7 @@ export default function Navbar() {
       <nav ref={dropdownRef} className={`fixed top-0 w-full z-50 transition-all duration-300 ${navBgClass}`} suppressHydrationWarning>
         <div className="max-w-[1800px] mx-auto px-4 md:px-8" suppressHydrationWarning>
           <div className={`flex items-center justify-between transition-all duration-300 ${navHeightClass}`} suppressHydrationWarning>
-            
+
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 shrink-0 group">
               <div className="w-9 h-9 bg-gradient-to-br from-rose-500 to-pink-600 rounded-xl flex items-center justify-center shadow-md shadow-rose-500/20 group-hover:scale-105 transition-transform duration-300">
@@ -131,7 +131,7 @@ export default function Navbar() {
 
             {/* Middle Nav Items */}
             <div className="hidden xl:flex items-center gap-1.5 2xl:gap-3">
-              
+
               {/* Home */}
               <Link href="/" className="px-3.5 py-2 rounded-xl group relative">
                 <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
@@ -153,13 +153,6 @@ export default function Navbar() {
                 </span>
               </Link>
 
-              {/* Blogs */}
-              <Link href="/blogs" className="px-3.5 py-2 rounded-xl group relative">
-                <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
-                  BLOGS
-                </span>
-              </Link>
-
               {/* About */}
               <Link href="/about" className="px-3.5 py-2 rounded-xl group relative">
                 <span className={`font-['Inter'] text-[12.5px] font-bold tracking-wider transition-colors duration-200 group-hover:text-[var(--nav-accent)] ${textColorClass}`}>
@@ -177,14 +170,13 @@ export default function Navbar() {
 
             {/* Right Side Buttons */}
             <div className="flex items-center gap-3 sm:gap-4.5">
-              
+
               {/* Wishlist Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => toggleDropdown('wishlist')}
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
-                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
-                  }`}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
+                    }`}
                   aria-label="Wishlist"
                 >
                   {wishlistItems.length > 0 && (
@@ -252,9 +244,8 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => toggleDropdown('notifications')}
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${
-                    isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
-                  }`}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all shrink-0 hover:bg-slate-100/50 ${isLightNav ? 'border-slate-200 text-slate-700' : 'border-white/10 text-white'
+                    }`}
                   aria-label="Notifications"
                 >
                   <span className="absolute top-1 right-1 w-2 h-2 bg-rose-500 rounded-full animate-pulse" />
@@ -365,9 +356,8 @@ export default function Navbar() {
                 ) : (
                   <div className="hidden sm:flex items-center gap-2">
                     <Link href="/login">
-                      <Button variant="ghost" className={`font-['Inter'] text-[12px] font-bold tracking-wider px-4.5 rounded-xl border border-transparent transition-all ${
-                        isLightNav ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
-                      }`}>
+                      <Button variant="ghost" className={`font-['Inter'] text-[12px] font-bold tracking-wider px-4.5 rounded-xl border border-transparent transition-all ${isLightNav ? 'text-slate-700 hover:bg-slate-100' : 'text-white hover:bg-white/10'
+                        }`}>
                         LOGIN
                       </Button>
                     </Link>
@@ -407,7 +397,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="fixed inset-0 bg-slate-900 xl:hidden z-40"
               />
-              
+
               {/* Drawer Content */}
               <motion.div
                 initial={{ x: '100%' }}
@@ -440,9 +430,6 @@ export default function Navbar() {
                       </Link>
                       <Link href="/destinations" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
                         Destinations
-                      </Link>
-                      <Link href="/blogs" className="px-4 py-2.5 font-['Inter'] text-[13px] font-semibold text-slate-600 hover:text-rose-500 rounded-xl transition-all">
-                        Palace Blogs
                       </Link>
                     </div>
                   </div>

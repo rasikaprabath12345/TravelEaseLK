@@ -119,18 +119,3 @@ export interface ApiResponse<T> {
   page?: number;
   pageSize?: number;
 }
-
-export interface Blog {
-  id: number;
-  title: string;
-  content: string;
-  excerpt?: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  author?: string;
-  isPublished: boolean;
-  publishedDate?: string;
-  tags?: string;
-  createdAt: string;
-  updatedAt?: string;
-}

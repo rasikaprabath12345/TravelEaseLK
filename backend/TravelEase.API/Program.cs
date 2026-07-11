@@ -24,7 +24,6 @@ builder.Services.AddScoped<IPackageService, PackageService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IDestinationService, DestinationService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddScoped<IBlogService, BlogService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "YourSuperSecretKeyForTravelEaseLK2026!@#$%^&*()";
