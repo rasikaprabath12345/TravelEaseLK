@@ -31,6 +31,13 @@ const contactInfo = [
   { icon: MapPin, title: 'Visit Our Office', detail: '42 Galle Road, Colombo 03', sub: 'Sri Lanka — Open Mon–Sat', href: '#', color: 'purple' },
 ];
 
+const colorMaps = {
+  sky: { bg: 'bg-sky-50 dark:bg-sky-950/30', text: 'text-sky-600 dark:text-sky-400' },
+  emerald: { bg: 'bg-emerald-50 dark:bg-emerald-950/30', text: 'text-emerald-600 dark:text-emerald-400' },
+  orange: { bg: 'bg-orange-50 dark:bg-orange-950/30', text: 'text-orange-600 dark:text-orange-400' },
+  purple: { bg: 'bg-purple-50 dark:bg-purple-950/30', text: 'text-purple-600 dark:text-purple-400' },
+};
+
 const tourTypes = [
   'Cultural Heritage Tour',
   'Wildlife Safari',
@@ -139,14 +146,16 @@ export default function ContactPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className={`bg-white rounded-2xl p-5 border border-sky-100 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group cursor-pointer`}
+                className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-sky-100 dark:border-slate-700/50 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group cursor-pointer flex flex-col justify-between h-full"
               >
-                <div className={`w-11 h-11 bg-${item.color}-100 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                  <item.icon className={`h-5 w-5 text-${item.color}-600`} />
+                <div>
+                  <div className={`w-11 h-11 ${colorMaps[item.color as keyof typeof colorMaps].bg} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                    <item.icon className={`h-5 w-5 ${colorMaps[item.color as keyof typeof colorMaps].text}`} />
+                  </div>
+                  <p className="font-semibold text-slate-800 dark:text-white text-sm mb-0.5">{item.title}</p>
+                  <p className="text-slate-700 dark:text-slate-300 font-medium text-sm break-all">{detail}</p>
                 </div>
-                <p className="font-semibold text-slate-800 text-sm mb-0.5">{item.title}</p>
-                <p className="text-slate-700 font-medium text-sm">{detail}</p>
-                <p className="text-slate-400 text-xs mt-0.5">{item.sub}</p>
+                <p className="text-slate-400 dark:text-slate-500 text-xs mt-2">{item.sub}</p>
               </motion.a>
             );
           })}
