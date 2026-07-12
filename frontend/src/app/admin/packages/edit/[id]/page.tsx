@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, X } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import { ImageUpload } from '../../../../../components/ui/image-upload';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,6 +43,7 @@ export default function EditPackagePage() {
     imageUrl: '',
     destinationId: 0,
     isFeatured: false,
+    images: [] as string[],
   });
 
   // 3. දැනට තියෙන Package දත්ත ලබාගැනීම
@@ -63,6 +64,7 @@ export default function EditPackagePage() {
             imageUrl: pkg.imageUrl || '',
             destinationId: pkg.destinationId || 0,
             isFeatured: pkg.isFeatured || false,
+            images: pkg.images || [],
           });
         }
       } catch (err: any) {
@@ -209,6 +211,42 @@ export default function EditPackagePage() {
                 onChange={(val) => setFormData((prev) => ({ ...prev, imageUrl: val }))}
                 placeholder="Paste cover image URL or upload one"
               />
+
+              {/* Gallery Images */}
+              <div className="space-y-4 pt-4 border-t">
+                <label className="text-sm font-medium block">Gallery Images (Additional Photos)</label>
+                
+                {formData.images && formData.images.length > 0 && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                    {formData.images.map((url, index) => (
+                      <div key={index} className="relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 group h-28 shadow-sm">
+                        <img src={url} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => setFormData(prev => ({ ...prev, images: prev.images.filter((_, i) => i !== index) }))}
+                            className="bg-red-600 hover:bg-red-700 text-white text-xs rounded-xl shadow font-semibold p-2"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <ImageUpload
+                  label="Add Image to Gallery"
+                  value=""
+                  onChange={(val) => {
+                    if (val) {
+                      setFormData(prev => ({ ...prev, images: [...(prev.images || []), val] }));
+                    }
+                  }}
+                  placeholder="Paste gallery image URL or upload one to add to gallery"
+                />
+              </div>
 
               <div className="flex items-center space-x-2 pt-2">
                 <input 

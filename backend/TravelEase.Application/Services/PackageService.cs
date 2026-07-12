@@ -102,7 +102,7 @@ public class PackageService : IPackageService
                 TourGuideName = p.TourGuide != null ? p.TourGuide.Name : null,
                 IsFeatured = p.IsFeatured,
                 AverageRating = p.AverageRating,
-                Images = new List<string>(),
+                Images = p.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
                 CreatedAt = p.CreatedAt
             })
             .FirstOrDefaultAsync();
@@ -132,7 +132,7 @@ public class PackageService : IPackageService
                 TourGuideName = p.TourGuide != null ? p.TourGuide.Name : null,
                 IsFeatured = p.IsFeatured,
                 AverageRating = p.AverageRating,
-                Images = new List<string>(),
+                Images = p.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
                 CreatedAt = p.CreatedAt
             })
             .ToListAsync();
@@ -162,6 +162,15 @@ public class PackageService : IPackageService
             CancellationPolicy = dto.CancellationPolicy
         };
 
+        if (dto.Images != null && dto.Images.Any())
+        {
+            package.Images = dto.Images.Select((url, index) => new PackageImage
+            {
+                ImageUrl = url,
+                Order = index
+            }).ToList();
+        }
+
         await _unitOfWork.Repository<Package>().AddAsync(package);
         await _unitOfWork.SaveChangesAsync();
 
@@ -178,6 +187,7 @@ public class PackageService : IPackageService
             ImageUrl = package.ImageUrl,
             DestinationId = package.DestinationId,
             IsFeatured = package.IsFeatured,
+            Images = package.Images.OrderBy(i => i.Order).Select(i => i.ImageUrl).ToList(),
             CreatedAt = package.CreatedAt
         };
     }
@@ -204,6 +214,31 @@ public class PackageService : IPackageService
         package.CancellationPolicy = dto.CancellationPolicy;
         package.UpdatedAt = DateTime.UtcNow;
 
+        // Get existing images and remove them
+        var existingImages = await _unitOfWork.Repository<PackageImage>()
+            .Query()
+            .Where(pi => pi.PackageId == package.Id)
+            .ToListAsync();
+
+        foreach (var img in existingImages)
+        {
+            await _unitOfWork.Repository<PackageImage>().DeleteAsync(img);
+        }
+
+        // Add new images
+        if (dto.Images != null && dto.Images.Any())
+        {
+            foreach (var (url, index) in dto.Images.Select((url, index) => (url, index)))
+            {
+                await _unitOfWork.Repository<PackageImage>().AddAsync(new PackageImage
+                {
+                    PackageId = package.Id,
+                    ImageUrl = url,
+                    Order = index
+                });
+            }
+        }
+
         await _unitOfWork.Repository<Package>().UpdateAsync(package);
         await _unitOfWork.SaveChangesAsync();
 
@@ -220,6 +255,7 @@ public class PackageService : IPackageService
             ImageUrl = package.ImageUrl,
             DestinationId = package.DestinationId,
             IsFeatured = package.IsFeatured,
+            Images = dto.Images ?? new List<string>(),
             CreatedAt = package.CreatedAt
         };
     }

@@ -38,6 +38,7 @@ public class CreatePackageDto
     public string? ExcludedServices { get; set; }
     public string? Itinerary { get; set; }
     public string? CancellationPolicy { get; set; }
+    public List<string> Images { get; set; } = new();
 }
 
 public class UpdatePackageDto : CreatePackageDto
