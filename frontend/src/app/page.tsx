@@ -31,6 +31,7 @@ import {
   FileText
 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -138,6 +139,21 @@ export default function HomePage() {
 
   const featuredPackages = packagesData?.data || [];
   const destinations = destinationsData?.data || [];
+
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [when, setWhen] = useState('');
+  const [guests, setGuests] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (searchQuery.trim()) {
+      params.set('search', searchQuery.trim());
+    }
+    // Note: When and guests can be expanded here if the packages search filters are extended.
+    router.push(`/packages?${params.toString()}`);
+  };
 
   const filteredPackages = activeCategory === 'all'
     ? featuredPackages
@@ -321,7 +337,7 @@ export default function HomePage() {
             transition={{ delay: 0.8 }}
             className="glass-card rounded-3xl p-3.5 soft-shadow w-full max-w-5xl"
           >
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2.5">
+            <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-2.5">
               <div className="flex items-center gap-3.5 rounded-2xl px-5 py-4 hover:bg-sky-50/80 transition-colors group">
                 <div className="w-10 h-10 bg-sky-100 rounded-xl flex items-center justify-center group-hover:bg-sky-200 transition-colors">
                   <MapPin className="h-5 w-5 text-sky-600" />
@@ -330,6 +346,8 @@ export default function HomePage() {
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Where to?</p>
                   <input
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Ella, Sigiriya, Galle..."
                     className="bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 w-full text-sm font-semibold"
                   />
@@ -344,6 +362,8 @@ export default function HomePage() {
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">When?</p>
                   <input
                     type="text"
+                    value={when}
+                    onChange={(e) => setWhen(e.target.value)}
                     placeholder="Select Month / Dates"
                     className="bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 w-full text-sm font-semibold"
                   />
@@ -358,6 +378,8 @@ export default function HomePage() {
                   <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">Guests</p>
                   <input
                     type="text"
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
                     placeholder="How many travelers?"
                     className="bg-transparent border-none outline-none text-slate-800 placeholder-slate-400 w-full text-sm font-semibold"
                   />
@@ -365,16 +387,15 @@ export default function HomePage() {
               </div>
 
               <div className="flex items-center p-1.5">
-                <Link href="/packages" className="w-full h-full">
-                  <Button
-                    size="lg"
-                    className="w-full h-full bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-2xl px-9 py-4 font-bold soft-shadow hover:shadow-xl transition-all cursor-pointer"
-                  >
-                    <Search className="h-5 w-5 mr-2" /> Search
-                  </Button>
-                </Link>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full h-full bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-600 hover:to-cyan-600 text-white rounded-2xl px-9 py-4 font-bold soft-shadow hover:shadow-xl transition-all cursor-pointer"
+                >
+                  <Search className="h-5 w-5 mr-2" /> Search
+                </Button>
               </div>
-            </div>
+            </form>
           </motion.div>
 
           {/* Social Proof Realtime Alerts */}

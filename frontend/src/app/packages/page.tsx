@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion } from 'framer-motion';
 import {
   Search, Grid, List, MapPin, Clock, Users, Star, ArrowRight,
@@ -13,6 +13,7 @@ import { useDestinations } from '@/hooks/useDestinations';
 import { formatPrice, isValidImageUrl } from '@/lib/utils';
 import Link from 'next/link';
 import { useWishlistStore } from '@/store/wishlist.store';
+import { useSearchParams } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
@@ -41,8 +42,17 @@ const durationOptions = [
   { value: '14+', label: '14+ Days' },
 ];
 
-export default function PackagesPage() {
+function PackagesPageContent() {
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q) {
+      setSearch(q);
+    }
+  }, [searchParams]);
+
   const [destinationId, setDestinationId] = useState<number | undefined>();
   const [sortBy, setSortBy] = useState('newest');
   const [page, setPage] = useState(1);
@@ -121,7 +131,7 @@ export default function PackagesPage() {
               placeholder="Search tours (Sigiriya, Whale watching, Yala...)"
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
-              className="w-full pl-13 pr-5 py-4 bg-white rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-lg border border-sky-100"
+              className="w-full pl-14 pr-5 py-4 bg-white rounded-2xl text-slate-800 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-sky-400 shadow-lg border border-sky-100"
             />
           </motion.div>
         </div>
@@ -419,5 +429,17 @@ export default function PackagesPage() {
       </section>
       <Footer />
     </div>
+  );
+}
+
+export default function PackagesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500" />
+      </div>
+    }>
+      <PackagesPageContent />
+    </Suspense>
   );
 }
