@@ -60,7 +60,8 @@ export default function Navbar() {
     pathname?.startsWith('/destinations') ||
     pathname?.startsWith('/blogs') ||
     pathname?.startsWith('/about') ||
-    pathname?.startsWith('/contact');
+    pathname?.startsWith('/contact') ||
+    pathname?.startsWith('/wishlist');
 
   const solid = scrolled || isSolidPage;
 
