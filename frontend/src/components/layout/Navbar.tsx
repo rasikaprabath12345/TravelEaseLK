@@ -166,7 +166,7 @@ export default function Navbar() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.98 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-3 w-56 bg-white border border-slate-100 shadow-xl rounded-xl overflow-hidden z-50"
+                        className="absolute right-0 top-full mt-3 w-56 bg-white border border-slate-100 shadow-none rounded-xl overflow-hidden z-50"
                       >
                         {/* Header */}
                         <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
