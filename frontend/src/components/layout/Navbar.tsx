@@ -140,6 +140,24 @@ export default function Navbar() {
               {/* Separator */}
               <div className={`hidden xl:block w-px h-4 ${solid ? 'bg-slate-200' : 'bg-white/20'}`} />
 
+              {/* Wishlist Link */}
+              <Link
+                href="/wishlist"
+                className={`relative p-1.5 rounded-lg transition-colors duration-200 ${
+                  solid
+                    ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                }`}
+                aria-label="Wishlist"
+              >
+                <Heart className="h-[18px] w-[18px]" strokeWidth={2} />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </Link>
+
               {/* Auth */}
               {isAuthenticated ? (
                 <div className="relative" ref={dropdownRef}>
