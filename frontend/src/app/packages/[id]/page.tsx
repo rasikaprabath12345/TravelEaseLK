@@ -150,7 +150,7 @@ export default function PackageDetailPage() {
 
 
       {/* Hero Image Carousel */}
-      <div className="relative h-[55vh] min-h-[420px] overflow-hidden pt-16">
+      <div className="relative h-[55vh] min-h-[420px] overflow-hidden">
         <img
           src={images[imgIdx] || packageImages[0]}
           alt={pkg.name}

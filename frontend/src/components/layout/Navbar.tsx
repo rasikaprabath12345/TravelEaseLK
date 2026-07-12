@@ -69,8 +69,8 @@ export default function Navbar() {
       {/* ── Top Bar ── */}
       <div
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${solid
-            ? 'bg-white/98 backdrop-blur-sm shadow-[0_1px_0_0_#e2e8f0]'
-            : 'bg-transparent'
+          ? 'bg-white/98 backdrop-blur-sm shadow-[0_1px_0_0_#e2e8f0]'
+          : 'bg-transparent'
           }`}
         suppressHydrationWarning
       >
@@ -105,18 +105,18 @@ export default function Navbar() {
                     key={link.href}
                     href={link.href}
                     className={`relative px-4 py-2 text-[13px] font-medium tracking-wide transition-colors duration-200 group ${active
-                        ? solid ? 'text-rose-600' : 'text-white'
-                        : solid
-                          ? 'text-slate-600 hover:text-slate-900'
-                          : 'text-white/75 hover:text-white'
+                      ? solid ? 'text-rose-600' : 'text-white'
+                      : solid
+                        ? 'text-slate-600 hover:text-slate-900'
+                        : 'text-white/75 hover:text-white'
                       }`}
                   >
                     {link.label}
                     {/* underline indicator */}
                     <span
                       className={`absolute bottom-0 left-4 right-4 h-[1.5px] rounded-full transition-all duration-300 ${active
-                          ? 'bg-rose-500 opacity-100 scale-x-100'
-                          : 'bg-rose-400 opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100'
+                        ? 'bg-rose-500 opacity-100 scale-x-100'
+                        : 'bg-rose-400 opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100'
                         }`}
                     />
                   </Link>
@@ -214,8 +214,8 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     className={`text-[13px] font-medium px-3.5 py-2 rounded-lg transition-colors duration-200 ${solid
-                        ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                      ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
                       }`}
                   >
                     Sign In
@@ -287,8 +287,8 @@ export default function Navbar() {
                         <Link
                           href={link.href}
                           className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors ${active
-                              ? 'bg-rose-50 text-rose-600'
-                              : 'text-slate-700 hover:bg-slate-50'
+                            ? 'bg-rose-50 text-rose-600'
+                            : 'text-slate-700 hover:bg-slate-50'
                             }`}
                         >
                           {link.label}
