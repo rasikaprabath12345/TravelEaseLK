@@ -128,7 +128,7 @@ export default function Navbar() {
             </nav>
 
             {/* ── Right Actions ── */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4" suppressHydrationWarning>
 
               {/* Phone */}
               <a
@@ -146,11 +146,10 @@ export default function Navbar() {
               {/* Wishlist Link */}
               <Link
                 href="/wishlist"
-                className={`relative p-1.5 rounded-lg transition-colors duration-200 ${
-                  solid
+                className={`relative p-1.5 rounded-lg transition-colors duration-200 ${solid
                     ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
+                  }`}
                 aria-label="Wishlist"
               >
                 <Heart className="h-[18px] w-[18px]" strokeWidth={2} />
