@@ -1,84 +1,30 @@
-# ✈️ TravelEase Sri Lanka (TravelEaseLK)
+# TravelEase - A Comprehensive Tour Booking & Travel Management Platform
 
-TravelEase Sri Lanka is a premium, modern tour booking and travel management platform designed to provide tourists with curated Sri Lankan adventures. Built using C# (.NET Core Clean Architecture) and React/Next.js.
+**July 2026**
 
----
+🚀 Excited to share my latest project: **TravelEase Sri Lanka** – a comprehensive travel and tour booking platform designed to inspire travelers and make holiday planning in Sri Lanka seamless and exciting! 🌍✨
 
-## 🏗️ Project Architecture
+TravelEase features six key sections:
+✅ **Home**: A visually stunning landing page featuring interactive hero sliders, popular destinations, client stories, and FAQs to ignite your wanderlust.
+✅ **Packages**: Discover curated travel itineraries and tour packages across Sri Lanka (Beach, Hill Country, Cultural, and Wildlife) with real-time reservation options.
+✅ **Destinations**: Explore Sri Lanka's top travel zones with local history, highlights, and matching tour guides.
+✅ **Blog**: Dive into rich travel tips, guides, and itineraries written to assist you on your journey.
+✅ **Customer Dashboard**: Easy-to-use workspace to view active bookings, upload payment receipts, and manage account settings.
+✅ **Admin Panel**: An enterprise-grade backoffice control panel to review and verify bookings, manage packages, publish blogs, and view registered customers.
 
-The project is split into a **Frontend** web app and a **Backend** REST API:
+This project was a fantastic opportunity to combine my passion for travel with my skills in modern web development, backend engineering, and clean architecture. I’m proud of how it turned out and excited to continue improving it!
 
-- **`/frontend`**: Next.js (App Router), React, TypeScript, Tailwind CSS, Zustand, and Framer Motion.
-- **`/backend`**: ASP.NET Core Web API using Clean Architecture:
-  - **`TravelEase.API`**: Presentation layer & Web API Controllers.
-  - **`TravelEase.Application`**: Business logic, Services, Interfaces, and DTOs.
-  - **`TravelEase.Infrastructure`**: Repository implementations, SQL Server DbContext, and security.
-  - **`TravelEase.Domain`**: Core domain entities and models.
-- **`/database`**: Database schema creation (`TravelEaseDB.sql`) and initial seed data (`seed-data.sql`).
+🔗 Check out the project on GitHub: [https://github.com/rasikaprabath12345/TravelEaseLK](https://github.com/rasikaprabath12345/TravelEaseLK)
 
----
+Feel free to explore, share feedback, or contribute to the codebase. Let’s make travel planning more seamless and inspiring for everyone!
 
-## 🚀 Quick Start Guide
-
-### 1. Database Setup
-1. Open your **SQL Server Management Studio (SSMS)** or database tool.
-2. Connect to your database server.
-3. Run the schema creation script: [TravelEaseDB.sql](file:///c:/Users/ASUS/Videos/New%20folder/TravelEaseLK/database/TravelEaseDB.sql)
-4. Run the seed data script: [seed-data.sql](file:///c:/Users/ASUS/Videos/New%20folder/TravelEaseLK/database/seed-data.sql)
-
-### 2. Backend Setup
-1. Configure your Connection String in [appsettings.json](file:///c:/Users/ASUS/Videos/New%20folder/TravelEaseLK/backend/TravelEase.API/appsettings.json) under `ConnectionStrings:DefaultConnection`.
-2. Launch the backend:
-   ```bash
-   cd backend
-   dotnet restore
-   dotnet run --project TravelEase.API/TravelEase.API.csproj
-   ```
-   The backend API will run on `http://localhost:5000` (or `https://localhost:5001`).
-
-### 3. Frontend Setup
-1. Install dependencies:
-   ```bash
-   cd frontend
-   npm install
-   ```
-2. Start the local Next.js development server:
-   ```bash
-   npm run dev
-   ```
-   The client application will run on `http://localhost:3000`.
+**Skills**: C# (.NET Core Clean Architecture), Next.js, React.js, TypeScript, Tailwind CSS, SQL Server, Entity Framework Core, Zustand, Framer Motion
 
 ---
 
-## ✨ Features
-- 🌅 **Package Browsing & Searching**: Explore curated Sri Lankan tours filtered by category (nature, beach, heritage, hills).
-- 🛒 **Interactive Wishlist**: Add preferred packages to a local client-side wishlist.
-- 💳 **Direct Reservation & Payment Verification**: Reserve dates and upload bank transaction receipts for verification.
-- 👤 **Customer Dashboard**: Track reservation history, booking statuses, and upload payment slips.
-- 🛡️ **Admin Panel**: Complete admin dashboard for managing packages, destinations, customer bookings, and blog posts.
+## 🔑 Demo Credentials
 
----
+For testing and verification, use the following credentials to access pre-seeded data in the local environment:
 
-## 🖥️ Website Overview & Structure
-
-The web application is structured with intuitive navigation tailored for visitors, registered clients, and system administrators.
-
-### 🌅 Client Portal (Public Pages)
-- **Home (`/`)**: A landing page featuring sliding hero banners of iconic Sri Lankan spots (Sigiriya, Ella, Kandy), direct package searches, trending destinations, customer testimonials, and FAQs.
-- **Packages (`/packages`, `/packages/[id]`)**: Comprehensive catalog of travel packages. Features search, categories (Beach, Cultural, Nature, Hills), dynamic pricing, details, and reservation capabilities.
-- **Destinations (`/destinations`, `/destinations/[id]`)**: Highlighting locations in Sri Lanka with background summaries, history, and associated tour packages.
-- **Blogs (`/blogs`, `/blogs/[id]`)**: Travel blogs, guides, and itineraries for tourists visiting Sri Lanka.
-- **About (`/about`) & Contact (`/contact`)**: Information about TravelEase, team overview, custom tour requests, and contact forms.
-- **Wishlist (`/wishlist`)**: Dynamic wishlist page showing curated and saved trips.
-
-### 👤 Customer Dashboard (`/dashboard`)
-- **My Bookings**: Customer workspace to view reservation history, check status updates (Pending, Verified, Active, Cancelled), and upload bank payment transaction slips.
-- **Settings**: Simple profile settings to update contact details and preferences.
-
-### 🛡️ Admin Dashboard (`/admin`)
-- **Overview Dashboard (`/admin/dashboard`)**: Visual summary of total sales, booking counts, active customers, and recent slip uploads awaiting confirmation.
-- **Packages Management (`/admin/packages`)**: View, edit, create, and delete travel packages (title, price, durations, image galleries, and categories).
-- **Destinations Management (`/admin/destinations`)**: Add and customize destinations across Sri Lanka.
-- **Bookings Verification (`/admin/bookings`)**: Centralized ledger to review bank receipts uploaded by customers, check payment validity, and confirm/update booking statuses.
-- **Customer Directory (`/admin/customers`)**: Database view of registered users.
-- **Blogs Manager (`/admin/blogs`)**: Full content management editor to write, publish, and delete travel blogs.
+- 🛡️ **Admin Account**: `admin@travelease.lk` / `Admin@123`
+- 👤 **Customer Account**: `james.w@gmail.com` / `Customer@123` (or click the **Sign in with Google** button on the login screen to instantly log in as this customer!)

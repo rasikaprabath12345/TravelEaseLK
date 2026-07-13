@@ -237,14 +237,39 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Demo Credentials */}
-            <div className="bg-sky-50 border border-sky-100 rounded-2xl p-4 mb-6">
-              <p className="text-sky-800 font-semibold text-xs mb-2">Demo Credentials:</p>
-              <div className="space-y-1 text-xs text-sky-700">
-                <p>Admin: <span className="font-mono font-bold">admin@travelease.lk</span> / <span className="font-mono font-bold">Admin@123</span></p>
-                <p>Customer: <span className="font-mono font-bold">james.w@gmail.com</span> / <span className="font-mono font-bold">Customer@123</span></p>
-              </div>
-            </div>
+            {/* Google Sign In Button */}
+            <button
+              type="button"
+              disabled={isLoading}
+              onClick={() => {
+                setIsLoading(true);
+                // Simulate a successful Google Sign-In by logging in as the demo Customer
+                setTimeout(() => {
+                  setAuth(
+                    {
+                      id: 2,
+                      firstName: 'James',
+                      lastName: 'Wilson',
+                      email: 'james.w@gmail.com',
+                      role: 'Customer',
+                    },
+                    'mock-google-jwt-token'
+                  );
+                  localStorage.setItem('token', 'mock-google-jwt-token');
+                  router.push('/dashboard');
+                  setIsLoading(false);
+                }, 1000);
+              }}
+              className="w-full border border-slate-200 hover:bg-slate-50 hover:border-slate-300 text-slate-700 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-3 transition-all hover:shadow-sm mb-6 bg-white disabled:opacity-70"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path
+                  fill="#EA4335"
+                  d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.79 5.79 0 0 1 8.2 12.725a5.79 5.79 0 0 1 5.79-5.79c2.476 0 4.542 1.547 5.342 3.73l3.858-2.998C21.282 3.756 17.962 1.5 13.99 1.5a10.875 10.875 0 0 0-10.87 10.875A10.875 10.875 0 0 0 13.99 23.25c5.96 0 10.125-4.148 10.125-10.286 0-.616-.057-1.228-.168-1.81H12.24Z"
+                />
+              </svg>
+              Sign in with Google
+            </button>
 
             <p className="text-center text-sm text-slate-500">
               Don&apos;t have an account?{' '}
