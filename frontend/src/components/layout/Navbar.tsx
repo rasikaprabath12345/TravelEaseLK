@@ -128,7 +128,7 @@ export default function Navbar() {
             </nav>
 
             {/* ── Right Actions ── */}
-            <div className="flex items-center gap-4" suppressHydrationWarning>
+            <div className="flex items-center gap-4">
 
               {/* Phone */}
               <a
@@ -143,115 +143,125 @@ export default function Navbar() {
               {/* Separator */}
               <div className={`hidden xl:block w-px h-4 ${solid ? 'bg-slate-200' : 'bg-white/20'}`} />
 
-              {/* Wishlist Link */}
-              <Link
-                href="/wishlist"
-                className={`p-1.5 rounded-lg transition-colors duration-200 ${
-                  solid
-                    ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                    : 'text-white/80 hover:text-white hover:bg-white/10'
-                }`}
-                aria-label="Wishlist"
-              >
-                <div className="relative inline-flex">
-                  <Heart className="h-[18px] w-[18px]" strokeWidth={2} />
-                  {mounted && wishlistItems.length > 0 && (
-                    <span
-                      style={{ top: '-7px', right: '-7px' }}
-                      className="absolute w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm"
-                    >
-                      {wishlistItems.length}
-                    </span>
-                  )}
-                </div>
-              </Link>
-
-              {/* Auth */}
-              {mounted && isAuthenticated ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setProfileOpen(!profileOpen)}
-                    className={`flex items-center gap-2.5 transition-opacity hover:opacity-80 ${solid ? 'text-slate-800' : 'text-white'
+              {/* Auth-dependent UI: only render after mount to avoid SSR/client mismatch */}
+              {mounted ? (
+                <>
+                  {/* Wishlist Link */}
+                  <Link
+                    href="/wishlist"
+                    className={`p-1.5 rounded-lg transition-colors duration-200 ${solid
+                        ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                       }`}
+                    aria-label="Wishlist"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-rose-700 rounded-full flex items-center justify-center text-white text-[13px] font-bold shadow">
-                      {user?.firstName?.charAt(0)}
+                    <div className="relative inline-flex">
+                      <Heart className="h-[18px] w-[18px]" strokeWidth={2} />
+                      {wishlistItems.length > 0 && (
+                        <span
+                          style={{ top: '-7px', right: '-7px' }}
+                          className="absolute w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm"
+                        >
+                          {wishlistItems.length}
+                        </span>
+                      )}
                     </div>
-                    <span className="hidden sm:block text-[13px] font-medium max-w-[80px] truncate">
-                      {user?.firstName}
-                    </span>
-                    <ChevronDown
-                      className={`h-3.5 w-3.5 opacity-50 hidden sm:block transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`}
-                    />
-                  </button>
+                  </Link>
 
-                  <AnimatePresence>
-                    {profileOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute right-0 top-full mt-3 w-56 bg-white border border-slate-100 shadow-none rounded-xl overflow-hidden z-50"
+                  {/* Auth */}
+                  {isAuthenticated ? (
+                    <div className="relative" ref={dropdownRef}>
+                      <button
+                        onClick={() => setProfileOpen(!profileOpen)}
+                        className={`flex items-center gap-2.5 transition-opacity hover:opacity-80 ${solid ? 'text-slate-800' : 'text-white'
+                          }`}
                       >
-                        {/* Header */}
-                        <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
-                          <p className="font-semibold text-slate-800 text-sm">{user?.firstName} {user?.lastName}</p>
-                          <p className="text-slate-400 text-[11px] truncate mt-0.5">{user?.email}</p>
+                        <div className="w-8 h-8 bg-gradient-to-br from-rose-500 to-rose-700 rounded-full flex items-center justify-center text-white text-[13px] font-bold shadow">
+                          {user?.firstName?.charAt(0)}
                         </div>
-                        {/* Links */}
-                        <div className="py-1.5">
-                          {user?.role === 'Admin' && (
-                            <Link href="/admin/dashboard" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 hover:text-rose-600 transition-colors">
-                              <Shield className="h-3.5 w-3.5 text-slate-400" /> Admin Panel
-                            </Link>
-                          )}
-                          <Link href="/dashboard" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
-                            <Calendar className="h-3.5 w-3.5 text-slate-400" /> My Bookings
-                          </Link>
-                          <Link href="/wishlist" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
-                            <Heart className="h-3.5 w-3.5 text-slate-400" />
-                            Wishlist
-                            {wishlistItems.length > 0 && (
-                              <span className="ml-auto text-[9px] font-bold bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
-                                {wishlistItems.length}
-                              </span>
-                            )}
-                          </Link>
-                          <Link href="/settings" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
-                            <Settings className="h-3.5 w-3.5 text-slate-400" /> Settings
-                          </Link>
-                        </div>
-                        {/* Logout */}
-                        <div className="border-t border-slate-100 py-1.5">
-                          <button
-                            onClick={logout}
-                            className="w-full flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-rose-500 hover:bg-rose-50 transition-colors text-left"
+                        <span className="hidden sm:block text-[13px] font-medium max-w-[80px] truncate">
+                          {user?.firstName}
+                        </span>
+                        <ChevronDown
+                          className={`h-3.5 w-3.5 opacity-50 hidden sm:block transition-transform duration-200 ${profileOpen ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+
+                      <AnimatePresence>
+                        {profileOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute right-0 top-full mt-3 w-56 bg-white border border-slate-100 shadow-none rounded-xl overflow-hidden z-50"
                           >
-                            <LogOut className="h-3.5 w-3.5" /> Sign Out
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                            {/* Header */}
+                            <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
+                              <p className="font-semibold text-slate-800 text-sm">{user?.firstName} {user?.lastName}</p>
+                              <p className="text-slate-400 text-[11px] truncate mt-0.5">{user?.email}</p>
+                            </div>
+                            {/* Links */}
+                            <div className="py-1.5">
+                              {user?.role === 'Admin' && (
+                                <Link href="/admin/dashboard" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 hover:text-rose-600 transition-colors">
+                                  <Shield className="h-3.5 w-3.5 text-slate-400" /> Admin Panel
+                                </Link>
+                              )}
+                              <Link href="/dashboard" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
+                                <Calendar className="h-3.5 w-3.5 text-slate-400" /> My Bookings
+                              </Link>
+                              <Link href="/wishlist" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
+                                <Heart className="h-3.5 w-3.5 text-slate-400" />
+                                Wishlist
+                                {wishlistItems.length > 0 && (
+                                  <span className="ml-auto text-[9px] font-bold bg-rose-100 text-rose-600 px-1.5 py-0.5 rounded-full">
+                                    {wishlistItems.length}
+                                  </span>
+                                )}
+                              </Link>
+                              <Link href="/settings" className="flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-slate-700 hover:bg-slate-50 transition-colors">
+                                <Settings className="h-3.5 w-3.5 text-slate-400" /> Settings
+                              </Link>
+                            </div>
+                            {/* Logout */}
+                            <div className="border-t border-slate-100 py-1.5">
+                              <button
+                                onClick={logout}
+                                className="w-full flex items-center gap-2.5 px-4 py-2 text-[12.5px] text-rose-500 hover:bg-rose-50 transition-colors text-left"
+                              >
+                                <LogOut className="h-3.5 w-3.5" /> Sign Out
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <div className="hidden sm:flex items-center gap-2.5">
+                      <Link
+                        href="/login"
+                        className={`text-[13px] font-medium px-3.5 py-2 rounded-lg transition-colors duration-200 ${solid
+                          ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                          : 'text-white/80 hover:text-white hover:bg-white/10'
+                          }`}
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/packages"
+                        className="bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-[12px] font-semibold px-5 py-2 rounded-lg transition-colors duration-200 tracking-wide shadow-md shadow-rose-600/25"
+                      >
+                        Book Now
+                      </Link>
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="hidden sm:flex items-center gap-2.5">
-                  <Link
-                    href="/login"
-                    className={`text-[13px] font-medium px-3.5 py-2 rounded-lg transition-colors duration-200 ${solid
-                      ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
-                      }`}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/packages"
-                    className="bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-[12px] font-semibold px-5 py-2 rounded-lg transition-colors duration-200 tracking-wide shadow-md shadow-rose-600/25"
-                  >
-                    Book Now
-                  </Link>
+                /* Pre-mount placeholder — matches neither auth state, avoids SSR mismatch */
+                <div className="hidden sm:flex items-center gap-2.5" aria-hidden="true">
+                  <div className="w-16 h-8 rounded-lg bg-transparent" />
+                  <div className="w-20 h-8 rounded-lg bg-transparent" />
                 </div>
               )}
 

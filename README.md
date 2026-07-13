@@ -22,9 +22,3 @@ Feel free to explore, share feedback, or contribute to the codebase. Let’s mak
 
 ---
 
-## 🔑 Demo Credentials
-
-For testing and verification, use the following credentials to access pre-seeded data in the local environment:
-
-- 🛡️ **Admin Account**: `admin@travelease.lk` / `Admin@123`
-- 👤 **Customer Account**: `james.w@gmail.com` / `Customer@123` (or click the **Sign in with Google** button on the login screen to instantly log in as this customer!)
