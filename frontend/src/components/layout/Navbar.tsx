@@ -23,6 +23,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -30,6 +31,7 @@ export default function Navbar() {
   const { items: wishlistItems } = useWishlistStore();
 
   useEffect(() => {
+    setMounted(true);
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll);
     onScroll();
@@ -152,7 +154,7 @@ export default function Navbar() {
                 aria-label="Wishlist"
               >
                 <Heart className="h-[18px] w-[18px]" strokeWidth={2} />
-                {wishlistItems.length > 0 && (
+                {mounted && wishlistItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
                     {wishlistItems.length}
                   </span>
@@ -160,7 +162,7 @@ export default function Navbar() {
               </Link>
 
               {/* Auth */}
-              {isAuthenticated ? (
+              {mounted && isAuthenticated ? (
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
@@ -323,7 +325,7 @@ export default function Navbar() {
                   <a href="tel:+94771234567" className="flex items-center gap-2 text-sm text-slate-500">
                     <Phone className="h-4 w-4 text-rose-500" /> +94 77 123 4567
                   </a>
-                  {isAuthenticated ? (
+                  {mounted && isAuthenticated ? (
                     <div className="space-y-2">
                       <div className="flex items-center gap-3 py-2">
                         <div className="w-9 h-9 bg-gradient-to-br from-rose-500 to-rose-700 rounded-full flex items-center justify-center text-white text-sm font-bold">
