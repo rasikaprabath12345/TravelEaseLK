@@ -28,6 +28,14 @@ A comprehensive travel and tour booking platform designed to simplify holiday pl
 - **Customer Dashboard:** A secure workspace for users to view active bookings, upload payment receipts, and manage accounts.
 - **Admin Control Panel:** A secure dashboard to review and verify bookings, manage packages, publish blogs, and oversee registered users.
 
+## 🔄 System Overview
+
+TravelEase operates on a strictly decoupled client-server model designed for scalability and maintainability:
+
+1. **Client-Side (Frontend):** The Next.js application serves as the user interface, handling routing, rendering, and state management. Zustand and React Query manage global state and asynchronous data fetching, ensuring a responsive user experience.
+2. **Server-Side (Backend):** The ASP.NET Core API acts as the central brain of the platform. It strictly follows **Clean Architecture**, separating the Domain (core logic), Application (use cases), Infrastructure (data access), and API (presentation) layers. This ensures the business logic remains independent of UI or database frameworks.
+3. **Data Flow:** Users interact with the Next.js frontend, which sends secure, JWT-authenticated REST requests to the .NET API. The API processes these requests through the Application layer, interacts with the SQL Server database via Entity Framework Core, and returns JSON responses back to the frontend.
+
 ## 🏗 Architecture Overview
 
 ```text
@@ -79,18 +87,18 @@ TravelEaseLK/
 
 ### 1. Backend Setup (.NET API)
 
-1. Open a terminal and navigate to the backend API directory:
+1. Open a terminal and navigate to the backend directory:
    ```bash
-   cd backend/TravelEase.API
+   cd backend
    ```
-2. Update the connection string in `appsettings.json` to point to your local SQL Server instance.
+2. Update the connection string in `TravelEase.API/appsettings.json` to point to your local SQL Server instance.
 3. Apply Entity Framework migrations to create the database:
    ```bash
-   dotnet ef database update --project ../TravelEase.Infrastructure --startup-project .
+   dotnet ef database update --project TravelEase.Infrastructure --startup-project TravelEase.API
    ```
 4. Run the API server:
    ```bash
-   dotnet run
+   dotnet run --project TravelEase.API
    ```
    *The API will start at `http://localhost:5000` (or as configured).*
 
